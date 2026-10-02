@@ -1,0 +1,91 @@
+{
+  "_about": "Single source of truth for Rev C enclosure and PCB mechanical geometry. Units: millimetres. Enclosure coordinates: origin at the front-left-bottom outer corner of the base, +X to the right, +Y toward the back, +Z up. Any key listed in _verify is a fit allowance or third-party dimension that has NOT been measured on real parts. source/build_cad.py reads this file; do not hard-code numbers there.",
+  "revision": "C",
+  "status": "UNVALIDATED ENGINEERING PROTOTYPE",
+  "_verify": [
+    "tube_glass_d", "tube_glass_h", "tube_spacer_h", "tube_opening_d", "tube_ring_gap_note",
+    "separator_opening_d", "button_opening_d", "button_height_above_pcb", "button_body_h", "button_pocket", "acrylic_button_hole_d",
+    "m2_pilot_d", "m2_clearance_d", "m2_head_counterbore_d", "m2_head_counterbore_depth",
+    "floor_clearance", "acrylic_pocket_clearance", "top_side_height_budget",
+    "cable_d", "cable_pinch", "in14_lead_count", "in14_lead_circle_d", "in14_lead_hole_d",
+    "rear_cable_opening_d"
+  ],
+
+  "base_l": 234.0,
+  "base_w": 80.0,
+  "base_h": 30.0,
+  "corner_r": 10.0,
+  "wall_t": 2.4,
+  "top_t": 3.0,
+  "floor_t": 3.0,
+  "floor_clearance": 0.25,
+
+  "pcb_l": 218.0,
+  "pcb_w": 64.0,
+  "pcb_t": 1.6,
+  "pcb_layers": 4,
+  "pcb_offset_x": 8.0,
+  "pcb_offset_y": 8.0,
+  "pcb_top_z": 24.0,
+  "top_side_height_budget": 2.5,
+  "bottom_side_height_budget": 18.0,
+
+  "tube_centers": [[32, 35], [62, 35], [102, 35], [132, 35], [172, 35], [202, 35]],
+  "separator_centers": [[82, 35], [152, 35]],
+  "buttons": {"SET": [218, 24], "H": [218, 38], "M": [218, 52]},
+  "pcb_screws": [[13, 13], [117, 13], [221, 13], [13, 67], [221, 67]],
+  "case_screws": [[7, 7], [227, 7], [7, 73], [227, 73]],
+
+  "tube_opening_d": 19.4,
+  "separator_opening_d": 7.0,
+  "button_opening_d": 3.9,
+  "button_height_above_pcb": 7.0,
+  "button_body": 6.0,
+  "button_body_h": 3.5,
+  "button_pocket": 7.4,
+  "button_pocket_depth": 1.0,
+  "acrylic_button_hole_d": 9.0,
+  "_button_note": "The B3F body (about 3.5 mm tall) is taller than the 3.0 mm gap between PCB top and the top underside. The printed hood gets a 1 mm underside pocket; the acrylic top gets a 9 mm hole that clears the 6x6 body. Found by tests/check_cad.py.",
+  "rear_cable_opening_d": 4.2,
+  "rear_cable_opening_x": 204.0,
+  "rear_cable_opening_z": 5.8,
+
+  "tube_glass_d": 19.0,
+  "tube_glass_h": 55.0,
+  "tube_spacer_h": 7.0,
+  "total_height_with_tubes_nominal": 86.0,
+  "tube_ring_gap_note": "Tube-Tester lists the IN-14 bulb as 19 mm, so the radial gap to the 19.4 mm opening is only 0.2 mm nominal; real bulbs vary, which is why coupon 06 is printed first. Baffle collars in the printed hood block line-of-sight to leads; the clear-top option has no collars. See docs/VALIDATION.md open items.",
+
+  "baffle_wall_t": 1.2,
+  "baffle_bottom_gap_above_pcb": 1.0,
+  "pcb_post_d": 5.0,
+  "pcb_post_rib_w": 2.0,
+
+  "m2_pilot_d": 1.7,
+  "m2_clearance_d": 2.4,
+  "m2_head_counterbore_d": 4.2,
+  "m2_head_counterbore_depth": 1.5,
+
+  "acrylic_t": 3.0,
+  "acrylic_pocket_clearance": 0.2,
+  "acrylic_ledge_w": 4.0,
+  "acrylic_ledge_t": 2.0,
+
+  "clamp_screws": [[194, 70], [214, 70]],
+  "clamp_boss_d": 5.5,
+  "clamp_boss_h": 2.0,
+  "clamp_len": 28.0,
+  "clamp_w": 8.0,
+  "clamp_bar_t": 2.6,
+  "cable_d": 4.0,
+  "cable_pinch": 0.4,
+
+  "in14_lead_count": 13,
+  "in14_lead_circle_d": 12.0,
+  "in14_lead_hole_d": 1.0,
+
+  "fasteners": {
+    "all_printed": {"M2x8": 4, "M2x6": 7, "M2x4": 0, "_uses": "4x M2x8 bottom, 5x M2x6 PCB, 2x M2x6 cable clamp"},
+    "clear_top":   {"M2x8": 4, "M2x6": 6, "M2x4": 5, "_uses": "4x M2x8 bottom, 5x M2x4 PCB, 4x M2x6 top, 2x M2x6 cable clamp"}
+  }
+}

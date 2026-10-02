@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# render_cad - regenerate every CAD output from cad/DIMENSIONS.json so nothing drifts:
+# STEP/STL/3MF per part, print plates, assembly and PCB-mechanical STEP, the acrylic DXF,
+# the preview images, and then the recorded geometry checks.
+# Needs: pip install -r requirements-cad.txt   (VTK renders offscreen via EGL/OSMesa)
+set -euo pipefail
+cd "$(dirname "$0")/.."
+python3 source/build_cad.py
+python3 scripts/make_drawings.py
+python3 scripts/render_previews.py
+python3 scripts/make_view_stl.py
+python3 tests/check_cad.py
+python3 scripts/make_checksums.py

@@ -1,0 +1,24 @@
+(version 1)
+# Rev C custom rules for the FUTURE routed board. Starting values, not a safety certification.
+# Assign nets HV170, ANODE*, T*_K*, LAMP*_A, SEP*_K, HV_BLEED_MID, HV_SENSE_MID to a net class named "HV".
+# Check every value against IPC-2221B Table 6-1 (and your fab's capability) before routing.
+
+(rule "HV to non-HV clearance"
+  (condition "A.NetClass == 'HV' && B.NetClass != 'HV'")
+  (constraint clearance (min 1.0mm)))
+
+(rule "HV to HV clearance"
+  (condition "A.NetClass == 'HV' && B.NetClass == 'HV'")
+  (constraint clearance (min 0.65mm)))
+
+(rule "HV hole to non-HV copper"
+  (condition "A.NetClass == 'HV' && B.NetClass != 'HV'")
+  (constraint hole_clearance (min 1.0mm)))
+
+(rule "HV parts stay clear of the board edge"
+  (condition "A.NetClass == 'HV'")
+  (constraint edge_clearance (min 2.0mm)))
+
+(rule "Top-side keep-out ring under the baffle collars"
+  (condition "A.insideArea('BAFFLE_KEEPOUT')")
+  (constraint disallow footprint))

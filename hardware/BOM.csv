@@ -1,0 +1,30 @@
+line,qty,refs,category,description,manufacturer,mpn_or_series,package,spec,substitution,safety_critical
+1,2,U1 U2,IC,"32-channel serial-to-parallel driver, open-drain, 220 V",Microchip,HV5522PJ-G,PLCC-44,"220 V outputs, VDD 10.8-13.2 V",not the HV5522PG-G (different package),yes
+2,1,PS1,Module,12 V to ~170 V DC-DC boost module,Omnixie,NCH8200HV,module (outline VERIFY),"2.5-15 V in, ~170 V out, 30 mA peak",none without re-checking HV design,yes
+3,1,F1,Protection,"Resettable fuse (PTC, positive temperature coefficient)",Littelfuse,1812L075/33DR,1812,"0.75 A hold, 33 V",SAFETY ITEM: same ratings or better only,yes
+4,2,QP1 QP2,Transistor,P-channel MOSFET (metal-oxide-semiconductor field-effect transistor),Diodes Inc.,DMP3098L-7,SOT-23,-30 V,equivalent P-MOSFET only after V_GS and R_DS(on) review,yes
+5,1,JP1,Connector,1x2 pin header + jumper shunt (HV_ARM),generic,2.54 mm header + shunt,THT 2.54 mm,"gold or tin, 2.54 mm",any part meeting the spec,yes
+6,6,RA1 RA2 RA3 RA4 RA5 RA6,Resistor,22 kOhm 1 % 1 W axial: tube anode,Vishay,"PR01 series, 22K0, 1 %","axial DIN0207, 10.16 mm pitch","1 % , 1 W, metal film",SAFETY ITEM: same ratings or better only,yes
+7,2,RL1 RL2,Resistor,220 kOhm 1 % 1 W axial: neon lamp,Vishay,"PR01 series, 220K, 1 %","axial DIN0207, 10.16 mm pitch","1 %, 1 W",SAFETY ITEM: same ratings or better only,yes
+8,2,RH1 RH2,Resistor,110 kOhm 1206: HV bleeder,generic,-,1206,">=0.5 W, >=200 V working voltage",SAFETY ITEM: same ratings or better only,yes
+9,2,RS1 RS2,Resistor,1 MOhm 1206: HV sense divider top,generic,-,1206,">=0.25 W, >=200 V working voltage",SAFETY ITEM: same ratings or better only,yes
+10,1,CHV,Capacitor,100 nF HV rail capacitor (CHV),generic,-,"1210, <=3 mm tall",">=250 V, X7R",SAFETY ITEM: same ratings or better only,yes
+11,6,T1 T2 T3 T4 T5 T6,Tube,IN-14 Nixie tube with factory spacers,"various (NOS, new old stock)",IN-14,13-lead direct solder,test each tube before soldering; bulb about 19 mm,IN-14 only (enclosure is sized for it),no
+12,2,L1 L2,Lamp,"NE-2 neon lamp, separator",VCC (Visual Communications Company),A1A (NE-2 type),wire leads,about 60 V maintaining voltage (verify),NE-2 equivalent,no
+13,3,SW1 SW2 SW3,Switch,"Tactile switch 6x6 mm, 7 mm tall",Omron,B3F-1062-G,THT 4-pin,7 mm actuator height,not the 4.3 mm B3F-1002,no
+14,1,A1,Module,Arduino Nano Classic (ATmega328P),Arduino,A000005,"2x 1x15 headers, 15.24 mm row spacing","ATmega328P, 16 MHz, 5 V",not Nano Every or Nano ESP32,no
+15,1,U3,IC,Temperature-compensated real-time clock (RTC),Analog Devices,DS3231SN#,SOIC-16 wide,+/-2 ppm 0-40 C,DS3231SN# only (not DS3231M),no
+16,5,QL1 QL2 QL3 QL4 QE1,Transistor,NPN bipolar transistor,onsemi or equivalent,MMBT3904,SOT-23,"40 V, 200 mA",any part meeting the spec,no
+17,1,QL5,Transistor,PNP bipolar transistor,onsemi or equivalent,MMBT3906,SOT-23,"-40 V, -200 mA",any part meeting the spec,no
+18,1,J1,Connector,Wire pads for 12 V input pigtail,(PCB pads),-,pads,see BOM_mechanical.csv for the pigtail,-,no
+19,1,J2,Connector,Wire pads for CR2032 holder,(PCB pads),-,pads,see BOM_mechanical.csv for the holder,-,no
+20,1,RS3,Resistor,22 kOhm 0805: HV sense bottom (NOT an anode resistor),generic,-,0805,"1 %, >=0.125 W, >=50 V",any part meeting the spec,no
+21,1,RV1,Resistor,47 kOhm 0805: VIN sense top,generic,-,0805,"1 %, >=0.125 W, >=50 V",any part meeting the spec,no
+22,11,RV2 RB1 RC1 RB2 RC2 RB3 RC3 RB4 RD1 RB6 RB5,Resistor,10 kOhm 0805,generic,-,0805,"1 %, >=0.125 W, >=50 V",any part meeting the spec,no
+23,7,RPD1 RPD2 RPD3 RPD4 RPU5 RPD5 RGP,Resistor,100 kOhm 0805: default-off pull-ups/pull-downs,generic,-,0805,"1 %, >=0.125 W, >=50 V",any part meeting the spec,no
+24,2,RI1 RI2,Resistor,4.7 kOhm 0805: I2C pull-ups,generic,-,0805,"1 %, >=0.125 W, >=50 V",any part meeting the spec,no
+25,3,C1 C2 C8,Capacitor,100 nF 0805 decoupling,generic,-,0805,"X7R, >=25 V",any part meeting the spec,no
+26,2,C3 C4,Capacitor,10 uF 0805 driver bulk,generic,-,0805,"X5R/X7R, >=25 V (check capacitance at 12 V bias)",any part meeting the spec,no
+27,1,C7,Capacitor,10 nF 0805 HV-sense filter,generic,-,0805,"X7R, >=25 V",any part meeting the spec,no
+28,1,C6,Capacitor,10 uF 1210 converter input,generic,-,1210,"X5R/X7R, >=25 V",any part meeting the spec,no
+29,1,C5,Capacitor,"47 uF electrolytic, 12 V input bulk",generic,-,"radial <=6.3x8 mm, 2.5 mm pitch","25 V, 105 C",any part meeting the spec,no

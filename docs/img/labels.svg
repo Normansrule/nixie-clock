@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200mm" height="120mm" viewBox="0 0 200 120" font-family="DejaVu Sans, Arial, sans-serif">
+<rect width="200" height="120" fill="#fff"/>
+<text x="6" y="7" font-size="3" fill="#555">Six-Tube Nixie Clock Rev C labels. Print at 100 %, check the 50 mm bar, cut on the grey lines.</text>
+<rect x="6" y="9" width="50" height="1.2" fill="#000"/><text x="58" y="10.6" font-size="2.6" fill="#555">50 mm</text>
+<!-- Label 1: HV warning, 90 x 44 mm -->
+<rect x="6" y="14" width="90" height="44" rx="3" fill="#ffd400" stroke="#999" stroke-width="0.3"/>
+<rect x="8" y="16" width="86" height="40" rx="2" fill="none" stroke="#111" stroke-width="1"/>
+<path d="M22.00,19.00 L33.00,38.05 L11.00,38.05 Z" fill="#ffd400" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/><path d="M22.66,24.72 L19.80,30.81 L22.00,30.81 L20.68,36.15 L24.64,28.91 L22.44,28.91 Z" fill="#111"/>
+<text x="37" y="26" font-size="6.2" font-weight="700" fill="#111">DANGER</text>
+<text x="37" y="33" font-size="4.2" font-weight="700" fill="#111">HIGH VOLTAGE INSIDE</text>
+<text x="37" y="38.5" font-size="3.6" fill="#111">about 170 V DC</text>
+<text x="11" y="45.5" font-size="3" fill="#111">Unplug, wait 60 s, then MEASURE TP4 below 10 V</text>
+<text x="11" y="50" font-size="3" fill="#111">before opening. Dark tubes do not mean safe.</text>
+<!-- Label 2: rating plate, 90 x 44 mm -->
+<rect x="104" y="14" width="90" height="44" rx="3" fill="#fff" stroke="#999" stroke-width="0.3"/>
+<text x="108" y="22" font-size="4.6" font-weight="700" fill="#111">Six-Tube Nixie Clock</text>
+<text x="108" y="27.5" font-size="3.2" fill="#111">Rev C · UNVALIDATED PROTOTYPE</text>
+<line x1="108" y1="30" x2="190" y2="30" stroke="#111" stroke-width="0.3"/>
+<text x="108" y="35.5" font-size="3.2" fill="#111">Input: 12 V DC, 1 A, centre positive</text>
+<text x="108" y="40.5" font-size="3.0" fill="#111">5.5 x 2.1 mm plug · isolated regulated adapter only</text>
+<text x="108" y="45.5" font-size="3.2" fill="#111">High voltage inside · read docs/SAFETY.md</text>
+<text x="108" y="52.5" font-size="3.2" fill="#111">Serial: ______________  Built: ___________</text>
+<!-- Label 3: small HV marker for inside the case, near PS1 and TP4, 40 x 16 mm (two copies) -->
+<g>
+<rect x="6" y="66" width="44" height="18" rx="2" fill="#ffd400" stroke="#999" stroke-width="0.3"/><path d="M15.50,68.00 L23.00,80.99 L8.00,80.99 Z" fill="#ffd400" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/><path d="M15.95,71.90 L14.00,76.05 L15.50,76.05 L14.60,79.69 L17.30,74.75 L15.80,74.75 Z" fill="#111"/>
+<text x="25" y="74" font-size="3.6" font-weight="700" fill="#111">170 V DC</text><text x="25" y="79" font-size="2.6" fill="#111">measure TP4 first</text>
+<rect x="56" y="66" width="44" height="18" rx="2" fill="#ffd400" stroke="#999" stroke-width="0.3"/><path d="M65.50,68.00 L73.00,80.99 L58.00,80.99 Z" fill="#ffd400" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/><path d="M65.95,71.90 L64.00,76.05 L65.50,76.05 L64.60,79.69 L67.30,74.75 L65.80,74.75 Z" fill="#111"/>
+<text x="75" y="74" font-size="3.6" font-weight="700" fill="#111">170 V DC</text><text x="75" y="79" font-size="2.6" fill="#111">measure TP4 first</text>
+</g>
+<!-- Label 4: HV_ARM shunt tag -->
+<rect x="106" y="66" width="60" height="18" rx="2" fill="#fff" stroke="#999" stroke-width="0.3"/>
+<text x="110" y="73" font-size="3.4" font-weight="700" fill="#111">JP1 HV_ARM</text>
+<text x="110" y="78" font-size="2.6" fill="#111">Removing the shunt does NOT discharge</text>
+<text x="110" y="81.5" font-size="2.6" fill="#111">the HV rail. Measure TP4 first.</text>
+<text x="6" y="96" font-size="2.8" fill="#555">These labels are reminders, not a safety certification. The build is an unvalidated engineering prototype.</text>
+</svg>

@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Six-Tube Nixie Clock · Rev C · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html" class=on>Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><div class="tubes" id="clock" aria-label="current time, styled like the clock">12<i>&#9679;</i>34<i>&#9679;</i>56</div><h1 id="six-tube-nixie-clock--rev-c">Six-Tube Nixie Clock · Rev C</h1>
+<blockquote>
+<p><strong>Caution:</strong> <strong>About 170 V of direct current (DC) inside: hazardous and potentially lethal.</strong> Power only from an external, isolated 12 V adapter (no mains inside). Dark tubes, software "off" or a pulled shunt do <strong>not</strong> mean safe: <strong>measure test pad TP4 below 10 V</strong> before touching. Read <strong><a href="SAFETY.html">SAFETY.md</a></strong> first.</p>
+</blockquote>
+<p><strong>An open-source clock with six real IN-14 Nixie tubes that you can make yourself.</strong> It comes with a 3D-printable enclosure, a laser-cut top, a bill of materials (BOM), pin-by-pin wiring, KiCad files, firmware, requirements, labels and a staged build guide, plus a website and a desktop app. <strong>The one missing piece is a routed circuit board</strong>: the path to it is in <a href="MANUFACTURING.html">MANUFACTURING.md</a>.</p>
+<p><img alt="status" src="https://img.shields.io/badge/status-unvalidated%20prototype-orange"> <img alt="high voltage" src="https://img.shields.io/badge/inside-170%20V%20DC-red"> <img alt="PCB" src="https://img.shields.io/badge/PCB-not%20yet%20routed-lightgrey"> <img alt="license" src="https://img.shields.io/badge/license-MIT-blue"></p>
+<table>
+<thead>
+<tr>
+<th>Clear acrylic top</th>
+<th>All-printed hood</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="Clear-top option, model render" src="img/hero_clear_top.png"></td>
+<td><img alt="All-printed option, model render" src="img/hero_all_printed.png"></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Important:</strong> <strong>Rev C is an unvalidated engineering prototype.</strong> Nothing has been powered yet, and the circuit board is not routed, so no Gerber files exist. Recorded file checks pass; every physical check is still open (<a href="VALIDATION.html">VALIDATION.md</a>).</p>
+</blockquote>
+<h2 id="at-a-glance">At a glance</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>📏 <strong>Size</strong></td>
+<td>234 × 80 × 30 mm base, about 86 mm tall with tubes</td>
+</tr>
+<tr>
+<td>🔆 <strong>Display</strong></td>
+<td>6 × IN-14 tubes (HH MM SS) + 2 × NE-2 neon separators</td>
+</tr>
+<tr>
+<td>🔌 <strong>Power</strong></td>
+<td>External isolated 12 V adapter, about 0.25 A with all digits lit</td>
+</tr>
+<tr>
+<td>🧠 <strong>Electronics</strong></td>
+<td>Arduino Nano Classic · DS3231 real-time clock (RTC) · 2 × HV5522 tube drivers · NCH8200HV 170 V module</td>
+</tr>
+<tr>
+<td>🧱 <strong>Enclosure</strong></td>
+<td>PETG print (fits a Bambu Lab P1S) · optional 3 mm clear cast-acrylic top · <strong>M2 screws only</strong></td>
+</tr>
+<tr>
+<td>💲 <strong>Parts</strong></td>
+<td>About $379 (all-printed) or $391 (clear-top) planning estimate, before tax</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-make-it">🏭 Make it</h2>
+<p><img alt="What to make, from which file, and what is ready" src="img/make_it.svg"></p>
+<p>Full process, PCB specification and the release gate: <strong><a href="MANUFACTURING.html">MANUFACTURING.md</a></strong>.</p>
+<h2 id="-see-it-in-3d">🧊 See it in 3D</h2>
+<p><img alt="Exploded view" src="img/exploded.png"></p>
+<p>GitHub shows <code>.stl</code> files in an interactive 3D viewer: click one to rotate it.</p>
+<table>
+<thead>
+<tr>
+<th>View the whole clock (do not print)</th>
+<th>Print these (PETG)</th>
+<th>Cut this</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="repo:cad/view/Assembly_RevC_clear_top_VIEW_ONLY.stl">Clear-top assembly</a> · <a href="repo:cad/view/Assembly_RevC_all_printed_VIEW_ONLY.stl">All-printed assembly</a></td>
+<td><a href="repo:cad/stl/01_printed_hood.stl">01 hood</a> · <a href="repo:cad/stl/02_bottom_cover.stl">02 floor</a> · <a href="repo:cad/stl/03_cable_clamp.stl">03 clamp</a> · <a href="repo:cad/stl/04_optional_acrylic_frame.stl">04 frame</a> · <a href="repo:cad/stl/06_fit_coupon.stl">06 fit coupon</a> · <a href="repo:cad/stl/07_unpowered_lead_pattern_coupon.stl">07 lead coupon</a> · ready plates in <a href="repo:cad/print/"><code>cad/print/</code></a></td>
+<td><a href="downloads/Acrylic_top_3mm_1to1.dxf">Acrylic top DXF</a> (3 mm cast, 1:1)</td>
+</tr>
+</tbody>
+</table>
+<p>STEP files for computer-aided design (CAD) are in <a href="repo:cad/step/"><code>cad/step/</code></a>; the model of record is <a href="repo:source/build_cad.py"><code>source/build_cad.py</code></a>, driven by <a href="repo:cad/DIMENSIONS.json"><code>cad/DIMENSIONS.json</code></a>. Printing settings: <a href="PRINTING.html">PRINTING.md</a>.</p>
+<p><img alt="Enclosure dimensions" src="img/dimensions.svg"></p>
+<h2 id="-bill-of-materials">🧾 Bill of materials</h2>
+<p>29 electrical lines (71 parts) plus enclosure and fasteners. <strong>Lines marked safety-critical must be bought at the stated rating or better.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Key part</th>
+<th>Qty</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IN-14 Nixie tube</td>
+<td>6</td>
+<td>The display; enclosure is sized for it</td>
+</tr>
+<tr>
+<td>HV5522PJ-G driver (PLCC-44)</td>
+<td>2</td>
+<td>Switches the tube cathodes (not the PG package)</td>
+</tr>
+<tr>
+<td>NCH8200HV module</td>
+<td>1</td>
+<td>Makes about 170 V from 12 V</td>
+</tr>
+<tr>
+<td>Arduino Nano Classic + DS3231SN#</td>
+<td>1 + 1</td>
+<td>Brains and timekeeping</td>
+</tr>
+<tr>
+<td>22 kΩ 1 W resistors (Vishay PR01)</td>
+<td>6</td>
+<td>Tube current limit: <strong>safety item</strong></td>
+</tr>
+<tr>
+<td>100 nF ≥250 V capacitor, 110 kΩ bleeders</td>
+<td>1 + 2</td>
+<td>HV rail storage and discharge: <strong>safety items</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Everything, with specs and allowed substitutions: <a href="downloads/BOM.csv"><code>hardware/BOM.csv</code></a> · <a href="downloads/BOM_mechanical.csv"><code>hardware/BOM_mechanical.csv</code></a> · readable <a href="BOM.html">BOM.md</a>.</p>
+<h2 id="-circuit-and-wiring">🔌 Circuit and wiring</h2>
+<p><img alt="Wiring overview and driver shift chain" src="img/wiring_shift_chain.svg"></p>
+<ul>
+<li><strong>Pin by pin:</strong> <a href="WIRING.html">WIRING.md</a> and <a href="downloads/NET_MAP.csv"><code>hardware/NET_MAP.csv</code></a> (340 connections; HV5522 pins from the data sheet)</li>
+<li><strong>Schematic:</strong> <a href="downloads/Nixie_RevC_schematic.pdf">PDF</a> · KiCad project in <a href="repo:hardware/"><code>hardware/</code></a></li>
+<li><strong>PCB:</strong> <a href="img/pcb_drawing.svg">mechanical drawing</a> · placement-only board (checked by KiCad's own design rules check, no copper yet)</li>
+<li><strong>Numbers behind the design:</strong> <a href="EQUATIONS.html">EQUATIONS.md</a> (tube current, resistor power, discharge time, RTC drift)</li>
+</ul>
+<h2 id="-build-it">🛠️ Build it</h2>
+<p><img alt="Build stages" src="img/build_flow.svg"></p>
+<p>Step by step, with parts, measurements and PASS / FIX / STOP at every stage: <strong><a href="BUILD_GUIDE.html">BUILD_GUIDE.md</a></strong>. Record each unit in <a href="downloads/TEST_RECORD.csv"><code>hardware/TEST_RECORD.csv</code></a> and stick on the <a href="downloads/labels.pdf">labels</a>.</p>
+<h2 id="-requirements">✅ Requirements</h2>
+<p><img alt="Requirement status" src="img/requirements_status.svg"></p>
+<p>37 requirements, each traced to the part of the design that meets it and to how it is verified: <a href="REQUIREMENTS.html">REQUIREMENTS.md</a>.</p>
+<h2 id="-website-app-and-tools">💻 Website, app and tools</h2>
+<table>
+<thead>
+<tr>
+<th>Website</th>
+<th>Desktop app</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This repository as a website on GitHub Pages; installs as an offline web app</td>
+<td>Windows, macOS and Linux from the <em>Releases</em> page</td>
+<td>Tube and HV calculator, and a USB serial companion for the clock (<a href="APP.html">APP.md</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-publish-and-keep-building">🚀 Publish and keep building</h2>
+<ul>
+<li>Put this repository on GitHub (website and desktop release included) with one paste: <a href="PUBLISH.html">PUBLISH.md</a></li>
+<li>Everyday commands (check, commit, release, apply a new ZIP): <a href="DEVELOP.html">DEVELOP.md</a></li>
+<li>Supply chain, signed releases, reporting problems: <a href="SECURITY.html">SECURITY.md</a> · data sheets: <a href="CREDITS.html">CREDITS.md</a></li>
+</ul>
+<details>
+<summary><b>Repository layout</b></summary>
+
+
+<pre><code>README.md            this page
+docs/                SAFETY · BUILD_GUIDE · MANUFACTURING · BOM · WIRING · REQUIREMENTS · EQUATIONS
+                     PRINTING · VALIDATION · APP · PUBLISH · DEVELOP · SECURITY · labels.pdf · schematic PDF
+hardware/            KiCad project · NET_MAP.csv · BOM.csv · BOM_mechanical.csv · REQUIREMENTS.csv
+                     COMPONENT_PLACEMENT.csv · TEST_RECORD.csv · REVIEW_SIGNOFF.md · native-check reports
+firmware/Nixie_RevC/ Nixie_RevC.ino · display_core.h · build/Nixie_RevC.hex
+cad/                 DIMENSIONS.json · stl/ · 3mf/ · print/ · step/ · view/ · acrylic DXF · assembly STEP
+source/build_cad.py  CadQuery model of record
+scripts/             generators, checks, publish/ship/release helpers, gated fab-output script
+tests/               equation, design, requirement, CAD and firmware checks
+site/ · app/         GitHub Pages website · Electron desktop app
+sbom/                toolchain software bill of materials
+</code></pre>
+
+</details>
+
+<p><strong>Checks:</strong> <code>scripts/run_all_checks.sh</code> reruns every recorded check (equations, design tables, requirements, firmware, AVR compile, CAD geometry, KiCad netlist and placement checks). Passing means the files agree with each other, not that a powered clock works.</p>
+<p><strong>License:</strong> MIT (<a href="repo:LICENSE">LICENSE</a>). Building and powering high-voltage hardware is at your own risk.</p></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>

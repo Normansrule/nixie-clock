@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Equations · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html" class=on>Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><h1 id="equations">Equations</h1>
+<p>Each section goes intuition → equation → symbols and units → worked example → picture and test. Every number on this page is recomputed by <a href="repo:tests/check_equations.py"><code>tests/check_equations.py</code></a> (34 checks). They are <strong>model numbers</strong>, not measurements: Stage 4 of the <a href="BUILD_GUIDE.html">build guide</a> replaces them with readings from your board.</p>
+<p>Inputs used throughout:</p>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V_HV</td>
+<td>170 V</td>
+<td>NCH8200HV v2.1 data sheet: fixed nominal output</td>
+</tr>
+<tr>
+<td>V_tube</td>
+<td>145 V typical, 135–155 V assumed spread</td>
+<td>Tube-Tester IN-14 page (typical maintaining voltage)</td>
+</tr>
+<tr>
+<td>I_typ</td>
+<td>2.5 mA per digit</td>
+<td>Tube-Tester IN-14 page (typical cathode current)</td>
+</tr>
+<tr>
+<td>R_anode</td>
+<td>22 kΩ, 1 W</td>
+<td>Rev C start value (RA1–RA6)</td>
+</tr>
+<tr>
+<td>R_lamp</td>
+<td>220 kΩ, 1 W</td>
+<td>RL1, RL2</td>
+</tr>
+<tr>
+<td>V_NE2</td>
+<td>60 V assumed</td>
+<td>NE-2 maintaining voltage; <strong>verify</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-tube-anode-current">1. Tube anode current</h2>
+<p><strong>Intuition.</strong> A glowing Nixie tube holds its own voltage roughly constant (the <em>maintaining voltage</em>). Whatever is left of the supply is dropped across the anode resistor, and that sets the current.</p>
+<p><strong>Equation.</strong> I_anode ≈ (V_HV − V_tube) / R_anode</p>
+<p><strong>Symbols.</strong> I_anode in amperes (A); V_HV and V_tube in volts (V); R_anode in ohms (Ω).</p>
+<p><strong>Worked example.</strong> (170 V − 145 V) / 22 000 Ω = <strong>1.14 mA</strong>. Across the assumed spread: 1.59 mA at 135 V, 0.68 mA at 155 V.</p>
+<p><strong>What it means.</strong> 1.14 mA is about <strong>45 % of the 2.5 mA typical</strong> IN-14 current. Expect the start value to run the tubes gently; a digit that glows only partly is a sign of too little current. The 22 kΩ value is a <em>starting point, not a verified brightness</em>. Measure the current on every digit (Stage 4) before you change anything. For reference, 2.5 mA at 145 V would need about 10 kΩ, and a lower resistor raises the fault power in section 2.</p>
+<p><img alt="Anode current against tube voltage" src="img/anode_current.svg"></p>
+<p><strong>Test.</strong> <code>anode current @ V_tube=...</code> and <code>22 k start value vs IN-14 typical</code> in <code>tests/check_equations.py</code>.</p>
+<h2 id="2-resistor-power-why-the-anode-resistors-are-1-w">2. Resistor power: why the anode resistors are 1 W</h2>
+<p><strong>Intuition.</strong> In normal running the resistor only sees the leftover 25 V or so, so it barely warms. In a fault (a tube or cathode path shorted) it can see the whole rail.</p>
+<p><strong>Equation.</strong> P = I² × R in normal running; P = V_HV² / R if the full rail appears across it.</p>
+<p><strong>Symbols.</strong> P in watts (W); I in A; R in Ω; V in V.</p>
+<p><strong>Worked example.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Calculation</th>
+<th>Result</th>
+<th>Share of 1 W rating</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal, worst tube (135 V)</td>
+<td>(1.59 mA)² × 22 kΩ</td>
+<td>55.7 mW</td>
+<td>5.6 %</td>
+</tr>
+<tr>
+<td>Fault: full rail across RA</td>
+<td>170² / 22 000</td>
+<td><strong>1.31 W</strong></td>
+<td><strong>131 %</strong></td>
+</tr>
+<tr>
+<td>Lamp resistor, normal</td>
+<td>(0.5 mA)² × 220 kΩ</td>
+<td>55 mW</td>
+<td>5.5 %</td>
+</tr>
+<tr>
+<td>Lamp resistor, fault</td>
+<td>170² / 220 000</td>
+<td>131 mW</td>
+<td>13 %</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What it means.</strong> Normal dissipation is tiny. The 1 W rating is there for voltage stress and fault margin, and it is still <strong>not enough</strong> for a sustained hard short, because the NCH8200HV data sheet describes no current limit (up to 30 mA peak output). This is recorded as an open item in <a href="VALIDATION.html#open-items">VALIDATION.md</a>, not hidden. Never reduce the rating.</p>
+<h2 id="3-bleeder-discharge">3. Bleeder discharge</h2>
+<p><strong>Intuition.</strong> When the converter stops, its output capacitors are still charged. The bleeder resistors drain that charge. The tubes go dark long before the rail is safe, because a tube stops glowing at about 140 V.</p>
+<p><strong>Equation.</strong> V(t) = V_HV × e^(−t/τ), with τ = R × C, so the time to fall to a voltage V is t = τ × ln(V_HV / V).</p>
+<p><strong>Symbols.</strong> τ (tau), the time constant, in seconds (s); R in Ω (the bleeder in parallel with the sense divider); C in farads (F).</p>
+<p><strong>Worked example.</strong> R = 220 kΩ ∥ 2.022 MΩ = 198.4 kΩ.</p>
+<table>
+<thead>
+<tr>
+<th>Capacitance on the rail</th>
+<th>τ</th>
+<th>Time to 10 V</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CHV only (100 nF)</td>
+<td>19.8 ms</td>
+<td>56 ms</td>
+</tr>
+<tr>
+<td>CHV + an <strong>assumed</strong> 1 µF inside the converter</td>
+<td>218 ms</td>
+<td>0.62 s</td>
+</tr>
+<tr>
+<td>Same, but <strong>the bleeder path open</strong> (RH1 and RH2 are in series, so one open resistor is enough)</td>
+<td>2.2 s</td>
+<td>6.3 s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What it means.</strong> On paper the rail empties in under a second. But the converter's internal capacitance is not in its data sheet, and a single open resistor makes it ten times slower. That is why <a href="SAFETY.html">SAFETY.md</a> asks you to wait 60 seconds <strong>and measure below 10 V</strong> every time.</p>
+<p><img alt="Discharge curves" src="img/discharge.svg"></p>
+<p><strong>Test.</strong> The <code>tau ...</code> and <code>time to 10 V ...</code> checks. The firmware also warns if its own sense reading is above 10 V three seconds after HV off; that is a hint, not a proof.</p>
+<h2 id="4-hv-and-vin-sensing">4. HV and VIN sensing</h2>
+<p><strong>Equation.</strong> V_A0 = V_HV × R_S3 / (R_S1 + R_S2 + R_S3); V_A1 = V_IN × R_V2 / (R_V1 + R_V2)</p>
+<p><strong>Worked example.</strong> 170 V × 22 k / 2.022 M = <strong>1.85 V</strong>, about 378 counts on the Nano's 10-bit analog-to-digital converter (ADC) with a 5 V reference, or 0.45 V of HV per count. 12 V × 10 k / 57 k = 2.1 V on A1. Full scale is 459 V for HV and 28.5 V for VIN. If RS3 ever opens, about 82 µA flows into the A0 protection diodes through 2 MΩ, which the pin tolerates.</p>
+<p><strong>What it means.</strong> The firmware window is 150–190 V. The reference is the Nano's 5 V rail, which can be a few percent off, so compare the firmware's <code>HV sense</code> with your meter at Stage 3 and note the difference in VALIDATION.md.</p>
+<h2 id="5-12-v-input-current">5. 12 V input current</h2>
+<p><strong>Equation.</strong> I_in ≈ P_HV / (η × 12 V) + I_logic, with P_HV = V_HV × (6 × I_anode + 2 × I_lamp + I_bleed + I_sense)</p>
+<p><strong>Worked example.</strong> Worst-case tubes: P_HV ≈ 1.94 W; at η (efficiency) = 86 % and about 50 mA of logic load, <strong>I_in ≈ 0.24 A</strong>. The HV load (10.6 mA) is about 35 % of the converter's 30 mA peak rating.</p>
+<p><strong>Test.</strong> <code>12 V input current ...</code> and <code>NCH8200HV headroom ...</code>. A reading well above 0.35 A is a stop condition.</p>
+<h2 id="6-real-time-clock-drift">6. Real-time clock drift</h2>
+<p><strong>Intuition.</strong> The DS3231 is a temperature-compensated crystal clock, so it drifts far less than an ordinary watch crystal, but not zero.</p>
+<p><strong>Equation.</strong> drift per day = accuracy (ppm) × 10⁻⁶ × 86 400 s</p>
+<p><strong>Worked example.</strong> At the data sheet's ±2 parts per million (ppm) from 0 to 40 °C: ±0.17 s per day, ±63 s per year at worst. Real parts are usually better. The DS3231 also has an aging register for trimming, which Rev C firmware leaves at zero.</p>
+<p><strong>Test.</strong> <code>DS3231 worst drift ...</code>. To measure your clock, set it against a reference, then compare after a week with <code>STATUS</code> over the serial port.</p></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>

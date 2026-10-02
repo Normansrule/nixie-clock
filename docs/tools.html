@@ -1,0 +1,179 @@
+<!-- Body fragment for the Tools page. scripts/build_site.py wraps it in the site template. -->
+<h1 id="tools">Tools</h1>
+<p>Two tools that work in the website (Chrome or Edge on a desktop) and in the downloadable <strong>Nixie Clock Companion</strong> app. The calculator uses the same formulas as <a href="EQUATIONS.html">Equations</a>; its numbers are a <strong>model, not measurements</strong>.</p>
+
+<h2 id="calculator">Tube and HV rail calculator</h2>
+<div class="tool">
+  <div class="sliders">
+    <label>HV rail <output id="o_vhv"></output><input id="vhv" type="range" min="150" max="185" step="1" value="170"></label>
+    <label>Tube maintaining voltage <output id="o_vt"></output><input id="vt" type="range" min="125" max="160" step="1" value="145"></label>
+    <label>Anode resistor <output id="o_ra"></output><input id="ra" type="range" min="10" max="47" step="0.5" value="22"></label>
+    <label>Resistor rating <output id="o_pr"></output><input id="pr" type="range" min="0.25" max="3" step="0.25" value="1"></label>
+    <label>Capacitance on the rail (CHV + converter) <output id="o_c"></output><input id="c" type="range" min="0.1" max="4.7" step="0.1" value="1.1"></label>
+    <label class="check"><input id="bleed" type="checkbox" checked> Bleeder RH1 + RH2 intact (220 kΩ)</label>
+  </div>
+  <div class="readout" id="readout"></div>
+</div>
+
+<h2 id="serial">Serial companion (USB to the Arduino Nano)</h2>
+<blockquote><p><strong>Safety.</strong> The Nano's USB port is under the bottom cover. Follow <a href="SAFETY.html#usb-the-shunt-and-the-serial-monitor">USB, the shunt and the serial monitor</a>: connect USB before 12 V, never plug or unplug it while 12 V is on, and treat the high-voltage rail as live until you have measured TP4. <strong>Connecting resets the Nano</strong>; the firmware keeps any HV fault latched across that reset.</p></blockquote>
+<div class="tool serialtool">
+  <p id="ser_support" class="muted"></p>
+  <div class="btns">
+    <button id="b_connect" class="primary">Connect</button>
+    <button id="b_disconnect" disabled>Disconnect</button>
+    <span id="ser_state" class="pill">not connected</span>
+  </div>
+  <div class="btns" id="cmdrow">
+    <button data-cmd="STATUS" disabled>Status</button>
+    <button id="b_sync" disabled>Set clock to this computer</button>
+    <button data-cmd="24" disabled>24-hour</button>
+    <button data-cmd="12" disabled>12-hour</button>
+    <button data-cmd="EXERCISE" disabled>Digit exercise</button>
+    <button data-cmd="RUN" disabled>Run (allow HV)</button>
+    <button data-cmd="HVOFF" class="danger" disabled>HV OFF</button>
+  </div>
+  <div class="btns">
+    <label>Sleep from <input id="s_from" type="time" value="23:00"></label>
+    <label>to <input id="s_to" type="time" value="07:00"></label>
+    <button id="b_sleep" disabled>Set sleep</button>
+    <button data-cmd="SLEEP OFF" disabled>Sleep off</button>
+  </div>
+  <div class="btns clear">
+    <label class="check"><input id="clear_ok" type="checkbox"> I measured TP4 below 10 V and fixed the cause of the fault</label>
+    <button id="b_clear" disabled>Clear HV fault</button>
+  </div>
+  <pre id="ser_log" class="log" aria-live="polite"></pre>
+  <div class="btns">
+    <input id="ser_in" type="text" placeholder="Type a command (e.g. STATUS) and press Enter" disabled>
+  </div>
+</div>
+
+<style>
+.tool{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:1em 0;display:grid;gap:18px}
+.tool:not(.serialtool){grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:760px){.tool:not(.serialtool){grid-template-columns:1fr}}
+.sliders{display:grid;gap:14px}.sliders label{display:grid;gap:4px;font-size:14px;color:var(--mute)}
+.sliders output{color:var(--glow2);font-weight:600;float:right}
+input[type=range]{width:100%;accent-color:var(--glow)}
+.check{display:flex!important;gap:8px;align-items:center;color:var(--ink)}
+.readout{display:grid;gap:8px;align-content:start}
+.kv{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:4px 0;font-size:14.5px}
+.kv b{color:var(--ink);font-variant-numeric:tabular-nums}.kv.bad b{color:var(--hv)}.kv.ok b{color:#9fe0a0}
+.note{font-size:13px;color:var(--mute)}.note.bad{color:#ffb6a3}
+.btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btns label{font-size:14px;color:var(--mute);display:flex;gap:6px;align-items:center}
+button{background:#2b211a;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--glow)}button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--glow);color:var(--bg);border:0;font-weight:600}
+button.danger{background:#5a1a10;border-color:var(--hv);color:#fff;font-weight:700}
+.pill{font-size:13px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.pill.on{border-color:#4caf50;color:#9fe0a0}
+.log{min-height:180px;max-height:340px;overflow:auto;font-size:13px;margin:0;white-space:pre-wrap}
+#ser_in{flex:1;min-width:0;background:var(--code);border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:8px 10px;font:inherit}
+input[type=time]{background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px}
+.muted{color:var(--mute);margin:0}
+.clear{padding-top:8px;border-top:1px dashed var(--line)}
+</style>
+
+<script>
+(function () {
+  // ---------- calculator ----------
+  var $ = function (id) { return document.getElementById(id); };
+  var ids = ['vhv', 'vt', 'ra', 'pr', 'c', 'bleed'];
+  function fmt(v, d) { return (Math.round(v * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); }
+  function calc() {
+    var vhv = +$('vhv').value, vt = +$('vt').value, ra = +$('ra').value * 1e3, pr = +$('pr').value;
+    var c = +$('c').value * 1e-6, bleed = $('bleed').checked;
+    $('o_vhv').textContent = vhv + ' V'; $('o_vt').textContent = vt + ' V';
+    $('o_ra').textContent = fmt(ra / 1e3, 1) + ' kΩ'; $('o_pr').textContent = fmt(pr, 2) + ' W';
+    $('o_c').textContent = fmt(c * 1e6, 1) + ' µF';
+    var i = Math.max(vhv - vt, 0) / ra;                  // A
+    var pn = i * i * ra, pf = vhv * vhv / ra;            // W
+    var rsense = 2.022e6, rb = 220e3;
+    var r = bleed ? 1 / (1 / rb + 1 / rsense) : rsense;  // ohm
+    var tau = r * c, t10 = tau * Math.log(vhv / 10);
+    var load = 6 * i + 2 * Math.max(vhv - 60, 0) / 220e3;
+    var rows = [
+      ['Digit current', fmt(i * 1e3, 2) + ' mA', i > 0.0025 * 1.2 ? 'bad' : ''],
+      ['Share of IN-14 typical 2.5 mA', fmt(i / 0.0025 * 100, 0) + ' %', ''],
+      ['Resistor power, normal', fmt(pn * 1e3, 1) + ' mW', pn > pr * 0.5 ? 'bad' : 'ok'],
+      ['Resistor power if the full rail lands on it', fmt(pf, 2) + ' W', pf > pr ? 'bad' : 'ok'],
+      ['HV load, 6 digits + 2 lamps', fmt(load * 1e3, 1) + ' mA', load > 0.03 ? 'bad' : ''],
+      ['Discharge time constant τ', tau < 1 ? fmt(tau * 1e3, 0) + ' ms' : fmt(tau, 2) + ' s', ''],
+      ['Time to fall below 10 V', t10 < 1 ? fmt(t10 * 1e3, 0) + ' ms' : fmt(t10, 1) + ' s', t10 > 60 ? 'bad' : '']
+    ];
+    var h = rows.map(function (r) { return '<div class="kv ' + r[2] + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>'; }).join('');
+    if (pf > pr) h += '<p class="note bad">A shorted tube or cathode path would overload this resistor. See Validation, open items.</p>';
+    if (!bleed) h += '<p class="note bad">With the bleeder open only the 2 MΩ sense divider drains the rail. This is why you always measure TP4.</p>';
+    h += '<p class="note">Model only. Rev C start values: 170 V, 22 kΩ, 1 W. Measure every digit at Stage 4 before changing anything.</p>';
+    $('readout').innerHTML = h;
+  }
+  ids.forEach(function (k) { $(k).addEventListener('input', calc); });
+  calc();
+
+  // ---------- serial companion ----------
+  var port = null, reader = null, writer = null, keep = false;
+  var log = $('ser_log'), state = $('ser_state');
+  var cmdButtons = Array.prototype.slice.call(document.querySelectorAll('#cmdrow button, button[data-cmd]'));
+  function say(t) { log.textContent += t; if (log.textContent.length > 20000) log.textContent = log.textContent.slice(-15000); log.scrollTop = log.scrollHeight; }
+  function setConnected(on) {
+    cmdButtons.concat([$('b_sync'), $('b_sleep'), $('ser_in')]).forEach(function (b) { b.disabled = !on; });
+    $('b_connect').disabled = on; $('b_disconnect').disabled = !on;
+    $('b_clear').disabled = !(on && $('clear_ok').checked);
+    state.textContent = on ? 'connected, 115200 baud' : 'not connected'; state.classList.toggle('on', on);
+  }
+  if (!('serial' in navigator)) {
+    $('ser_support').innerHTML = 'This browser has no Web Serial. Use Chrome or Edge on a desktop computer, or the downloadable <strong>Nixie Clock Companion</strong> app. You can also use the Arduino IDE serial monitor at 115200 baud.';
+    $('b_connect').disabled = true;
+    return;
+  }
+  $('ser_support').textContent = 'Pick the Nano\'s port when asked. Commands are sent with a newline, as the firmware expects.';
+  async function send(cmd) {
+    if (!writer) return;
+    say('> ' + cmd + '\n');
+    await writer.write(new TextEncoder().encode(cmd + '\n'));
+  }
+  async function readLoop() {
+    var dec = new TextDecoderStream();
+    port.readable.pipeTo(dec.writable).catch(function () {});
+    reader = dec.readable.getReader();
+    try {
+      while (keep) {
+        var r = await reader.read();
+        if (r.done) break;
+        say(r.value.replace(/\r/g, ''));
+      }
+    } catch (e) { say('\n[read error: ' + e.message + ']\n'); }
+  }
+  $('b_connect').onclick = async function () {
+    try {
+      port = await navigator.serial.requestPort();
+      await port.open({ baudRate: 115200 });
+      writer = port.writable.getWriter(); keep = true; setConnected(true);
+      say('[connected: the Nano resets now; wait for its banner]\n');
+      readLoop();
+    } catch (e) {
+      if (e.name === 'NotFoundError') say('[no serial port chosen or found: plug the Nano in by USB. On Linux, join the dialout group once: sudo usermod -aG dialout $USER]\n');
+      else say('[could not connect: ' + e.message + ']\n');
+    }
+  };
+  $('b_disconnect').onclick = async function () {
+    keep = false;
+    try { if (reader) await reader.cancel(); } catch (e) {}
+    try { if (writer) { writer.releaseLock(); } } catch (e) {}
+    try { if (port) await port.close(); } catch (e) {}
+    reader = writer = port = null; setConnected(false); say('[disconnected]\n');
+  };
+  document.querySelectorAll('button[data-cmd]').forEach(function (b) { b.onclick = function () { send(b.getAttribute('data-cmd')); }; });
+  $('b_sync').onclick = function () {
+    var d = new Date(), z = function (n) { return ('0' + n).slice(-2); };
+    send('T ' + z(d.getHours()) + ':' + z(d.getMinutes()) + ':' + z(d.getSeconds()));
+  };
+  $('b_sleep').onclick = function () { send('SLEEP ' + $('s_from').value + ' ' + $('s_to').value); };
+  $('clear_ok').onchange = function () { $('b_clear').disabled = !(writer && $('clear_ok').checked); };
+  $('b_clear').onclick = function () { send('CLEARFAULT'); $('clear_ok').checked = false; $('b_clear').disabled = true; };
+  $('ser_in').addEventListener('keydown', function (e) { if (e.key === 'Enter' && this.value.trim()) { send(this.value.trim().toUpperCase()); this.value = ''; } });
+  setConnected(false);
+})();
+</script>

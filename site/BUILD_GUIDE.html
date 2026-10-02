@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build guide (Rev C) · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html" class=on>Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><h1 id="build-guide-rev-c">Build guide (Rev C)</h1>
+<p>This is the spine of the project. Every stage lists the <strong>parts</strong>, the <strong>steps</strong>, the <strong>measurements</strong> to record, and an explicit <strong>PASS / FIX / STOP</strong> decision. Record every measurement in <a href="VALIDATION.html">VALIDATION.md</a> as you go; that file is how the next builder learns what actually worked.</p>
+<blockquote>
+<p><strong>Read <a href="SAFETY.html">SAFETY.md</a> first.</strong> Stages 3 onward involve about 170 V DC. There is a safety gate before anything high-voltage, and the discharge gate is never skipped.</p>
+</blockquote>
+<p><strong>Words used here.</strong> <em>HV</em> = high voltage, the ~170 V rail (<code>HV170</code>). <em>LV</em> = low voltage, the 12 V and 5 V parts. <em>Shunt</em> = the little jumper cap on JP1 (HV_ARM). <em>RTC</em> = real-time clock (the DS3231). <em>PCB</em> = printed circuit board. <em>DMM</em> = digital multimeter. <em>IDE</em> = integrated development environment (the Arduino app). <em>USB</em> = Universal Serial Bus. <em>I²C</em> = Inter-Integrated Circuit, the two-wire bus to the RTC. <em>VIN</em> = the Nano's input-voltage pin. <em>CAT II</em> = the meter's measurement category rating. <em>PETG</em> = polyethylene terephthalate glycol, the printing plastic.</p>
+<h2 id="before-you-start-what-exists-and-what-does-not">Before you start: what exists and what does not</h2>
+<p>Rev C is an <strong>unvalidated engineering prototype</strong>. The repository has the net map, a generated KiCad schematic, a placement-only board, firmware and enclosure models. It does <strong>not</strong> yet have a routed board or Gerber files. Someone must:</p>
+<ol>
+<li>Open <code>hardware/Nixie_RevC.kicad_pro</code> in KiCad, redraw the generated schematic into readable form, pick or draw real footprints, and run <strong>native ERC</strong> (electrical rules check).</li>
+<li>Route the 4-layer board with the HV rules in <code>hardware/Nixie_RevC.kicad_dru</code> and run <strong>native DRC</strong> (design rules check).</li>
+<li>Have the HV layout reviewed by someone experienced, then generate Gerbers and drill files.</li>
+</ol>
+<p>Only after that does Stage 1 have a board to populate. Stages 0 and the firmware parts of Stage 2 can be done today.</p>
+<p><strong>Tools:</strong> temperature-controlled soldering iron, flux, DMM rated CAT II 600 V or better with clip leads, bench supply with adjustable current limit (for Stages 1–3), USB Mini-B data cable, M2 tap and holder, calipers, safety glasses.</p>
+<p><strong>Pick ONE enclosure option now:</strong> (a) printed frame + 3 mm clear cast-acrylic top, or (b) all-printed hood. Buy only that fastener set (<a href="BOM.html#m2-fasteners-choose-one-set">BOM.md</a>).</p>
+<hr>
+<h2 id="stage-0-fit-coupons-and-m2-threads-no-electronics">Stage 0: fit coupons and M2 threads (no electronics)</h2>
+<p><strong>Parts:</strong> PETG, <code>cad/print/plate_0_fit_coupons.3mf</code> (parts 06 and 07), one IN-14 tube, one NE-2, one B3F-1062-G, M2 × 6 and M2 × 8 screws, M2 tap.</p>
+<p><strong>Steps</strong>
+1. Print the coupons with the baseline settings in <a href="PRINTING.html">PRINTING.md</a>.
+2. Coupon 06: hold an IN-14 over the 19.4 mm opening and lower it straight in. The glass should pass with a small, even gap. Do not force it. Check the NE-2 in the 7 mm hole and the switch plunger in the 3.9 mm hole with the switch body sitting in its 7.4 mm pocket.
+3. Tap the two 1.7 mm pilot holes with an M2 tap, backing out every half-turn. Drive an M2 × 6 into the short post and an M2 × 8 into the tall block. Snug, then back out.
+4. Coupon 07 (<strong>never powered</strong>, never used as a tube spacer): try your tube's 13 leads against the hole pattern. The pattern in <code>cad/DIMENSIONS.json</code> (13 × Ø1.0 mm on a 12.0 mm circle) is a placeholder; measure your tube's actual lead circle with calipers and update <code>in14_lead_circle_d</code>.</p>
+<p><strong>Measure:</strong> glass diameter of each of your six tubes; gap in the opening; thread engagement (turns before snug); the real lead circle diameter.</p>
+<ul>
+<li><strong>PASS:</strong> every tube passes the opening without contact; screws bite firmly and do not strip.</li>
+<li><strong>FIX:</strong> a tight hole → change the value in <code>cad/DIMENSIONS.json</code> and rerun <code>scripts/render_cad</code>. <strong>Never scale a whole part</strong> in the slicer to fix a hole. Stripped threads → try 1.6 mm pilots.</li>
+<li><strong>STOP:</strong> a tube only fits with force. Glass under stress can crack at the seal.</li>
+</ul>
+<hr>
+<h2 id="stage-1-low-voltage-section-no-hv-parts-powered">Stage 1: low-voltage section (no HV parts powered)</h2>
+<p><strong>Parts:</strong> the bare Rev C PCB, F1, QP1, C5, C1–C4, U1, U2, U3 and its passives, all level-shifter parts (QL1–QL5, RB1–RB4, RB6, RPD1–RPD4, RC1–RC3, RD1, RPU5), the HV-enable parts that are still low voltage (QE1, RB5, RPD5, QP2, RGP, C6, the JP1 header), RV1, RV2, RI1, RI2, C7, C8, Nano headers, J1 pigtail, J2 battery holder.</p>
+<p><strong>Do not fit yet:</strong> PS1, the JP1 shunt, tubes, lamps, anode and lamp resistors, bleeders, sense divider (RS1–RS3), CHV.</p>
+<p><strong>Steps</strong>
+1. Inspect the bare board under magnification: no bridges, no copper slivers near the HV area.
+2. Solder surface-mount parts smallest first, then the Nano headers and the pigtail. Clamp the pigtail so it does not pull on the pads.
+3. Clean off flux. Inspect every joint.
+4. With nothing powered, measure resistance TP2 → TP1 and TP3 → TP1. Neither should be a short.
+5. Bench supply at 12.0 V, <strong>current limit 100 mA</strong>, into J1. Nano <strong>not</strong> plugged in yet.</p>
+<p><strong>Measure:</strong> TP2 (V12), supply current; then reverse the leads briefly and confirm almost zero current (QP1 blocking).</p>
+<ul>
+<li><strong>PASS:</strong> TP2 = 11.8–12.0 V, current a few milliamps; reversed polarity draws nothing and nothing warms.</li>
+<li><strong>FIX:</strong> low V12 → check QP1 orientation and F1. Current at the limit → look for a short near C5/C6 or the drivers.</li>
+<li><strong>STOP:</strong> anything gets hot, or the supply sits in current limit.</li>
+</ul>
+<p>Then plug in the Nano (not yet programmed) and repeat: TP3 (V5) should be 4.9–5.1 V.</p>
+<hr>
+<h2 id="stage-2-logic-and-rtc-bring-up-no-converter-fitted">Stage 2: logic and RTC bring-up (no converter fitted)</h2>
+<p><strong>Parts:</strong> Nano on its headers, CR2032 in its holder, USB data cable, the JP1 shunt. PS1 is <strong>not</strong> fitted yet, so nothing on the board can make high voltage in this stage. That is why the shunt can go in here: it lets you test the HV switch QP2 with nothing behind it.</p>
+<p><strong>Steps</strong>
+1. Install the Arduino IDE and "Arduino AVR Boards". Board: <em>Arduino Nano</em>; processor: <em>ATmega328P</em> (try <em>Old Bootloader</em> if upload fails). Open <code>firmware/Nixie_RevC/Nixie_RevC.ino</code> and upload. Record the IDE, core and compiler versions in VALIDATION.md.
+2. Serial monitor at 115200 baud, line ending <em>Newline</em>. You should see <code>Nixie Rev C (UNVALIDATED PROTOTYPE FIRMWARE)</code> and <code>RTC time invalid ... display stays OFF</code>.
+3. Type <code>T 12:34:00</code>. Expect <code>OK time set</code>. Type <code>STATUS</code>.
+4. Fit the shunt. Apply 12 V (bench supply, 150 mA limit). With a valid time the firmware switches QP2 on, sees no high voltage (PS1 is not fitted) and reports <code>HV did not reach 150 V ...</code> and <code>HV FAULT latched in EEPROM</code>. <strong>That is the expected result</strong>: it proves the start check works. Press the Nano's reset button: it must print <code>HV FAULT is latched from before the reset</code> and keep HV off. Then send <code>HVOFF</code> followed by <code>CLEARFAULT</code> (in that order, so it does not immediately try again).
+5. Buttons: <code>STATUS</code> shows <code>buttons SET/H/M 000</code>; hold each switch and repeat, expecting a <code>1</code> in its place.
+6. Battery backup: note the time, remove 12 V and USB for five minutes, restore power, <code>STATUS</code>. Time must have kept running.
+7. HV switch check (shunt fitted, 12 V on): hold the Nano in reset (keep its reset button pressed) and measure <code>HV_IN_12V</code> (QP2 drain, the PS1 VIN pad): it must be about 0 V, and <code>HV_GATE</code> must equal <code>HV_ARMED_12V</code> (about 12 V). With <code>HVOFF</code> in force, <code>HV_IN_12V</code> must again be about 0 V. Send <code>RUN</code> only when you want HV requested again.
+8. Logic check with a scope or logic analyser (optional, recommended): probe <code>DRV_CLK</code>, <code>DRV_DIN</code>, <code>DRV_LE</code> and <code>DRV_BL</code> at the drivers. Swings should be about 0 V to 12 V. With the Nano held in reset, <code>DRV_BL</code> must read LOW.
+9. Remove the shunt again before Stage 3.</p>
+<p><strong>Measure:</strong> VIN reading in <code>STATUS</code> vs DMM on TP2; backup result; <code>HV_IN_12V</code> in reset and after <code>HVOFF</code>; <code>HV_IN_12V</code> during the start attempt (about 12 V); driver-side logic levels; <code>DRV_BL</code> during reset.</p>
+<ul>
+<li><strong>PASS:</strong> time set and retained, buttons read, fault survives a reset until <code>CLEARFAULT</code>, <code>HV_IN_12V</code> about 0 V whenever HV is not requested, <code>DRV_BL</code> LOW in reset, logic swings 0–12 V.</li>
+<li><strong>FIX:</strong> <code>RTC read failed</code> → check I²C pull-ups and U3 orientation. Wrong VIN reading → check RV1/RV2.</li>
+<li><strong>STOP:</strong> <code>DRV_BL</code> is HIGH while the Nano is in reset, <code>HV_IN_12V</code> is above about 1 V when HV is not requested, or a fault does not survive a reset. The blanking, HV-enable or fault-latch default is broken; do not continue to Stage 3.</li>
+</ul>
+<hr>
+<h2 id="safety-gate-before-stage-3">SAFETY GATE before Stage 3</h2>
+<p>All of these must be true. Write the date and the reviewer's name in VALIDATION.md.</p>
+<ul>
+<li>[ ] Stages 0–2 passed and are recorded.</li>
+<li>[ ] An experienced HV reviewer has inspected the populated board, the HV area, the planned test setup and this guide.</li>
+<li>[ ] Meter: CAT II 600 V or better, black lead clipped to TP1, discharge tool (≥10 kΩ, ≥5 W, insulated) within reach.</li>
+<li>[ ] Bench supply with current limit available; the board sits on an insulated surface behind a clear barrier; meter leads and USB are connected before power; no one else touches it.</li>
+<li>[ ] You will not leave it energised unattended, and you know the stop conditions in <a href="SAFETY.html#stop-conditions-any-of-these-ends-the-session-until-fixed">SAFETY.md</a>.</li>
+</ul>
+<hr>
+<h2 id="stage-3-hv-stage-guarded">Stage 3: HV stage (guarded)</h2>
+<p><strong>Parts:</strong> PS1 NCH8200HV, CHV, RH1, RH2, RS1, RS2, RS3. <strong>Still no tubes, lamps or anode resistors.</strong></p>
+<p><strong>Steps</strong>
+1. With everything unplugged, fit PS1, CHV, the bleeders and the sense divider. Clean and inspect; check the HV area for flux and solder balls.
+2. Bench supply 12.0 V, current limit <strong>300 mA</strong>. Guarded bench setup from <a href="SAFETY.html">SAFETY.md</a> rule 4: board out of its cover on an insulated surface behind a clear barrier. Connect USB and open the serial monitor, and clip the meter to TP4/TP1, all <strong>before</strong> applying power.
+3. Insert the HV_ARM shunt (power off). Apply 12 V. The firmware starts HV if the time is valid. Expect <code>HV up: ~170 V</code>.
+4. Read TP4 on the meter. Compare with the firmware's <code>HV sense</code> in <code>STATUS</code>.
+5. Send <code>HVOFF</code>. Watch the meter fall. The firmware should report <code>HV decayed to ...</code> after 3 s.
+6. Unplug 12 V. Wait 60 s. Confirm TP4 below 10 V. <strong>This is the discharge gate.</strong></p>
+<p><strong>Measure:</strong> TP4 running; firmware HV reading; supply current with HV on (no load); TP4 at 1 s, 5 s and 60 s after <code>HVOFF</code>; time to fall below 10 V.</p>
+<ul>
+<li><strong>PASS:</strong> TP4 = 165–175 V; firmware within about 5 % of the meter; TP4 below 10 V within a few seconds and well below by 60 s.</li>
+<li><strong>FIX:</strong> firmware reading off by a steady percentage → note it; the Nano's 5 V reference is the usual cause.</li>
+<li><strong>STOP:</strong> TP4 above 190 V; supply in current limit; TP4 not falling after <code>HVOFF</code> or not below 10 V at 60 s (suspect RH1/RH2 or the solder joints); any heat or smell at PS1.</li>
+</ul>
+<hr>
+<h2 id="stage-4-light-one-digit-then-all-six-tubes-and-both-lamps">Stage 4: light one digit, then all six tubes and both lamps</h2>
+<p><strong>Parts:</strong> T1–T6 with factory spacers, RA1–RA6, L1, L2, RL1, RL2, sleeving.</p>
+<p><strong>Steps</strong>
+1. Discharge gate (unplug, 60 s, TP4 below 10 V). Remove the shunt.
+2. Fit <strong>T1 only</strong> and RA1. This stage uses the same guarded bench setup as Stage 3 (board out of its cover, barrier, leads and USB connected before power). Tubes are direct-solder: keep the factory spacers, seat the tube square, solder the leads, and never bend them at the glass seal.
+3. Fit the shunt (power off), then power up. Use <code>EXERCISE</code> or set the time so T1 shows each digit. Confirm the digit that lights is the one intended: this is the real test of the bit order, <code>kOutReversed</code>, and the latch and clock timing.
+4. Measure the current of each digit. Two methods, chosen with your reviewer: (a) with power off and the rail discharged, lift one end of RA1 and clip the DMM in its mA range into the gap before powering up; or (b) clip DMM leads across RA1 before powering up, read the voltage, and divide by 22 kΩ. Never move probes while 12 V is on.
+5. Discharge gate. Fit the remaining tubes, anode resistors, lamps (leads sleeved) and lamp resistors. Repeat the digit check for every tube and both separators.
+6. With all six tubes lit, record the supply current and TP4.</p>
+<p><strong>Measure:</strong> per-digit current for every digit of every tube (60 values); lamp current; TP4 with all lit; 12 V supply current with all lit.</p>
+<ul>
+<li><strong>PASS:</strong> each tube shows only the intended digit; currents close to the model (about 0.7–1.6 mA; see <a href="EQUATIONS.html#1-tube-anode-current">EQUATIONS.md</a>); TP4 stays above 160 V with everything lit; supply current about 0.25 A.</li>
+<li><strong>FIX:</strong> wrong digit lights → flip <code>kOutReversed</code> or correct the cathode wiring, and record which. Digits glow only partly → too little current; discuss changing RA with your reviewer (it raises the fault power) and record the change as a design change.</li>
+<li><strong>STOP:</strong> two digits in one tube glow together; a separator lights when it should be off; TP4 sags below 150 V (the firmware will fault); anything hot.</li>
+</ul>
+<hr>
+<h2 id="stage-5-closed-case-thermal-run">Stage 5: closed-case thermal run</h2>
+<p><strong>Steps:</strong> close the chosen enclosure completely (no USB: the port is inside), shunt fitted, all digits running, 25 °C room. Measure the 12 V current with an inline meter on the adapter side. Run for 2 hours, watching the tubes. Then unplug, pass the discharge gate, open, and immediately measure the Nano's regulator, PS1 and the anode resistors with a thermometer or thermal camera. Afterwards, connect USB (shunt out) and read <code>STATUS</code> for any fault.</p>
+<p><strong>Measure:</strong> temperatures, 12 V current at start and end, room temperature, time drift, any fault.</p>
+<ul>
+<li><strong>PASS:</strong> regulator comfortably below its limit (record the value; below about 70 °C case temperature is a reasonable target), no part too hot to touch briefly, HV steady.</li>
+<li><strong>FIX:</strong> hot regulator → the enclosure may need vents that do <strong>not</strong> expose HV; that is an enclosure design change.</li>
+<li><strong>STOP:</strong> any component discoloured or the case deformed.</li>
+</ul>
+<hr>
+<h2 id="stage-6-final-enclosure-assembly">Stage 6: final enclosure assembly</h2>
+<p><strong>Parts:</strong> your chosen enclosure set, cable clamp (03), four rubber feet, two cable ties.</p>
+<ol>
+<li>Discharge gate. Dress the pigtail through the rear opening, over the cradle, and fix it with the cable clamp (2 × M2 × 6).</li>
+<li><strong>All-printed:</strong> PCB to the hood posts with 5 × M2 × 6; bottom cover with 4 × M2 × 8.
+   <strong>Clear-top:</strong> acrylic into the frame with 4 × M2 × 6; PCB to the frame bosses with <strong>5 × M2 × 4</strong>; bottom cover with 4 × M2 × 8.</li>
+<li>Lower the enclosure over the tubes straight down. Never use the lid to align the tubes and never force glass through an opening.</li>
+<li>Stick the feet clear of the screw heads.</li>
+<li>Check: no gap anywhere shows HV copper, leads or PS1; buttons press and return.</li>
+</ol>
+<ul>
+<li><strong>PASS:</strong> closed, rigid, buttons work, no exposed HV. <strong>STOP:</strong> any gap exposes HV.</li>
+</ul>
+<h2 id="stage-7-close-the-loop">Stage 7: close the loop</h2>
+<ol>
+<li>Fill in VALIDATION.md: every measurement, every deviation, every FIX you made, and who reviewed Stage 3.</li>
+<li>If you changed a value, update <code>cad/DIMENSIONS.json</code> or <code>scripts/make_design_tables.py</code>, rerun the generators and tests, and commit.</li>
+<li>Only claim what you actually measured. "Worked on my bench" is a data point, not a validation.</li>
+</ol>
+<p><strong>Never skip the discharge gate.</strong></p></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>

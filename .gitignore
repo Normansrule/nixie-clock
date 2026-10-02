@@ -1,0 +1,13 @@
+.build/
+__pycache__/
+*.pyc
+*.kicad_prl
+*-backup*
+fp-info-cache
+hardware/*.lck
+*.zip
+.venv/
+app/node_modules/
+app/www/
+app/dist/
+fab/

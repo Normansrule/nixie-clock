@@ -1,0 +1,81 @@
+ref,value,footprint_intent,side,x_mm,y_mm,rot_deg,note
+T1,IN-14,local:IN-14_direct_solder,top,32,35,0,fixed by enclosure; numerals face -Y (front)
+T2,IN-14,local:IN-14_direct_solder,top,62,35,0,fixed by enclosure; numerals face -Y (front)
+T3,IN-14,local:IN-14_direct_solder,top,102,35,0,fixed by enclosure; numerals face -Y (front)
+T4,IN-14,local:IN-14_direct_solder,top,132,35,0,fixed by enclosure; numerals face -Y (front)
+T5,IN-14,local:IN-14_direct_solder,top,172,35,0,fixed by enclosure; numerals face -Y (front)
+T6,IN-14,local:IN-14_direct_solder,top,202,35,0,fixed by enclosure; numerals face -Y (front)
+L1,NE-2 / VCC A1A,local:NE2_upright_sleeved,top,82,35,0,fixed by enclosure
+L2,NE-2 / VCC A1A,local:NE2_upright_sleeved,top,152,35,0,fixed by enclosure
+SW1,B3F-1062-G (SET),Button_Switch_THT:SW_PUSH_6mm,top,218,24,0,fixed by enclosure
+SW2,B3F-1062-G (H),Button_Switch_THT:SW_PUSH_6mm,top,218,38,0,fixed by enclosure
+SW3,B3F-1062-G (M),Button_Switch_THT:SW_PUSH_6mm,top,218,52,0,fixed by enclosure
+H1,M2 mounting hole,MountingHole:MountingHole_2.2mm_M2,both,13,13,0,fixed by enclosure
+H2,M2 mounting hole,MountingHole:MountingHole_2.2mm_M2,both,117,13,0,fixed by enclosure
+H3,M2 mounting hole,MountingHole:MountingHole_2.2mm_M2,both,221,13,0,fixed by enclosure
+H4,M2 mounting hole,MountingHole:MountingHole_2.2mm_M2,both,13,67,0,fixed by enclosure
+H5,M2 mounting hole,MountingHole:MountingHole_2.2mm_M2,both,221,67,0,fixed by enclosure
+U1,HV5522PJ-G,Package_LCC:PLCC-44,bottom,80,18,0,planning position
+U2,HV5522PJ-G,Package_LCC:PLCC-44,bottom,152,18,0,planning position
+A1,Arduino Nano Classic A000005,"Module:Arduino_Nano (2x 1x15 headers, 6 mm)",bottom,40,58,0,planning position
+PS1,NCH8200HV,Nixie_RevC:PLACEHOLDER_NCH8200HV_30x21 (size VERIFY),bottom,125,58,0,planning position
+U3,DS3231SN#,Package_SO:SOIC-16W_7.5x10.3mm,bottom,186,18,0,planning position
+F1,1812L075/33DR,Fuse:Fuse_1812,bottom,211,67,0,planning position
+QP1,DMP3098L-7,Package_TO_SOT_SMD:SOT-23,bottom,211,61,0,planning position
+QP2,DMP3098L-7,Package_TO_SOT_SMD:SOT-23,bottom,100,50,0,planning position
+JP1,1x2 header + shunt (HV_ARM),Connector_PinHeader_2.54mm:PinHeader_1x02,bottom,104,57,0,planning position
+J1,12 V pigtail pads,Nixie_RevC:WirePads_2 (to author),bottom,204,67,0,planning position
+J2,CR2032 lead pads,Nixie_RevC:WirePads_2 (to author),bottom,224,45,0,planning position
+C5,47 uF 25 V radial,Capacitor_THT:CP_Radial_D6.3mm_P2.50mm,bottom,196,60,0,planning position
+C6,10 uF 1210,Capacitor_SMD:C_1210,bottom,100,54,0,planning position
+CHV,100 nF >=250 V 1210,Capacitor_SMD:C_1210,bottom,145,50,0,planning position
+RH1,110 k 1206 >=0.5 W,Resistor_SMD:R_1206,bottom,145,54,0,planning position
+RH2,110 k 1206 >=0.5 W,Resistor_SMD:R_1206,bottom,145,58,0,planning position
+RS1,1 M 1206,Resistor_SMD:R_1206,bottom,149,50,0,planning position
+RS2,1 M 1206,Resistor_SMD:R_1206,bottom,149,54,0,planning position
+RS3,22 k 0805,Resistor_SMD:R_0805,bottom,149,58,0,planning position
+C7,10 nF 0805,Capacitor_SMD:C_0805,bottom,149,62,0,planning position
+RA1,22 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,42,35,90,HV: keep >=2 mm creepage from LV nets
+RA2,22 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,72,35,90,HV: keep >=2 mm creepage from LV nets
+RA3,22 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,112,35,90,HV: keep >=2 mm creepage from LV nets
+RA4,22 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,142,35,90,HV: keep >=2 mm creepage from LV nets
+RA5,22 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,182,35,90,HV: keep >=2 mm creepage from LV nets
+RA6,22 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,212,35,90,HV: keep >=2 mm creepage from LV nets
+RL1,220 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,86,35,90,planning position
+RL2,220 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,156,35,90,planning position
+C1,100 nF 0805,Capacitor_SMD:C_0805,bottom,93,12,0,planning position
+C3,10 uF 0805,Capacitor_SMD:C_0805,bottom,93,16,0,planning position
+C2,100 nF 0805,Capacitor_SMD:C_0805,bottom,165,12,0,planning position
+C4,10 uF 0805,Capacitor_SMD:C_0805,bottom,165,16,0,planning position
+C8,100 nF 0805,Capacitor_SMD:C_0805,bottom,186,27,0,planning position
+RI1,4.7 k 0805,Resistor_SMD:R_0805,bottom,196,12,0,planning position
+RI2,4.7 k 0805,Resistor_SMD:R_0805,bottom,196,16,0,planning position
+RV1,47 k 0805,Resistor_SMD:R_0805,bottom,66,50,0,planning position
+RV2,10 k 0805,Resistor_SMD:R_0805,bottom,66,54,0,planning position
+QL1,MMBT3904,Package_TO_SOT_SMD:SOT-23,bottom,97,11,0,planning position
+RB1,10 k 0805,Resistor_SMD:R_0805,bottom,101,11,0,planning position
+RPD1,100 k 0805,Resistor_SMD:R_0805,bottom,105,11,0,planning position
+RC1,10 k 0805,Resistor_SMD:R_0805,bottom,109,11,0,planning position
+QL2,MMBT3904,Package_TO_SOT_SMD:SOT-23,bottom,97,15,0,planning position
+RB2,10 k 0805,Resistor_SMD:R_0805,bottom,101,15,0,planning position
+RPD2,100 k 0805,Resistor_SMD:R_0805,bottom,105,15,0,planning position
+RC2,10 k 0805,Resistor_SMD:R_0805,bottom,109,15,0,planning position
+QL3,MMBT3904,Package_TO_SOT_SMD:SOT-23,bottom,97,19,0,planning position
+RB3,10 k 0805,Resistor_SMD:R_0805,bottom,101,19,0,planning position
+RPD3,100 k 0805,Resistor_SMD:R_0805,bottom,105,19,0,planning position
+RC3,10 k 0805,Resistor_SMD:R_0805,bottom,109,19,0,planning position
+QL4,MMBT3904,Package_TO_SOT_SMD:SOT-23,bottom,97,23,0,planning position
+RB4,10 k 0805,Resistor_SMD:R_0805,bottom,101,23,0,planning position
+RPD4,100 k 0805,Resistor_SMD:R_0805,bottom,105,23,0,planning position
+RD1,10 k 0805,Resistor_SMD:R_0805,bottom,109,23,0,planning position
+QL5,MMBT3906,Package_TO_SOT_SMD:SOT-23,bottom,123,11,0,planning position
+RB6,10 k 0805,Resistor_SMD:R_0805,bottom,127,11,0,planning position
+RPU5,100 k 0805,Resistor_SMD:R_0805,bottom,131,11,0,planning position
+QE1,MMBT3904,Package_TO_SOT_SMD:SOT-23,bottom,96,62,0,planning position
+RB5,10 k 0805,Resistor_SMD:R_0805,bottom,100,62,0,planning position
+RPD5,100 k 0805,Resistor_SMD:R_0805,bottom,104,62,0,planning position
+RGP,100 k 0805,Resistor_SMD:R_0805,bottom,104,50,0,planning position
+TP1,GND,TestPoint:TestPoint_Pad_D1.5mm,bottom,180,64,0,planning position
+TP2,V12,TestPoint:TestPoint_Pad_D1.5mm,bottom,184,64,0,planning position
+TP3,V5,TestPoint:TestPoint_Pad_D1.5mm,bottom,188,64,0,planning position
+TP4,HV170,TestPoint:TestPoint_Pad_D1.5mm,bottom,145,63,0,planning position

@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bill of materials (Rev C) · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html" class=on>Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><h1 id="bill-of-materials-rev-c">Bill of materials (Rev C)</h1>
+<p>Machine-readable versions: <a href="downloads/BOM.csv"><code>hardware/BOM.csv</code></a> (electrical, with specs and allowed substitutions) and <a href="downloads/BOM_mechanical.csv"><code>hardware/BOM_mechanical.csv</code></a> (enclosure and fasteners by option), generated by <code>scripts/make_bom.py</code>.</p>
+<p>Quantities are <strong>Rev C fitted quantities</strong>, not purchase quantities. Buy one or two spares of the cheap passives, not a whole second kit. Before ordering, check every package suffix, footprint and pinout against the manufacturer's data sheet (<a href="CREDITS.html">CREDITS.md</a> lists them). Reference designators match <a href="downloads/NET_MAP.csv"><code>hardware/NET_MAP.csv</code></a> and <a href="repo:hardware/COMPONENT_PLACEMENT.csv"><code>hardware/COMPONENT_PLACEMENT.csv</code></a>; <code>tests/check_design.py</code> checks the counts below against the placement table.</p>
+<p><strong>Budget (planning only, recheck before ordering):</strong> about $379 all-printed, about $391 clear-top, before tax. Tube prices move the total more than anything else.</p>
+<h2 id="safety-critical-parts-first">Safety-critical parts first</h2>
+<p>These are the parts you must not substitute with something cheaper or lower-rated.</p>
+<table>
+<thead>
+<tr>
+<th>Qty</th>
+<th>Ref</th>
+<th>Part</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6</td>
+<td>RA1–RA6</td>
+<td>22 kΩ 1 % <strong>1 W</strong> axial, Vishay PR01 series</td>
+<td>Tube anode resistors. 1 W is for voltage stress and fault margin (see <a href="EQUATIONS.html#2-resistor-power-why-the-anode-resistors-are-1-w">EQUATIONS.md</a>). Do <strong>not</strong> confuse with RS3.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RL1, RL2</td>
+<td>220 kΩ 1 % <strong>1 W</strong> axial, PR01</td>
+<td>Neon lamp resistors</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RH1, RH2</td>
+<td>110 kΩ 1206, <strong>≥0.5 W, ≥200 V</strong></td>
+<td>HV bleeder. Each sees 85 V</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RS1, RS2</td>
+<td>1 MΩ 1206, ≥0.25 W, <strong>≥200 V</strong></td>
+<td>HV sense divider top</td>
+</tr>
+<tr>
+<td>1</td>
+<td>CHV</td>
+<td>100 nF <strong>≥250 V</strong> 1210, ≤3 mm tall</td>
+<td>HV rail capacitor. Never a low-voltage substitute</td>
+</tr>
+<tr>
+<td>1</td>
+<td>F1</td>
+<td>Littelfuse 1812L075/33DR resettable fuse (positive temperature coefficient, PTC)</td>
+<td>12 V input protection</td>
+</tr>
+<tr>
+<td>1</td>
+<td>QP1</td>
+<td>Diodes DMP3098L-7 P-channel metal-oxide-semiconductor field-effect transistor (P-MOSFET), SOT-23 (small-outline transistor) package</td>
+<td>Reverse-polarity protection</td>
+</tr>
+<tr>
+<td>—</td>
+<td>—</td>
+<td>Insulation sleeving rated <strong>≥300 V (600 V preferred)</strong></td>
+<td>Over every neon lamp lead</td>
+</tr>
+<tr>
+<td>1</td>
+<td>—</td>
+<td><strong>Isolated</strong>, regulated 12 V, ≥1 A adapter, centre-positive 5.5 × 2.1 mm</td>
+<td>Keeps mains outside the clock</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tubes-modules-integrated-circuits-ics-and-controls">Tubes, modules, integrated circuits (ICs) and controls</h2>
+<table>
+<thead>
+<tr>
+<th>Qty</th>
+<th>Ref</th>
+<th>Part</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6</td>
+<td>T1–T6</td>
+<td>IN-14 Nixie tube <strong>with factory spacers</strong></td>
+<td>Direct-solder leads. Bulb about 19 mm; check each against fit coupon 06</td>
+</tr>
+<tr>
+<td>2</td>
+<td>L1, L2</td>
+<td>NE-2 (VCC A1A) neon lamp</td>
+<td>Separators. Sleeve both leads</td>
+</tr>
+<tr>
+<td>2</td>
+<td>U1, U2</td>
+<td>Microchip <strong>HV5522PJ-G</strong> (44-lead PLCC, Plastic Leaded Chip Carrier)</td>
+<td>Not the HV5522PG-G (different package)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>A1</td>
+<td>Arduino Nano Classic A000005 (ATmega328P)</td>
+<td>Not a Nano Every or ESP32 board</td>
+</tr>
+<tr>
+<td>1</td>
+<td>U3</td>
+<td>Analog Devices <strong>DS3231SN#</strong> real-time clock (RTC), SOIC-16 wide (small-outline integrated circuit)</td>
+<td>Temperature-compensated</td>
+</tr>
+<tr>
+<td>1</td>
+<td>PS1</td>
+<td>Omnixie <strong>NCH8200HV</strong> 12 V → ~170 V module</td>
+<td>2.5–15 V input, fixed output, no enable pin</td>
+</tr>
+<tr>
+<td>3</td>
+<td>SW1–SW3</td>
+<td>Omron <strong>B3F-1062-G</strong> 7 mm tactile switch</td>
+<td>SET, H, M. Not the 4.3 mm B3F-1002</td>
+</tr>
+<tr>
+<td>1</td>
+<td>QP2</td>
+<td>Diodes DMP3098L-7 P-MOSFET, SOT-23</td>
+<td>HV converter switch</td>
+</tr>
+<tr>
+<td>5</td>
+<td>QE1, QL1–QL4</td>
+<td>MMBT3904 NPN bipolar transistor, SOT-23</td>
+<td>Level shifters and HV enable</td>
+</tr>
+<tr>
+<td>1</td>
+<td>QL5</td>
+<td>MMBT3906 PNP bipolar transistor, SOT-23</td>
+<td>Blanking stage</td>
+</tr>
+<tr>
+<td>1</td>
+<td>JP1</td>
+<td>1×2 2.54 mm header + shunt</td>
+<td><strong>HV_ARM</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="low-voltage-passives-0805-1--0125-w-50-v">Low-voltage passives (0805, 1 %, ≥0.125 W, ≥50 V)</h2>
+<table>
+<thead>
+<tr>
+<th>Qty</th>
+<th>Value</th>
+<th>Refs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7</td>
+<td>100 kΩ</td>
+<td>RPD1–RPD5, RGP, RPU5</td>
+</tr>
+<tr>
+<td>11</td>
+<td>10 kΩ</td>
+<td>RB1–RB6, RC1–RC3, RD1, RV2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>22 kΩ</td>
+<td>RS3 (sense divider bottom, <strong>not</strong> an anode resistor)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>47 kΩ</td>
+<td>RV1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>4.7 kΩ</td>
+<td>RI1, RI2 (I²C pull-ups)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="capacitors">Capacitors</h2>
+<table>
+<thead>
+<tr>
+<th>Qty</th>
+<th>Value</th>
+<th>Refs</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>100 nF 0805</td>
+<td>C1, C2, C8</td>
+<td>Driver and RTC decoupling</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10 µF 0805, ≥25 V</td>
+<td>C3, C4</td>
+<td>Driver bulk. Check the capacitance left at 12 V bias</td>
+</tr>
+<tr>
+<td>1</td>
+<td>47 µF 25 V radial, ≤6.3 × 8 mm, 2.5 mm pitch</td>
+<td>C5</td>
+<td>12 V input bulk</td>
+</tr>
+<tr>
+<td>1</td>
+<td>10 µF 1210, ≥25 V</td>
+<td>C6</td>
+<td>Converter input</td>
+</tr>
+<tr>
+<td>1</td>
+<td>100 nF ≥250 V 1210</td>
+<td>CHV</td>
+<td>See safety table</td>
+</tr>
+<tr>
+<td>1</td>
+<td>10 nF 0805</td>
+<td>C7</td>
+<td>HV sense filter</td>
+</tr>
+</tbody>
+</table>
+<h2 id="off-board-and-mechanical">Off-board and mechanical</h2>
+<table>
+<thead>
+<tr>
+<th>Qty</th>
+<th>Item</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>4-layer FR-4 (glass-epoxy) printed circuit board (PCB), 218 × 64 × 1.6 mm</td>
+<td><strong>Not yet routed.</strong> Do not order until the native review in <a href="VALIDATION.html">VALIDATION.md</a> passes</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Insulated DC-jack pigtail</td>
+<td>Through the 4.2 mm rear opening, clamped by part 03</td>
+</tr>
+<tr>
+<td>1</td>
+<td>CR2032 <strong>primary</strong> lithium cell</td>
+<td>Never a rechargeable LIR2032 (no charging circuit)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Insulated CR2032 holder, ≤30 × 25 × 7 mm</td>
+<td>Wired to J2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1×15 2.54 mm headers, 6 mm stack</td>
+<td>Nano mount</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Converter mount set, 4 mm stand-off</td>
+<td>For PS1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Cable ties</td>
+<td>Wire dressing</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Rubber feet</td>
+<td>Keep clear of the four screw heads</td>
+</tr>
+<tr>
+<td>1</td>
+<td>USB (Universal Serial Bus) Mini-B <strong>data</strong> cable</td>
+<td>Charge-only cables will not flash</td>
+</tr>
+<tr>
+<td>—</td>
+<td>PETG (polyethylene terephthalate glycol) filament, matte</td>
+<td>Under 200 g for either option (estimated from model volume)</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Fit coupons 06 and 07</td>
+<td>Print first (<a href="PRINTING.html">PRINTING.md</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="m2-fasteners-choose-one-set">M2 fasteners: choose ONE set</h2>
+<p>M2 throughout, no M3 or M4. Posts have 1.7 mm printed pilot holes (not heat-set inserts): tap M2 after checking the coupon.</p>
+<table>
+<thead>
+<tr>
+<th>Enclosure</th>
+<th>M2 × 8</th>
+<th>M2 × 6</th>
+<th>M2 × 4</th>
+<th>Uses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All-printed hood</td>
+<td>4</td>
+<td>7</td>
+<td>0</td>
+<td>4 bottom, 5 PCB, 2 cable clamp</td>
+</tr>
+<tr>
+<td>Clear-top frame</td>
+<td>4</td>
+<td>6</td>
+<td>5</td>
+<td>4 bottom, 5 PCB (<strong>M2 × 4</strong>), 4 acrylic top, 2 cable clamp</td>
+</tr>
+</tbody>
+</table>
+<p>In the clear-top frame a longer PCB screw reaches the acrylic: <code>tests/check_design.py</code> shows M2 × 6 would stick 1.4 mm past the 3 mm boss. Use M2 × 4 there.</p>
+<p>Clear-top option also needs one 3 mm clear <strong>cast</strong> acrylic sheet cut from <a href="downloads/Acrylic_top_3mm_1to1.dxf"><code>cad/Acrylic_top_3mm_1to1.dxf</code></a> (228.8 × 74.8 mm). Extruded acrylic cracks more easily at the screw holes.</p>
+<h2 id="cost-levers-that-are-safe-to-pull">Cost levers that are safe to pull</h2>
+<ul>
+<li>Generic passives from a reputable distributor, at the ratings above.</li>
+<li>Buy one enclosure fastener set, not both.</li>
+<li>Tubes and ICs from reputable sellers (fakes and pulls are common); do not overbuy spares.</li>
+</ul>
+<p>Do <strong>not</strong> cheapen: the 1 W tube and lamp resistors, CHV, the bleeders, the sleeving, the isolated adapter, or the fused, reverse-protected input.</p></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>

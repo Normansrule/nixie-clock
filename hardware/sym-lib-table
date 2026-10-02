@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "Nixie_RevC")(type "KiCad")(uri "${KIPRJMOD}/Nixie_RevC.kicad_sym")(options "")(descr "Rev C local symbols (generated)"))
+)

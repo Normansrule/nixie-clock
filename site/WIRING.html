@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wiring, pin by pin · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html" class=on>Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><h1 id="wiring-pin-by-pin">Wiring, pin by pin</h1>
+<p>This page is the human-readable view of <a href="downloads/NET_MAP.csv"><code>hardware/NET_MAP.csv</code></a> (340 connections, 106 shared nets). The net map is the source of truth; the generated KiCad schematic (<a href="downloads/Nixie_RevC_schematic.pdf">PDF</a>) is checked against it by a native KiCad netlist export. <strong>Verify every pin against the real part and board before soldering.</strong></p>
+<p><img alt="Wiring overview and shift chain" src="img/wiring_shift_chain.svg"></p>
+<p>Status column in the net map: <code>OK</code> = stable, well-known pinout (Nano silk labels, DS3231SN); <code>DATASHEET</code> = taken from the HV5522 data sheet, recheck against the current Microchip revision; <code>VERIFY</code> = design intent to confirm during schematic review.</p>
+<h2 id="1-power-path">1. Power path</h2>
+<table>
+<thead>
+<tr>
+<th>From</th>
+<th>Through</th>
+<th>To</th>
+<th>Net</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12 V adapter</td>
+<td>J1 pad 1 (pad 2 = GND)</td>
+<td>F1 pin 1</td>
+<td><code>+12V_IN</code></td>
+</tr>
+<tr>
+<td>F1 pin 2</td>
+<td>QP1 drain → source (gate to GND)</td>
+<td>V12 rail</td>
+<td><code>12V_FUSED</code> → <code>V12</code></td>
+</tr>
+<tr>
+<td>V12</td>
+<td>C5 47 µF to GND; TP2</td>
+<td>Nano VIN, U1/U2 VDD (pin 25), C1–C4</td>
+<td><code>V12</code></td>
+</tr>
+<tr>
+<td>Nano 5V</td>
+<td>TP3</td>
+<td>U3 VCC (pin 2), C8, RI1, RI2</td>
+<td><code>V5</code></td>
+</tr>
+<tr>
+<td>V12</td>
+<td>JP1 (HV_ARM)</td>
+<td>QP2 source, RGP</td>
+<td><code>HV_ARMED_12V</code></td>
+</tr>
+<tr>
+<td>QP2 drain</td>
+<td>C6 10 µF to GND</td>
+<td>PS1 pin 1 VIN</td>
+<td><code>HV_IN_12V</code></td>
+</tr>
+<tr>
+<td>PS1 pin 3 VOUT</td>
+<td>CHV to GND; TP4</td>
+<td>RA1–RA6, RL1, RL2, RH1, RS1</td>
+<td><code>HV170</code></td>
+</tr>
+</tbody>
+</table>
+<p>Test pads: TP1 GND, TP2 V12, TP3 V5, TP4 HV170. PCB pads: J1 12 V in, J2 backup battery (pad 1 VBAT, pad 2 GND).</p>
+<h2 id="2-arduino-nano-a1">2. Arduino Nano (A1)</h2>
+<table>
+<thead>
+<tr>
+<th>Nano pin</th>
+<th>Net</th>
+<th>Goes to</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D2</td>
+<td><code>BTN_SET</code></td>
+<td>SW1 pins 1, 2</td>
+<td><code>INPUT_PULLUP</code>, press = LOW</td>
+</tr>
+<tr>
+<td>D3</td>
+<td><code>BTN_H</code></td>
+<td>SW2 pins 1, 2</td>
+<td></td>
+</tr>
+<tr>
+<td>D4</td>
+<td><code>BTN_M</code></td>
+<td>SW3 pins 1, 2</td>
+<td>Switch pins 3, 4 to GND</td>
+</tr>
+<tr>
+<td>D6</td>
+<td><code>RUN</code></td>
+<td>RB4 → QL4 → RB6 → QL5 → <code>DRV_BL</code></td>
+<td>HIGH = outputs enabled</td>
+</tr>
+<tr>
+<td>D7</td>
+<td><code>HV_EN</code></td>
+<td>RB5 → QE1 → <code>HV_GATE</code> (QP2 gate)</td>
+<td>HIGH = converter input on</td>
+</tr>
+<tr>
+<td>D9</td>
+<td><code>LATCH_N</code></td>
+<td>RB3 → QL3 → <code>DRV_LE</code></td>
+<td>Inverted: Nano HIGH → LE LOW</td>
+</tr>
+<tr>
+<td>D10</td>
+<td><code>DATA_N</code></td>
+<td>RB2 → QL2 → <code>DRV_DIN</code></td>
+<td>Inverted</td>
+</tr>
+<tr>
+<td>D13</td>
+<td><code>CLOCK_N</code></td>
+<td>RB1 → QL1 → <code>DRV_CLK</code></td>
+<td>Inverted. D13 also drives the Nano's light-emitting diode (LED): harmless</td>
+</tr>
+<tr>
+<td>A0</td>
+<td><code>HV_SENSE</code></td>
+<td>RS2/RS3 junction, C7</td>
+<td>170 V → 1.85 V</td>
+</tr>
+<tr>
+<td>A1</td>
+<td><code>VIN_SENSE</code></td>
+<td>RV1/RV2 junction</td>
+<td>12 V → 2.1 V; firmware window 10.8–13.2 V</td>
+</tr>
+<tr>
+<td>A4</td>
+<td><code>I2C_SDA</code></td>
+<td>U3 pin 15, RI1</td>
+<td>I²C (Inter-Integrated Circuit) data</td>
+</tr>
+<tr>
+<td>A5</td>
+<td><code>I2C_SCL</code></td>
+<td>U3 pin 16, RI2</td>
+<td>I²C clock</td>
+</tr>
+<tr>
+<td>VIN / 5V / GND</td>
+<td><code>V12</code> / <code>V5</code> / <code>GND</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule: no Nano pin connects directly to an HV5522 pin.</strong> The HV5522 needs logic HIGH above VDD − 2 V (about 10 V at 12 V), which a 5 V Nano cannot give, and a direct link would put the Nano on a board that carries 170 V. <code>tests/check_design.py</code> enforces this rule on the net map.</p>
+<h2 id="3-level-shifters-5-v--12-v-logic">3. Level shifters (5 V → 12 V logic)</h2>
+<p>Each Nano output drives an NPN (bipolar, negative-positive-negative) transistor through a 10 kΩ base resistor, with a 100 kΩ pull-down so the transistor stays off while the Nano is in reset.</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Transistor</th>
+<th>Base R / pull-down</th>
+<th>Collector pull-up</th>
+<th>Driver net</th>
+<th>Default with Nano in reset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clock</td>
+<td>QL1 MMBT3904</td>
+<td>RB1 / RPD1</td>
+<td>RC1 10 k to V12</td>
+<td><code>DRV_CLK</code></td>
+<td>HIGH (reset state; running idle is LOW)</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>QL2 MMBT3904</td>
+<td>RB2 / RPD2</td>
+<td>RC2</td>
+<td><code>DRV_DIN</code></td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>Latch</td>
+<td>QL3 MMBT3904</td>
+<td>RB3 / RPD3</td>
+<td>RC3</td>
+<td><code>DRV_LE</code></td>
+<td>HIGH (latches follow the shift register, but BL is blanking)</td>
+</tr>
+<tr>
+<td>Blank</td>
+<td>QL4 MMBT3904 → QL5 MMBT3906</td>
+<td>RB4 / RPD4, RB6 / RPU5</td>
+<td>RD1 10 k <strong>pull-down</strong></td>
+<td><code>DRV_BL</code></td>
+<td><strong>LOW = all outputs off</strong></td>
+</tr>
+<tr>
+<td>HV enable</td>
+<td>QE1 MMBT3904</td>
+<td>RB5 / RPD5</td>
+<td>RGP 100 k gate pull-up</td>
+<td><code>HV_GATE</code></td>
+<td>QP2 <strong>off</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Blanking uses two stages so that its default is LOW (blanked) rather than the HIGH that a single pulled-up inverter would give.</p>
+<h2 id="4-hv5522pj-g-drivers-u1-u2">4. HV5522PJ-G drivers (U1, U2)</h2>
+<p>PLCC-44 pins, from the HV5522 data sheet: 30–44 = HVOUT1–15, 1–17 = HVOUT16–32, 18 DATA OUT, 22 POL, 23 CLK, 24 VSS, 25 VDD, 26 LE, 27 DATA IN, 28 BL, 19–21 and 29 not connected.</p>
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>U1 net</th>
+<th>U2 net</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>25 VDD (logic supply) / 24 VSS (ground)</td>
+<td><code>V12</code> / <code>GND</code></td>
+<td><code>V12</code> / <code>GND</code></td>
+</tr>
+<tr>
+<td>23 CLK</td>
+<td><code>DRV_CLK</code></td>
+<td><code>DRV_CLK</code></td>
+</tr>
+<tr>
+<td>26 LE</td>
+<td><code>DRV_LE</code></td>
+<td><code>DRV_LE</code></td>
+</tr>
+<tr>
+<td>28 BL</td>
+<td><code>DRV_BL</code></td>
+<td><code>DRV_BL</code></td>
+</tr>
+<tr>
+<td>22 POL</td>
+<td><strong><code>V12</code> (tied HIGH)</strong></td>
+<td><strong><code>V12</code></strong></td>
+</tr>
+<tr>
+<td>27 DATA IN</td>
+<td><code>DRV_DIN</code></td>
+<td><code>DRV_CHAIN</code></td>
+</tr>
+<tr>
+<td>18 DATA OUT</td>
+<td><code>DRV_CHAIN</code></td>
+<td>not connected</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why POL is tied high.</strong> In the data sheet's function table, BL LOW with POL HIGH turns every output <strong>off</strong>; BL LOW with POL LOW turns every output <strong>on</strong>. Tying POL to V12 is what makes the default-low BL line a blanking signal. If POL were ever left floating or low, a reset would light all ten digits of every tube at once.</p>
+<h3 id="driver-output-map">Driver output map</h3>
+<table>
+<thead>
+<tr>
+<th>Driver output (pin)</th>
+<th>U1</th>
+<th>U2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HVOUT1–10 (30–39)</td>
+<td>T1 digits 0–9</td>
+<td>T4 digits 0–9</td>
+</tr>
+<tr>
+<td>HVOUT11–20 (40–44, 1–5)</td>
+<td>T2 digits 0–9</td>
+<td>T5 digits 0–9</td>
+</tr>
+<tr>
+<td>HVOUT21–30 (6–15)</td>
+<td>T3 digits 0–9</td>
+<td>T6 digits 0–9</td>
+</tr>
+<tr>
+<td>HVOUT31 (16)</td>
+<td>L1 separator (via lamp)</td>
+<td>L2 separator</td>
+</tr>
+<tr>
+<td>HVOUT32 (17)</td>
+<td>unused, never set</td>
+<td>unused, never set</td>
+</tr>
+</tbody>
+</table>
+<p>Each IN-14 anode goes to HV170 through its own 22 kΩ resistor: T<em>n</em> anode ← RA<em>n</em>. The IN-14 left and right decimal-point cathodes are left unconnected. Each lamp: HV170 → RL<em>n</em> → lamp → driver HVOUT31.</p>
+<p>T1 and T2 show hours, T3 and T4 minutes, T5 and T6 seconds. L1 sits between T2 and T3; L2 between T4 and T5.</p>
+<h3 id="shift-order-and-timing">Shift order and timing</h3>
+<ul>
+<li>Firmware sends 64 bits, <strong>bit 63 first</strong>, then pulses LE. U1 DATA OUT feeds U2 DATA IN.</li>
+<li>Data enters at HVOUT1 and moves toward HVOUT32, so after 64 clocks <strong>bit 0 is U1 HVOUT1</strong> and <strong>bit 63 is U2 HVOUT32</strong>. Frame bit <em>b</em> of bank <em>k</em> = HVOUT(<em>b</em> − 32<em>k</em> + 1). This is <code>kOutReversed = false</code> in <code>display_core.h</code>.</li>
+<li>The data sheet shifts on the CLK falling edge and loads the latches while LE is HIGH. The firmware holds data steady across the whole clock pulse, so either edge would capture it. Confirm with Stage 4 of the build guide by lighting one digit at a time.</li>
+</ul>
+<h2 id="5-real-time-clock-u3-ds3231sn-soic-16-small-outline-package">5. Real-time clock (U3, DS3231SN#, SOIC-16 small-outline package)</h2>
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>Net</th>
+<th>Pin</th>
+<th>Net</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 32kHz</td>
+<td>not connected</td>
+<td>13 GND</td>
+<td><code>GND</code></td>
+</tr>
+<tr>
+<td>2 VCC</td>
+<td><code>V5</code></td>
+<td>14 VBAT</td>
+<td><code>VBAT</code> (J2 pad 1 → CR2032 +)</td>
+</tr>
+<tr>
+<td>3 INT/SQW</td>
+<td>not connected</td>
+<td>15 SDA</td>
+<td><code>I2C_SDA</code></td>
+</tr>
+<tr>
+<td>4 RST</td>
+<td>not connected</td>
+<td>16 SCL</td>
+<td><code>I2C_SCL</code></td>
+</tr>
+<tr>
+<td>5–12</td>
+<td><code>GND</code> (the data sheet asks for these not-connected (N.C.) pins to be grounded; <strong>verify</strong>)</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-hv-converter-ps1-nch8200hv">6. HV converter (PS1, NCH8200HV)</h2>
+<p>Pins per the v2.1 data sheet: VIN, GND, VOUT, GND, GND (numbered 1–5 here). Confirm on the module you receive. The module has <strong>no enable pin, no reverse-polarity protection and no documented current limit</strong>; QP2 is the enable, and QP1 plus F1 protect the input.</p>
+<h2 id="7-off-board-wiring">7. Off-board wiring</h2>
+<table>
+<thead>
+<tr>
+<th>Wire</th>
+<th>From</th>
+<th>To</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12 V pigtail</td>
+<td>Rear 4.2 mm opening, clamped by part 03</td>
+<td>J1 pads</td>
+<td>Strain relief before the solder joint</td>
+</tr>
+<tr>
+<td>Battery</td>
+<td>Insulated CR2032 holder</td>
+<td>J2 pads</td>
+<td>Primary CR2032 only</td>
+</tr>
+<tr>
+<td>Neon leads</td>
+<td>L1, L2</td>
+<td>PCB</td>
+<td>Sleeved ≥300 V (600 V preferred) over their whole exposed length</td>
+</tr>
+</tbody>
+</table>
+<p>Dress all wires away from the HV area around PS1, the anode resistors and the tube leads, and tie them down with the two cable ties.</p></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>

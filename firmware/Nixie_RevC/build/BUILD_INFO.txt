@@ -1,0 +1,5 @@
+Nixie_RevC.hex - UNVALIDATED prototype firmware image (never run on a Rev C board)
+Built by scripts/avr_compile_check.sh: avr-gcc 7.3.0, ATmega328P @ 16 MHz, -Os
+Arduino AVR core: 42fa4a1ea1b1b11d1cc0a60298e529d37f9d14bd (1.8.6 expected)
+Flash used: 13712 bytes, static RAM: 844 bytes
+SHA-256: 2ae26238d1a0eeb7e5ef4e7a05358be6d320b72e4ed13d45e33b501e9dc928cd

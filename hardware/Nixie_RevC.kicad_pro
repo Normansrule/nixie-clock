@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "filename": "Nixie_RevC.kicad_pro",
+    "version": 1
+  },
+  "board": {
+    "design_settings": {
+      "rules": {
+        "min_clearance": 0.2
+      }
+    }
+  },
+  "net_settings": {
+    "classes": [
+      {
+        "name": "Default",
+        "clearance": 0.2,
+        "track_width": 0.25,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "diff_pair_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "wire_width": 6,
+        "bus_width": 12,
+        "line_style": 0,
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)"
+      },
+      {
+        "name": "HV",
+        "clearance": 1.0,
+        "track_width": 0.3,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "diff_pair_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "wire_width": 6,
+        "bus_width": 12,
+        "line_style": 0,
+        "pcb_color": "rgba(255, 90, 40, 0.800)",
+        "schematic_color": "rgba(255, 90, 40, 1.000)"
+      }
+    ],
+    "meta": {
+      "version": 3
+    },
+    "netclass_patterns": [
+      {
+        "netclass": "HV",
+        "pattern": "HV170"
+      },
+      {
+        "netclass": "HV",
+        "pattern": "ANODE*"
+      },
+      {
+        "netclass": "HV",
+        "pattern": "T?_K?"
+      },
+      {
+        "netclass": "HV",
+        "pattern": "LAMP?_A"
+      },
+      {
+        "netclass": "HV",
+        "pattern": "SEP?_K"
+      },
+      {
+        "netclass": "HV",
+        "pattern": "HV_BLEED_MID"
+      },
+      {
+        "netclass": "HV",
+        "pattern": "HV_SENSE_MID"
+      }
+    ]
+  },
+  "sheets": [
+    [
+      "d8165023-5d1a-59b7-bb58-74e2db6ec14f",
+      ""
+    ],
+    [
+      "22abd07f-b8a9-51ad-9469-c816f43e55be",
+      "digit_1"
+    ],
+    [
+      "2ae4abdc-a5ef-522f-b0ef-d79f062f58ef",
+      "digit_2"
+    ]
+  ],
+  "text_variables": {
+    "REVISION": "C",
+    "STATUS": "UNVALIDATED ENGINEERING PROTOTYPE"
+  }
+}

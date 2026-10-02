@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credits and data sheets · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html" class=on>Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><h1 id="credits-and-data-sheets">Credits and data sheets</h1>
+<p>Every value taken from a data sheet is marked in <a href="downloads/NET_MAP.csv"><code>hardware/NET_MAP.csv</code></a> (status <code>DATASHEET</code>) or listed as an untested assumption in <a href="VALIDATION.html"><code>docs/VALIDATION.md</code></a>. Links were found or opened on 2026-09-30, except the onsemi, Microchip ATmega328P and Arduino pages, which are the manufacturers' usual product pages and were not re-checked. Manufacturers move files: search the part number on the manufacturer's site if a link breaks.</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Document</th>
+<th>Used for</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IN-14 Nixie tube</td>
+<td><a href="https://www.tube-tester.com/sites/nixie/data/in-14/in-14.htm">Tube-Tester IN-14 page</a>; <a href="https://download.elektronicastynus.be/57/in-14_datasheet.pdf">IN-14 data (PDF)</a></td>
+<td>145 V typical maintaining voltage, 2.5 mA typical current, 19 mm × 55 mm bulb, 13 leads</td>
+<td>Lead-circle diameter <strong>not verified</strong> (placeholder)</td>
+</tr>
+<tr>
+<td>HV5522 (HV5522PJ-G)</td>
+<td><a href="https://www.microchip.com/en-us/product/hv5522">Microchip product page</a>; <a href="https://ww1.microchip.com/downloads/en/DeviceDoc/20005699A.pdf">data sheet DS20005699</a>; <a href="https://www.mouser.com/datasheet/2/268/supertex_hv5522-1181179.pdf">Supertex-era data sheet</a></td>
+<td>PLCC-44 pinout, function table (POL/BL), shift direction, falling-edge clock, VDD 10.8–13.2 V, VIH ≥ VDD − 2 V, 220 V outputs</td>
+<td>Read from the Supertex-era sheet; <strong>recheck against DS20005699</strong></td>
+</tr>
+<tr>
+<td>DS3231SN#</td>
+<td><a href="https://www.analog.com/en/products/ds3231.html">Analog Devices DS3231 product page</a>; <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/ds3231.pdf">data sheet (PDF)</a></td>
+<td>Pinout, ±2 ppm (0–40 °C), OSF and EOSC bits, grounding pins 5–12</td>
+<td>Pin 5–12 grounding <strong>verify</strong></td>
+</tr>
+<tr>
+<td>NCH8200HV</td>
+<td><a href="https://omnixie.io/nch8200hv.html">Omnixie product page</a>; <a href="https://nixieclock.org/wp-content/uploads/2023/02/NCH8200HV-Datasheet-EN-v2.1.0.3.pdf">NCH8200HV data sheet v2.1 (PDF)</a></td>
+<td>2.5–15 V in, ~170 V fixed out, 30 mA peak, 86–89.65 % efficiency, pin order, no reverse-polarity protection</td>
+<td>Outline and output capacitance <strong>not documented</strong></td>
+</tr>
+<tr>
+<td>ATmega328P / Arduino Nano</td>
+<td><a href="https://www.microchip.com/en-us/product/atmega328p">Microchip ATmega328P</a>; <a href="https://docs.arduino.cc/hardware/nano/">Arduino Nano A000005</a></td>
+<td>ADC, watchdog, Nano header pinout</td>
+<td></td>
+</tr>
+<tr>
+<td>DMP3098L-7</td>
+<td><a href="https://datasheet.octopart.com/DMP3098L-7-Diodes-Inc.-datasheet-12534397.pdf">Diodes Inc. DMP3098L data sheet DS31447</a></td>
+<td>−30 V P-MOSFET, SOT-23</td>
+<td>V_GS limit <strong>verify</strong> against adapter overshoot</td>
+</tr>
+<tr>
+<td>1812L075/33DR</td>
+<td><a href="https://www.littelfuse.com/assetdocs/resettable-ptcs-1812l-datasheet?assetguid=ca5c80cb-504e-4a8a-8e74-0107520a1717">Littelfuse 1812L PolySwitch data sheet</a></td>
+<td>0.75 A hold, 33 V PTC</td>
+<td></td>
+</tr>
+<tr>
+<td>MMBT3904 / MMBT3906</td>
+<td><a href="https://www.onsemi.com/products/discrete-power-modules/general-purpose-and-low-vcesat-transistors/mmbt3904">onsemi MMBT3904</a>; <a href="https://www.onsemi.com/products/discrete-power-modules/general-purpose-and-low-vcesat-transistors/mmbt3906">onsemi MMBT3906</a></td>
+<td>Level shifters</td>
+<td></td>
+</tr>
+<tr>
+<td>Omron B3F-1062-G</td>
+<td><a href="https://components.omron.com/us-en/products/switches/B3F">Omron B3F series</a></td>
+<td>6 × 6 mm body, 7 mm height</td>
+<td>Body height <strong>verify</strong> (drove the pocket change)</td>
+</tr>
+<tr>
+<td>Vishay PR01</td>
+<td><a href="https://www.vishay.com/en/product/28729/">Vishay PR01/PR02/PR03</a>; <a href="https://www.vishay.com/docs/28729/pr010203.pdf">data sheet (PDF)</a></td>
+<td>1 W axial anode and lamp resistors</td>
+<td></td>
+</tr>
+<tr>
+<td>NE-2 neon lamp</td>
+<td>Generic; supplier data</td>
+<td>~60 V maintaining voltage assumed</td>
+<td><strong>verify</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="standards-and-references">Standards and references</h2>
+<ul>
+<li>OWASP Top 10:2025, A03 Software Supply Chain Failures: <a href="https://owasp.org/Top10/2025/A03_2025-Software_Supply_Chain_Failures/">A03:2025</a>.</li>
+<li>IPC-2221B Table 6-1 (conductor spacing): the source to check the HV clearances in <code>hardware/Nixie_RevC.kicad_dru</code> against. Not reproduced here.</li>
+</ul>
+<h2 id="tools">Tools</h2>
+<p>CadQuery, OpenCASCADE, ezdxf, VTK, KiCad, avr-gcc and ArduinoCore-avr. Versions are in <a href="repo:sbom/toolchain.spdx.json"><code>sbom/toolchain.spdx.json</code></a>.</p>
+<h2 id="author">Author</h2>
+<p>Aleksander Norman. Rev C documentation, generators and checks prepared with Claude (Anthropic).</p></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>

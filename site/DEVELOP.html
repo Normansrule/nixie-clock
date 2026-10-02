@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Keep building · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html" class=on>Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><h1 id="keep-building">Keep building</h1>
+<p>Everyday commands for after the repository is on GitHub (<a href="PUBLISH.html">PUBLISH.md</a> does the first push). Every block is meant to be pasted into an Ubuntu or WSL terminal as is. They all start with <code>cd ~/nixie-clock</code>, so you can paste them from anywhere, and they never touch your home folder's own files.</p>
+<h2 id="one-time-install-the-full-toolchain-optional">One-time: install the full toolchain (optional)</h2>
+<p>Needed only to rerun every generator and check locally (KiCad, AVR compiler, CadQuery, the desktop app). The quick checks and <code>ship.sh</code> work without it.</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; scripts/setup_dev.sh
+</code></pre>
+<h2 id="after-you-change-something-check-commit-push">After you change something: check, commit, push</h2>
+<p>Rebuilds the website, runs the quick checks, refreshes <code>SHA256SUMS</code>, commits and pushes. Pages redeploys by itself.</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; scripts/ship.sh &quot;Describe what you changed&quot;
+</code></pre>
+<h2 id="run-every-recorded-check">Run every recorded check</h2>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; scripts/run_all_checks.sh
+</code></pre>
+<h2 id="change-the-enclosure">Change the enclosure</h2>
+<p>Edit a value in <code>cad/DIMENSIONS.json</code>, then rebuild every STEP, STL, 3MF, plate, the DXF and the previews, and ship:</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; scripts/render_cad &amp;&amp; scripts/ship.sh &quot;Enclosure: describe the change&quot;
+</code></pre>
+<h2 id="change-the-bom-requirements-drawings-or-labels">Change the BOM, requirements, drawings or labels</h2>
+<p>Edit the list at the top of the matching script, regenerate, check and ship:</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; python3 scripts/make_bom.py &amp;&amp; python3 scripts/make_requirements.py &amp;&amp; python3 scripts/make_drawings.py &amp;&amp; python3 tests/check_requirements.py &amp;&amp; scripts/ship.sh &quot;BOM/requirements: describe the change&quot;
+</code></pre>
+<p><code>scripts/make_labels.py</code> regenerates <code>docs/labels.pdf</code> (needs the CairoSVG package from <code>scripts/setup_dev.sh</code>).</p>
+<h2 id="make-the-pcb-fabrication-package-only-after-routing-and-review">Make the PCB fabrication package (only after routing and review)</h2>
+<p>Refuses until <code>hardware/Nixie_RevC.kicad_pcb</code> is routed, passes KiCad's own DRC and <code>hardware/REVIEW_SIGNOFF.md</code> is approved. See <a href="MANUFACTURING.html#3-pcb-fabrication-blocked-until-the-release-gate-passes">MANUFACTURING.md</a>.</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; scripts/make_fab_outputs.sh
+</code></pre>
+<h2 id="change-the-circuit-tables-or-kicad-files">Change the circuit tables or KiCad files</h2>
+<p>Edit <code>scripts/make_design_tables.py</code> (the net map and placement come from it), then:</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; python3 scripts/make_design_tables.py &amp;&amp; python3 tests/check_design.py &amp;&amp; /usr/bin/python3 scripts/make_kicad.py &amp;&amp; kicad-cli sch export pdf -o docs/Nixie_RevC_schematic.pdf hardware/Nixie_RevC.kicad_sch &amp;&amp; scripts/ship.sh &quot;Circuit: describe the change&quot;
+</code></pre>
+<h2 id="try-the-desktop-app-locally">Try the desktop app locally</h2>
+<p>On Windows 11 WSL the window opens through WSLg. On plain Ubuntu it opens normally.</p>
+<pre><code class="language-bash">cd ~/nixie-clock/app &amp;&amp; npm ci --no-audit --no-fund &amp;&amp; npm start
+</code></pre>
+<h2 id="release-a-new-desktop-app-version">Release a new desktop app version</h2>
+<p>Bumps the version, tags <code>app-vX.Y.Z</code> and pushes. GitHub Actions builds Windows, macOS and Linux files into a Release (about 10 minutes).</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; scripts/release_app.sh 1.0.1
+</code></pre>
+<h2 id="bring-in-a-new-nixie-clockzip-for-example-from-claude">Bring in a new nixie-clock.zip (for example from Claude)</h2>
+<p>Put the new <code>nixie-clock.zip</code> in your Downloads folder (Windows Downloads works too under WSL), then:</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; scripts/apply_zip.sh &amp;&amp; scripts/ship.sh &quot;Apply new nixie-clock.zip&quot;
+</code></pre>
+<p><code>apply_zip.sh</code> replaces files, removes files the new ZIP no longer has, and leaves <code>.git</code>, <code>node_modules</code>, <code>.venv</code> and <code>.build</code> alone.</p>
+<h2 id="record-a-bench-result">Record a bench result</h2>
+<p>Fill in the build log in <code>docs/VALIDATION.md</code>, then ship it. Claim only what you measured.</p>
+<pre><code class="language-bash">cd ~/nixie-clock &amp;&amp; nano docs/VALIDATION.md &amp;&amp; scripts/ship.sh &quot;Validation: Stage N results&quot;
+</code></pre></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>

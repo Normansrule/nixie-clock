@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">
+  <title>Rev C wiring: power path, HV path and driver shift chain (design intent, verify against the board)</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b9a99a"/></marker>
+    <marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff5a3c"/></marker>
+    <marker id="l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6fb3ff"/></marker>
+    <style>
+      .box{fill:#221d19;stroke:#5a4d42;stroke-width:1.5;rx:8}
+      .hvbox{fill:#2a1712;stroke:#ff5a3c;stroke-width:1.8;rx:8}
+      .t{fill:#f4e9dc;font-size:12px}.s{fill:#b9a99a;font-size:10.5px}.h{fill:#ffb08f}.k{fill:#ff9a3c;font-weight:600}
+      .lv{stroke:#b9a99a;stroke-width:2;fill:none}.hv{stroke:#ff5a3c;stroke-width:2.6;fill:none}.lg{stroke:#6fb3ff;stroke-width:2;fill:none}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#14110f"/>
+  <text x="24" y="34" fill="#f4e9dc" font-size="19" font-weight="600">Rev C wiring overview</text>
+  <text x="24" y="54" class="s">Design intent from hardware/NET_MAP.csv. Pin-level truth lives in the net map and schematic. Nothing here has been tested on a powered board.</text>
+
+  <!-- ===== Power path ===== -->
+  <text x="24" y="92" class="k">1 · 12 V power path (low voltage)</text>
+  <rect class="box" x="24" y="104" width="150" height="54"/><text x="36" y="126" class="t">External adapter</text><text x="36" y="144" class="s">isolated, regulated 12 V</text>
+  <rect class="box" x="204" y="104" width="96" height="54"/><text x="216" y="126" class="t">J1 pigtail</text><text x="216" y="144" class="s">+12V_IN</text>
+  <rect class="box" x="330" y="104" width="96" height="54"/><text x="342" y="126" class="t">F1 PTC</text><text x="342" y="144" class="s">0.75 A hold</text>
+  <rect class="box" x="456" y="104" width="130" height="54"/><text x="468" y="126" class="t">QP1 PMOS</text><text x="468" y="144" class="s">reverse polarity</text>
+  <rect class="box" x="616" y="104" width="96" height="54"/><text x="628" y="126" class="t">V12 rail</text><text x="628" y="144" class="s">C5 47 µF</text>
+  <path class="lv" d="M174 131H200" marker-end="url(#a)"/><path class="lv" d="M300 131H326" marker-end="url(#a)"/><path class="lv" d="M426 131H452" marker-end="url(#a)"/><path class="lv" d="M586 131H612" marker-end="url(#a)"/>
+  <rect class="box" x="760" y="84" width="190" height="40"/><text x="772" y="109" class="t">Nano VIN → 5 V → DS3231</text>
+  <rect class="box" x="760" y="134" width="190" height="40"/><text x="772" y="159" class="t">HV5522 VDD (12 V logic)</text>
+  <path class="lv" d="M712 131H736V104H756" marker-end="url(#a)"/><path class="lv" d="M736 131V154H756" marker-end="url(#a)"/>
+
+  <!-- ===== HV path ===== -->
+  <text x="24" y="210" class="k">2 · HV path: armed by a shunt, switched by firmware, sensed, bled</text>
+  <rect class="box" x="24" y="222" width="150" height="62"/><text x="36" y="244" class="t">JP1 HV_ARM</text><text x="36" y="262" class="s">shunt fitted = armed</text><text x="36" y="277" class="s">removed ≠ discharged</text>
+  <rect class="box" x="204" y="222" width="170" height="62"/><text x="216" y="244" class="t">QP2 PMOS switch</text><text x="216" y="262" class="s">gate pulled OFF (RGP)</text><text x="216" y="277" class="s">on via QE1 ← Nano D7</text>
+  <rect class="hvbox" x="404" y="222" width="160" height="62"/><text x="416" y="244" class="t">PS1 NCH8200HV</text><text x="416" y="262" class="h">12 V in → ~170 V out</text><text x="416" y="277" class="s">no enable, no current limit</text>
+  <path class="lv" d="M100 158V190H40V253H20" stroke-dasharray="0" opacity="0"/>
+  <path class="lv" d="M660 158V194H12V253H20" marker-end="url(#a)"/>
+  <path class="lv" d="M174 253H200" marker-end="url(#a)"/><path class="lv" d="M374 253H400" marker-end="url(#a)"/>
+  <path class="hv" d="M564 253H604" marker-end="url(#h)"/>
+  <rect class="hvbox" x="608" y="222" width="96" height="62"/><text x="620" y="246" class="t">HV170</text><text x="620" y="266" class="h">CHV 100 nF</text><text x="620" y="280" class="s">TP4</text>
+  <path class="hv" d="M704 238H736V230H760" marker-end="url(#h)"/>
+  <path class="hv" d="M736 238V270H760" marker-end="url(#h)"/>
+  <path class="hv" d="M736 270V310H760" marker-end="url(#h)"/>
+  <path class="hv" d="M736 310V350H760" marker-end="url(#h)"/>
+  <rect class="hvbox" x="764" y="214" width="250" height="32"/><text x="776" y="235" class="t">RA1–RA6 22 kΩ 1 W → IN-14 anodes</text>
+  <rect class="hvbox" x="764" y="254" width="250" height="32"/><text x="776" y="275" class="t">RL1, RL2 220 kΩ 1 W → NE-2 lamps</text>
+  <rect class="hvbox" x="764" y="294" width="250" height="32"/><text x="776" y="315" class="t">RH1 + RH2 110 kΩ bleeder → GND</text>
+  <rect class="hvbox" x="764" y="334" width="250" height="32"/><text x="776" y="355" class="t">RS1 + RS2 1 MΩ, RS3 22 kΩ → A0</text>
+  <text x="1030" y="235" class="s">about 1.1 mA per digit</text><text x="1030" y="275" class="s">about 0.5 mA per lamp</text><text x="1030" y="315" class="s">τ ≈ 20 ms + converter C</text><text x="1030" y="355" class="s">170 V → 1.85 V</text>
+
+  <!-- ===== Shift chain ===== -->
+  <text x="24" y="410" class="k">3 · Driver shift chain (Nano never touches a driver pin)</text>
+  <rect class="box" x="24" y="424" width="150" height="152"/><text x="36" y="446" class="t">Arduino Nano</text>
+  <text x="36" y="470" class="s">D13 CLOCK_N</text><text x="36" y="494" class="s">D10 DATA_N</text><text x="36" y="518" class="s">D9  LATCH_N</text><text x="36" y="542" class="s">D6  RUN</text><text x="36" y="566" class="s">(5 V logic)</text>
+  <rect class="box" x="214" y="424" width="200" height="152"/><text x="226" y="446" class="t">Level shifters</text>
+  <text x="226" y="470" class="s">QL1 NPN, inverting → DRV_CLK</text><text x="226" y="494" class="s">QL2 NPN, inverting → DRV_DIN</text><text x="226" y="518" class="s">QL3 NPN, inverting → DRV_LE</text><text x="226" y="542" class="s">QL4 + QL5 → DRV_BL</text><text x="226" y="566" class="s">pull-ups to V12, base pull-downs</text>
+  <path class="lg" d="M174 466H210" marker-end="url(#l)"/><path class="lg" d="M174 490H210" marker-end="url(#l)"/><path class="lg" d="M174 514H210" marker-end="url(#l)"/><path class="lg" d="M174 538H210" marker-end="url(#l)"/>
+  <rect class="box" x="454" y="424" width="330" height="152"/><text x="466" y="446" class="t">U1 HV5522PJ-G  (frame bits 0–31)</text>
+  <text x="466" y="470" class="s">OUT1–10 → T1 digits 0–9    (hours tens)</text>
+  <text x="466" y="492" class="s">OUT11–20 → T2 digits 0–9   (hours units)</text>
+  <text x="466" y="514" class="s">OUT21–30 → T3 digits 0–9   (minutes tens)</text>
+  <text x="466" y="536" class="s">OUT31 → L1 separator,  OUT32 unused</text>
+  <text x="466" y="562" class="h">POL tied HIGH: BL LOW blanks every output</text>
+  <rect class="box" x="834" y="424" width="330" height="152"/><text x="846" y="446" class="t">U2 HV5522PJ-G  (frame bits 32–63)</text>
+  <text x="846" y="470" class="s">OUT1–10 → T4 digits 0–9    (minutes units)</text>
+  <text x="846" y="492" class="s">OUT11–20 → T5 digits 0–9   (seconds tens)</text>
+  <text x="846" y="514" class="s">OUT21–30 → T6 digits 0–9   (seconds units)</text>
+  <text x="846" y="536" class="s">OUT31 → L2 separator,  OUT32 unused</text>
+  <text x="846" y="562" class="s">DATA OUT not connected</text>
+  <path class="lg" d="M414 500H450" marker-end="url(#l)"/>
+  <path class="lg" d="M784 500H830" marker-end="url(#l)"/><text x="789" y="518" class="s" font-size="9">DOUT→DIN</text>
+  <path class="lg" d="M414 548H436V590H1000V580" marker-end="url(#l)"/><text x="600" y="606" class="s">CLK, LE and BL go to both drivers in parallel</text>
+
+  <!-- bit order strip -->
+  <text x="24" y="652" class="k">Shift order</text>
+  <text x="24" y="674" class="s">Firmware shifts bit 63 first and bit 0 last, then pulses LE. Data enters at OUT1 and moves toward OUT32 (data sheet), so after 64 clocks bit 0 sits at U1 OUT1 and bit 63 at U2 OUT32.</text>
+  <g font-size="11">
+    <rect x="24" y="690" width="552" height="26" fill="#1d2a33" stroke="#6fb3ff"/><text x="36" y="708" class="t">bits 0–31 → U1: T1 · T2 · T3 · L1 · (unused)</text>
+    <rect x="600" y="690" width="552" height="26" fill="#1d2a33" stroke="#6fb3ff"/><text x="612" y="708" class="t">bits 32–63 → U2: T4 · T5 · T6 · L2 · (unused)</text>
+  </g>
+  <text x="24" y="742" class="s">One-active-digit rule: firmware rejects any frame with more than one cathode set per tube, or with OUT32 set (display_core.h, frameIsSafe).</text>
+</svg>

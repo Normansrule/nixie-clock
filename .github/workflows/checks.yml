@@ -1,0 +1,31 @@
+# Recorded checks that need nothing beyond the runner's own Python and g++.
+# CAD, AVR and KiCad checks need heavier toolchains and are run locally (scripts/run_all_checks.sh).
+name: checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  recorded-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Equation checks
+        run: python3 tests/check_equations.py
+      - name: Design-table checks (custom Python, not KiCad DRC)
+        run: python3 tests/check_design.py
+      - name: Requirement and BOM checks
+        run: python3 tests/check_requirements.py
+      - name: Firmware display core on the host
+        run: |
+          g++ -std=c++11 -Wall -Wextra -Werror -I firmware/Nixie_RevC tests/test_display_core.cpp -o tdc
+          ./tdc
+      - name: Desktop app JavaScript parses
+        run: node --check app/main.js && node --check app/copy-site.js
+      - name: Checksums match the committed files
+        run: |
+          python3 scripts/make_checksums.py
+          git diff --exit-code SHA256SUMS

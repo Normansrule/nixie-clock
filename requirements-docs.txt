@@ -1,0 +1,3 @@
+# scripts/build_site.py (GitHub Pages site generator). Pinned; Dependabot proposes updates.
+Markdown==3.10.2
+CairoSVG==2.9.1

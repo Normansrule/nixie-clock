@@ -1,0 +1,5 @@
+native netlist: 147 nets from kicad-cli 7.0.11
+NET_MAP.csv:    106 multi-use nets (NC nets excluded)
+mismatched nets: 0
+extra native nets: []
+NETLIST vs NET_MAP: MATCH

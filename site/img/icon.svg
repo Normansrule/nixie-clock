@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#3a2210"/><stop offset="1" stop-color="#120e0b"/></radialGradient>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".10"/><stop offset=".5" stop-color="#ffd2a0" stop-opacity=".04"/><stop offset="1" stop-color="#ffffff" stop-opacity=".12"/></linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="146" y="52" width="220" height="372" rx="110" fill="url(#glass)" stroke="#ffcf99" stroke-opacity=".35" stroke-width="6"/>
+  <path d="M256 128c-48 0-80 34-80 74 0 30 18 52 44 62-34 10-56 38-56 72 0 46 40 82 92 82s92-36 92-82c0-34-22-62-56-72 26-10 44-32 44-62 0-40-32-74-80-74zm0 30c28 0 46 20 46 44s-18 44-46 44-46-20-46-44 18-44 46-44zm0 118c32 0 54 22 54 50s-22 52-54 52-54-24-54-52 22-50 54-50z" fill="none" stroke="#ff8a1f" stroke-width="14" stroke-linejoin="round" filter="url(#glow)"/>
+  <rect x="146" y="424" width="220" height="40" rx="10" fill="#1c1612" stroke="#3a2f27" stroke-width="4"/>
+</svg>

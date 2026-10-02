@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Validation status (Rev C) · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html" class=on>Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><h1 id="validation-status-rev-c">Validation status (Rev C)</h1>
+<p><strong>Rev C is an UNVALIDATED ENGINEERING PROTOTYPE, not a fabrication release.</strong> No Gerbers or drill files are shipped. This page keeps two lists apart on purpose:</p>
+<ul>
+<li><strong>Recorded checks</strong>: things a script or tool did to the <em>files</em> in this repository. They show the files are self-consistent. They are <strong>not</strong> independent proof that the circuit, the board or the enclosure works.</li>
+<li><strong>Physical checks</strong>: things that can only be done with real parts, a real board and a meter. <strong>None of these has been done.</strong></li>
+</ul>
+<h2 id="recorded-checks-repeat-with-scriptsrun_all_checkssh">Recorded checks (repeat with <code>scripts/run_all_checks.sh</code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Tool</th>
+<th>Result on 2026-09-30</th>
+<th>What it does <em>not</em> show</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Equation arithmetic (34 checks)</td>
+<td><code>tests/check_equations.py</code></td>
+<td>34 / 34 pass</td>
+<td>That the real tubes, converter or resistors behave like the model</td>
+</tr>
+<tr>
+<td>Design-table consistency (150 checks): BOM counts, no Nano pin on a driver net, pull-ups/pull-downs present, POL tied high, one cathode per driver output, placement inside the board, fastener lengths</td>
+<td><code>tests/check_design.py</code> (<strong>custom Python, not KiCad DRC</strong>)</td>
+<td>150 / 150 pass</td>
+<td>Electrical correctness of the design; anything about copper</td>
+</tr>
+<tr>
+<td>Requirements and BOM (traceability, safety ratings in BOM.csv, bed fit, files exist)</td>
+<td><code>tests/check_requirements.py</code> (<strong>custom Python</strong>)</td>
+<td>134 / 134 pass</td>
+<td>Whether the requirements are met by real hardware</td>
+</tr>
+<tr>
+<td>Fabrication release gate</td>
+<td><code>scripts/make_fab_outputs.sh</code></td>
+<td>Refuses (no routed board): correct</td>
+<td>Anything about a future board</td>
+</tr>
+<tr>
+<td>Firmware display core on a PC (383 checks), including every displayable time producing a one-digit-per-tube frame</td>
+<td><code>g++</code> + <code>tests/test_display_core.cpp</code></td>
+<td>383 / 383 pass</td>
+<td>That the bit order, polarity and clock edge match the real HV5522</td>
+</tr>
+<tr>
+<td>Firmware compile and link for ATmega328P</td>
+<td><code>scripts/avr_compile_check.sh</code>: avr-gcc 7.3.0 against ArduinoCore-avr 1.8.6, <strong>manual build, not the Arduino IDE</strong></td>
+<td>Pass: 13 712 B flash, 844 B static RAM, no sketch warnings with <code>-Wall -Wextra</code></td>
+<td>That the IDE build is identical, that it uploads, or that it runs correctly</td>
+</tr>
+<tr>
+<td>Schematic encodes the net map</td>
+<td><code>scripts/make_kicad.py</code>: <strong>native</strong> <code>kicad-cli 7.0.11 sch export netlist</code>, compared net by net with <code>NET_MAP.csv</code></td>
+<td>106 / 106 nets match, no extra nets</td>
+<td>ERC; readability; whether the net map itself is right. <strong>Native ERC has not been run</strong></td>
+</tr>
+<tr>
+<td>Placement board</td>
+<td><code>scripts/make_kicad.py</code>: <strong>native</strong> pcbnew 7.0.11 DRC on <code>Nixie_RevC_placement.kicad_pcb</code> (outline, 5 M2 holes, placeholder courtyards on both sides, no copper)</td>
+<td>0 violations</td>
+<td>Anything about routing, clearances, copper or real footprints</td>
+</tr>
+<tr>
+<td>Desktop app (Nixie Clock Companion 1.0.0)</td>
+<td>electron-builder 26.15.3 / Electron 44.5.1, Linux AppImage and <code>.deb</code> packaged; app launched on a virtual display (Xvfb) with Playwright: pages load, calculator matches EQUATIONS.md, Web Serial present, no page errors</td>
+<td>Pass on Linux x64</td>
+<td>Windows and macOS builds (made by CI at release, not yet run); any real serial session with a Nano</td>
+</tr>
+<tr>
+<td>Enclosure computer-aided design (CAD) model</td>
+<td><code>tests/check_cad.py</code>: OpenCASCADE booleans between every part and nominal envelopes of the PCB, glass, spacers, lamps and switches</td>
+<td>32 / 32 pass</td>
+<td>Physical fit of real, printed parts and real tubes</td>
+</tr>
+</tbody>
+</table>
+<p>Reports: <code>hardware/reports/SUMMARY.txt</code>, <code>hardware/reports/placement_native_drc.rpt</code>, <code>hardware/reports/netlist_vs_netmap.txt</code>, <code>cad/BUILD_REPORT.txt</code>.</p>
+<h2 id="physical-checks-all-not-established">Physical checks: all NOT established</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Status</th>
+<th>Stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Native KiCad electrical rules check (ERC) on a human-reviewed schematic</td>
+<td>NOT DONE</td>
+<td>Before Stage 1</td>
+</tr>
+<tr>
+<td>Routed 4-layer board with native design rules check (DRC) under <code>Nixie_RevC.kicad_dru</code></td>
+<td>NOT DONE (board not routed)</td>
+<td>Before Stage 1</td>
+</tr>
+<tr>
+<td>Experienced HV layout review, then Gerbers</td>
+<td>NOT DONE</td>
+<td>Before Stage 1</td>
+</tr>
+<tr>
+<td>Arduino integrated development environment (IDE) compile and upload to a real Nano</td>
+<td>NOT DONE</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Printed fit: coupons, hood/frame, acrylic, screws</td>
+<td>NOT DONE</td>
+<td>0, 6</td>
+</tr>
+<tr>
+<td>Low-voltage power-up, reverse polarity, logic levels, blanking default</td>
+<td>NOT DONE</td>
+<td>1, 2</td>
+</tr>
+<tr>
+<td>HV bring-up, sense accuracy, <strong>measured discharge</strong></td>
+<td>NOT DONE</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Digit mapping, per-digit current, converter loading</td>
+<td>NOT DONE</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Closed-case thermal margin</td>
+<td>NOT DONE</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Any safety compliance or certification</td>
+<td>NOT CLAIMED</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="untested-assumptions">Untested assumptions</h2>
+<p>Each of these is a number or behaviour the design relies on and that nobody has measured on Rev C hardware.</p>
+<ol>
+<li>IN-14 bulb is about 19 mm (Tube-Tester), leaving 0.2 mm radial clearance in the 19.4 mm opening. Real tubes vary.</li>
+<li>IN-14 lead pattern (13 leads) is a <strong>placeholder</strong>: 12.0 mm circle, 1.0 mm holes. Measure your tubes.</li>
+<li>IN-14 maintaining voltage about 145 V; typical current 2.5 mA. With 22 kΩ at 170 V the model gives about 1.1 mA.</li>
+<li>NE-2 maintaining voltage about 60 V.
+4a. IN-14 ignition (strike) voltage is commonly quoted as up to about 170 V; it was not confirmed from a primary source here. On a fixed 170 V rail that leaves little margin: check that every digit strikes reliably, including from cold. The firmware's 150 V floor is a fault limit, not an operating point.</li>
+<li>NCH8200HV: output fixed at about 170 V, 2.5–15 V input, 30 mA peak, pin order VIN, GND, VOUT, GND, GND, <strong>internal output capacitance unknown</strong> (the discharge model assumes 1 µF). Module outline unknown: the placement board reserves 30 × 21 mm.</li>
+<li>HV5522PJ-G function table (POL HIGH + BL LOW = all off; with POL HIGH and BL HIGH, a register 1 = output on), shift direction (HVOUT1 → HVOUT32), falling-edge clock, LE HIGH loads latches, VDD 10.8–13.2 V (the firmware's VIN window stops at 13.2 V for this reason), PLCC pin numbers: taken from the Supertex-era HV5522 data sheet. Recheck against Microchip DS20005699.</li>
+<li>DS3231SN pins 5–12 should be grounded.</li>
+<li>Omron B3F-1062-G body about 3.5 mm tall and 6 × 6 mm.</li>
+<li>Nano's 5 V rail is the ADC reference, accurate to a few percent.</li>
+<li>All printed fit allowances marked VERIFY in <code>cad/DIMENSIONS.json</code>.</li>
+</ol>
+<h2 id="open-items">Open items</h2>
+<p>These came out of the recorded checks and are deliberately left visible rather than fixed silently.</p>
+<ul>
+<li><strong>Anode resistor fault power.</strong> If the full 170 V rail appears across one 22 kΩ resistor (a shorted tube or cathode path), it dissipates 1.31 W, above its 1 W rating. The NCH8200HV data sheet documents no current limit. Options for a future revision: a 2 W part or two 11 kΩ 1 W in series, a current-limited HV supply, or an HV fuse. Rev C keeps the brief's 22 kΩ 1 W values.</li>
+<li><strong>Tube current well below typical.</strong> The 22 kΩ start value predicts about 45 % of the IN-14's typical 2.5 mA. Measure at Stage 4 before deciding anything.</li>
+<li><strong>Switch body vs 3 mm gap (changed from the brief).</strong> <code>tests/check_cad.py</code> found that the B3F body (about 3.5 mm) is taller than the 3 mm gap between the PCB and the top. The hood now has a 7.4 mm × 1 mm pocket over each switch; the acrylic top has <strong>9 mm</strong> holes over the switches instead of the brief's 3.9 mm (acrylic cannot be pocketed on a laser). The hood keeps 3.9 mm.</li>
+<li><strong>Ring gap around each tube.</strong> 0.2 mm nominal. The printed hood has baffle collars that block line of sight to the leads; the clear-top option has none, so the tube leads sit under clear acrylic behind a very thin ring gap. Reviewer to judge.</li>
+<li><strong>Clear-top frame printing.</strong> The frame prints upright; the acrylic seat ledge is chamfered to print without supports, but the five PCB bosses and the upper corner blocks overhang and need painted-on supports (see <a href="PRINTING.html">PRINTING.md</a>).</li>
+<li><strong>USB back-feed.</strong> The converter can start from 2.5 V. With the shunt fitted and only USB connected, back-feed through the Nano could, in principle, reach it if QP2 were on. Firmware refuses HV below 10.8 V VIN, and the flashing procedure removes the shunt; Stage 2 checks that <code>HV_IN_12V</code> stays near 0 V whenever HV is not requested.</li>
+<li><strong>Serial monitor resets the Nano.</strong> Opening the serial monitor resets the board. The firmware therefore latches HV faults in EEPROM; it does not rely on the Nano staying powered. Confirmed in code only; Stage 2 checks it on a board.</li>
+<li><strong>Bottom-side keep-out above the cable clamp.</strong> Parts under the clamp region near the rear opening must stay below about 11 mm.</li>
+<li><strong>Nano classic bootloader and the watchdog.</strong> Some older Nano bootloaders hang after a watchdog reset. With the pins high-impedance the clock simply stays dark and HV stays off (safe), but it will not restart until power-cycled. Record which bootloader your Nano has.</li>
+</ul>
+<h2 id="build-log-fill-in">Build log (fill in)</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Stage</th>
+<th>Builder</th>
+<th>Reviewer</th>
+<th>Measurement</th>
+<th>Value</th>
+<th>PASS/FIX/STOP</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>0</td>
+<td></td>
+<td></td>
+<td>glass diameters T1–T6</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>0</td>
+<td></td>
+<td></td>
+<td>real IN-14 lead circle</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>1</td>
+<td></td>
+<td></td>
+<td>TP2, TP3, reverse polarity</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2</td>
+<td></td>
+<td></td>
+<td>IDE / core / compiler versions</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2</td>
+<td></td>
+<td></td>
+<td>DRV_BL and HV_GATE in reset</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>3</td>
+<td></td>
+<td></td>
+<td>TP4 running; firmware HV reading</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>3</td>
+<td></td>
+<td></td>
+<td>TP4 at 1 s / 5 s / 60 s after off</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>4</td>
+<td></td>
+<td></td>
+<td>per-digit current (attach table)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>4</td>
+<td></td>
+<td></td>
+<td>supply current, all lit</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>5</td>
+<td></td>
+<td></td>
+<td>regulator / PS1 / RA temps after 2 h</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>6</td>
+<td></td>
+<td></td>
+<td>enclosure fit, gaps</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>
