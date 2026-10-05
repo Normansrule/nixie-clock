@@ -18,25 +18,27 @@ Only after that does Stage 1 have a board to populate. Stages 0 and the firmware
 
 **Tools:** temperature-controlled soldering iron, flux, DMM rated CAT II 600 V or better with clip leads, bench supply with adjustable current limit (for Stages 1–3), USB Mini-B data cable, M2 tap and holder, calipers, safety glasses.
 
-**Pick ONE enclosure option now:** (a) printed frame + 3 mm clear cast-acrylic top, or (b) all-printed hood. Buy only that fastener set ([BOM.md](BOM.md#m2-fasteners-choose-one-set)).
+**The enclosure** is a fully enclosed alarm-clock case: the tubes stand inside, seen through a smoked acrylic window, and SET, H and M are pressed from the top. The PCB screws onto five standoffs on the printed floor, making a **chassis** you can work on by itself; the case lowers over it at the end. One fastener set: 4 × M2 × 8 and 7 × M2 × 6 ([BOM.md](BOM.md#m2-fasteners-one-set)).
+
+![Exploded view](img/exploded.png)
 
 ---
 
 ## Stage 0: fit coupons and M2 threads (no electronics)
 
-**Parts:** PETG, `cad/print/plate_0_fit_coupons.3mf` (parts 06 and 07), one IN-14 tube, one NE-2, one B3F-1062-G, M2 × 6 and M2 × 8 screws, M2 tap.
+**Parts:** PETG, `cad/print/plate_0_fit_coupons.3mf` (parts 06 and 07), one IN-14 tube, one printed button rod (part 04), a 25 mm offcut of your 3 mm acrylic, a scrap of 1.6 mm board, M2 × 6 and M2 × 8 screws, M2 tap.
 
 **Steps**
 1. Print the coupons with the baseline settings in [PRINTING.md](PRINTING.md).
-2. Coupon 06: hold an IN-14 over the 19.4 mm opening and lower it straight in. The glass should pass with a small, even gap. Do not force it. Check the NE-2 in the 7 mm hole and the switch plunger in the 3.9 mm hole with the switch body sitting in its 7.4 mm pocket.
-3. Tap the two 1.7 mm pilot holes with an M2 tap, backing out every half-turn. Drive an M2 × 6 into the short post and an M2 × 8 into the tall block. Snug, then back out.
+2. Coupon 06: slide the acrylic offcut into the 3.3 mm slot (it must go in without force and not rattle), and slide a button rod through the guide (it must drop freely under its own weight).
+3. Tap the two 1.7 mm pilot holes with an M2 tap, backing out every half-turn. Drive an M2 × 6 through the board scrap into the standoff, and an M2 × 8 into the tall block. Snug, then back out.
 4. Coupon 07 (**never powered**, never used as a tube spacer): try your tube's 13 leads against the hole pattern. The pattern in `cad/DIMENSIONS.json` (13 × Ø1.0 mm on a 12.0 mm circle) is a placeholder; measure your tube's actual lead circle with calipers and update `in14_lead_circle_d`.
 
-**Measure:** glass diameter of each of your six tubes; gap in the opening; thread engagement (turns before snug); the real lead circle diameter.
+**Measure:** glass diameter and height of each of your six tubes (spacer plus glass must stay under 80 mm above the board; nominal is 62 mm); acrylic thickness; thread engagement (turns before snug); the real lead circle diameter.
 
-- **PASS:** every tube passes the opening without contact; screws bite firmly and do not strip.
+- **PASS:** acrylic slides in, rod drops freely, screws bite firmly and do not strip.
 - **FIX:** a tight hole → change the value in `cad/DIMENSIONS.json` and rerun `scripts/render_cad`. **Never scale a whole part** in the slicer to fix a hole. Stripped threads → try 1.6 mm pilots.
-- **STOP:** a tube only fits with force. Glass under stress can crack at the seal.
+- **STOP:** your tubes are taller than the case allows (they would touch the roof).
 
 ---
 
@@ -104,7 +106,7 @@ All of these must be true. Write the date and the reviewer's name in VALIDATION.
 
 **Steps**
 1. With everything unplugged, fit PS1, CHV, the bleeders and the sense divider. Clean and inspect; check the HV area for flux and solder balls.
-2. Bench supply 12.0 V, current limit **300 mA**. Guarded bench setup from [SAFETY.md](SAFETY.md) rule 4: board out of its cover on an insulated surface behind a clear barrier. Connect USB and open the serial monitor, and clip the meter to TP4/TP1, all **before** applying power.
+2. Screw the board onto the floor standoffs (5 × M2 × 6) so it becomes the chassis. Bench supply 12.0 V, current limit **300 mA**. Guarded bench setup from [SAFETY.md](SAFETY.md) rule 4: chassis without its case, on an insulated surface behind a clear barrier. Connect USB and open the serial monitor, and clip the meter to TP4/TP1, all **before** applying power.
 3. Insert the HV_ARM shunt (power off). Apply 12 V. The firmware starts HV if the time is valid. Expect `HV up: ~170 V`.
 4. Read TP4 on the meter. Compare with the firmware's `HV sense` in `STATUS`.
 5. Send `HVOFF`. Watch the meter fall. The firmware should report `HV decayed to ...` after 3 s.
@@ -124,7 +126,7 @@ All of these must be true. Write the date and the reviewer's name in VALIDATION.
 
 **Steps**
 1. Discharge gate (unplug, 60 s, TP4 below 10 V). Remove the shunt.
-2. Fit **T1 only** and RA1. This stage uses the same guarded bench setup as Stage 3 (board out of its cover, barrier, leads and USB connected before power). Tubes are direct-solder: keep the factory spacers, seat the tube square, solder the leads, and never bend them at the glass seal.
+2. Fit **T1 only** and RA1. This stage uses the same guarded bench setup as Stage 3 (chassis without its case, barrier, leads and USB connected before power). Tubes are direct-solder: keep the factory spacers, seat the tube square, solder the leads, and never bend them at the glass seal.
 3. Fit the shunt (power off), then power up. Use `EXERCISE` or set the time so T1 shows each digit. Confirm the digit that lights is the one intended: this is the real test of the bit order, `kOutReversed`, and the latch and clock timing.
 4. Measure the current of each digit. Two methods, chosen with your reviewer: (a) with power off and the rail discharged, lift one end of RA1 and clip the DMM in its mA range into the gap before powering up; or (b) clip DMM leads across RA1 before powering up, read the voltage, and divide by 22 kΩ. Never move probes while 12 V is on.
 5. Discharge gate. Fit the remaining tubes, anode resistors, lamps (leads sleeved) and lamp resistors. Repeat the digit check for every tube and both separators.
@@ -140,28 +142,32 @@ All of these must be true. Write the date and the reviewer's name in VALIDATION.
 
 ## Stage 5: closed-case thermal run
 
-**Steps:** close the chosen enclosure completely (no USB: the port is inside), shunt fitted, all digits running, 25 °C room. Measure the 12 V current with an inline meter on the adapter side. Run for 2 hours, watching the tubes. Then unplug, pass the discharge gate, open, and immediately measure the Nano's regulator, PS1 and the anode resistors with a thermometer or thermal camera. Afterwards, connect USB (shunt out) and read `STATUS` for any fault.
+**Steps:** close the alarm-clock case completely (no USB: the port is inside), shunt fitted, all digits running, 25 °C room. The case has no vents on purpose (it keeps HV enclosed); the model predicts an average internal rise of only a few kelvin ([EQUATIONS.md](EQUATIONS.md#7-sealed-case-temperature)), and this stage checks the hot spots. Measure the 12 V current with an inline meter on the adapter side. Run for 2 hours, watching the tubes. Then unplug, pass the discharge gate, open, and immediately measure the Nano's regulator, PS1 and the anode resistors with a thermometer or thermal camera. Afterwards, connect USB (shunt out) and read `STATUS` for any fault.
 
 **Measure:** temperatures, 12 V current at start and end, room temperature, time drift, any fault.
 
 - **PASS:** regulator comfortably below its limit (record the value; below about 70 °C case temperature is a reasonable target), no part too hot to touch briefly, HV steady.
-- **FIX:** hot regulator → the enclosure may need vents that do **not** expose HV; that is an enclosure design change.
+- **FIX:** hot regulator → the case may need baffled vents that do **not** expose HV; that is an enclosure design change.
 - **STOP:** any component discoloured or the case deformed.
 
 ---
 
-## Stage 6: final enclosure assembly
+## Stage 6: close the alarm-clock case
 
-**Parts:** your chosen enclosure set, cable clamp (03), four rubber feet, two cable ties.
+**Parts:** case (01), window panel (05), three button rods (04), cable clamp (03), clear silicone, four rubber feet, two cable ties.
 
-1. Discharge gate. Dress the pigtail through the rear opening, over the cradle, and fix it with the cable clamp (2 × M2 × 6).
-2. **All-printed:** PCB to the hood posts with 5 × M2 × 6; bottom cover with 4 × M2 × 8.
-   **Clear-top:** acrylic into the frame with 4 × M2 × 6; PCB to the frame bosses with **5 × M2 × 4**; bottom cover with 4 × M2 × 8.
-3. Lower the enclosure over the tubes straight down. Never use the lid to align the tubes and never force glass through an opening.
-4. Stick the feet clear of the screw heads.
-5. Check: no gap anywhere shows HV copper, leads or PS1; buttons press and return.
+1. Discharge gate. Dress the pigtail through the rear opening, over the floor's cradle, and fix it with the cable clamp (2 × M2 × 6).
+2. Case upside down on a soft cloth: slide the window panel up into its slot from the open bottom, film peeled on the inside face only. Put three small dots of silicone in the slot (both top corners and the middle of the top edge). Let it cure.
+3. Drop the three rods into the holes in the top, cap first from outside: they hang by their caps.
+4. Fit the HV_ARM shunt (power off). Turn the case upright and lower it **straight down** over the chassis; the tubes go in without touching anything. Watch that each rod lands on its switch.
+5. Lay the clock on its back on a cloth and fit 4 × M2 × 8 through the floor into the corner blocks. Stick the feet clear of the screw heads. Peel the outer film.
+6. Check: nothing shows through any gap except the glowing digits; each cap clicks its switch and springs back.
 
-- **PASS:** closed, rigid, buttons work, no exposed HV. **STOP:** any gap exposes HV.
+- **PASS:** closed, rigid, buttons work, no exposed HV. **STOP:** any gap exposes HV, or a cap stays down.
+
+**To open later:** unplug, wait 60 s, lay the clock on its back, remove the 4 floor screws, stand it up and lift the case straight up. The window and rods stay in the case. Measure TP4 to TP1 (top side, rear edge) below 10 V before touching anything else; the HV_ARM shunt is next to them.
+
+---
 
 ## Stage 7: close the loop
 

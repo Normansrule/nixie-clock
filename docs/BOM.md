@@ -4,7 +4,7 @@ Machine-readable versions: [`hardware/BOM.csv`](../hardware/BOM.csv) (electrical
 
 Quantities are **Rev C fitted quantities**, not purchase quantities. Buy one or two spares of the cheap passives, not a whole second kit. Before ordering, check every package suffix, footprint and pinout against the manufacturer's data sheet ([CREDITS.md](../CREDITS.md) lists them). Reference designators match [`hardware/NET_MAP.csv`](../hardware/NET_MAP.csv) and [`hardware/COMPONENT_PLACEMENT.csv`](../hardware/COMPONENT_PLACEMENT.csv); `tests/check_design.py` checks the counts below against the placement table.
 
-**Budget (planning only, recheck before ordering):** about $379 all-printed, about $391 clear-top, before tax. Tube prices move the total more than anything else.
+**Budget (planning only, recheck before ordering):** about $390 before tax. This is carried over from the brief's $379–391 planning figures and has not been re-priced for the alarm-clock case (more filament, a smaller acrylic panel). Tube prices move the total more than anything else.
 
 ## Safety-critical parts first
 
@@ -72,26 +72,24 @@ These are the parts you must not substitute with something cheaper or lower-rate
 | 2 | Cable ties | Wire dressing |
 | 4 | Rubber feet | Keep clear of the four screw heads |
 | 1 | USB (Universal Serial Bus) Mini-B **data** cable | Charge-only cables will not flash |
-| — | PETG (polyethylene terephthalate glycol) filament, matte | Under 200 g for either option (estimated from model volume) |
+| — | PETG (polyethylene terephthalate glycol) filament, matte black or your case colour | About 350 g for the case, floor, rods and coupons, plus supports (estimated from model volume) |
+| 1 | Window panel, 3 mm smoked grey **cast** acrylic, laser cut from [`cad/Window_panel_3mm_1to1.dxf`](../cad/Window_panel_3mm_1to1.dxf) | 206 × 92.8 mm; clear also works |
+| — | Clear neutral-cure silicone | Three dots hold the window in its slot |
 | — | Fit coupons 06 and 07 | Print first ([PRINTING.md](PRINTING.md)) |
 
-## M2 fasteners: choose ONE set
+## M2 fasteners: one set
 
 M2 throughout, no M3 or M4. Posts have 1.7 mm printed pilot holes (not heat-set inserts): tap M2 after checking the coupon.
 
-| Enclosure | M2 × 8 | M2 × 6 | M2 × 4 | Uses |
-|---|---|---|---|---|
-| All-printed hood | 4 | 7 | 0 | 4 bottom, 5 PCB, 2 cable clamp |
-| Clear-top frame | 4 | 6 | 5 | 4 bottom, 5 PCB (**M2 × 4**), 4 acrylic top, 2 cable clamp |
-
-In the clear-top frame a longer PCB screw reaches the acrylic: `tests/check_design.py` shows M2 × 6 would stick 1.4 mm past the 3 mm boss. Use M2 × 4 there.
-
-Clear-top option also needs one 3 mm clear **cast** acrylic sheet cut from [`cad/Acrylic_top_3mm_1to1.dxf`](../cad/Acrylic_top_3mm_1to1.dxf) (228.8 × 74.8 mm). Extruded acrylic cracks more easily at the screw holes.
+| Screw | Qty | Uses |
+|---|---|---|
+| M2 × 8 | 4 | Floor into the four corner blocks of the case (from below) |
+| M2 × 6 | 7 | 5 × PCB onto the floor standoffs, 2 × cable clamp |
 
 ## Cost levers that are safe to pull
 
 - Generic passives from a reputable distributor, at the ratings above.
-- Buy one enclosure fastener set, not both.
+- Smoked or clear acrylic offcuts are cheap: the window is only 206 × 92.8 mm.
 - Tubes and ICs from reputable sellers (fakes and pulls are common); do not overbuy spares.
 
 Do **not** cheapen: the 1 W tube and lamp resistors, CHV, the bleeders, the sleeving, the isolated adapter, or the fused, reverse-protected input.

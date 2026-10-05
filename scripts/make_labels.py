@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""make_labels.py - printable HV warning and rating labels for the bottom cover (1:1, millimetres).
+"""make_labels.py - printable HV warning and rating labels for the underside of the floor and the inside of the case (1:1, millimetres).
 Writes docs/img/labels.svg and docs/labels.pdf. Print at 100 % (no "fit to page") on vinyl sticker paper.
 """
 from pathlib import Path

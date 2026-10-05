@@ -57,20 +57,21 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </ol>
 <p>Only after that does Stage 1 have a board to populate. Stages 0 and the firmware parts of Stage 2 can be done today.</p>
 <p><strong>Tools:</strong> temperature-controlled soldering iron, flux, DMM rated CAT II 600 V or better with clip leads, bench supply with adjustable current limit (for Stages 1–3), USB Mini-B data cable, M2 tap and holder, calipers, safety glasses.</p>
-<p><strong>Pick ONE enclosure option now:</strong> (a) printed frame + 3 mm clear cast-acrylic top, or (b) all-printed hood. Buy only that fastener set (<a href="BOM.html#m2-fasteners-choose-one-set">BOM.md</a>).</p>
+<p><strong>The enclosure</strong> is a fully enclosed alarm-clock case: the tubes stand inside, seen through a smoked acrylic window, and SET, H and M are pressed from the top. The PCB screws onto five standoffs on the printed floor, making a <strong>chassis</strong> you can work on by itself; the case lowers over it at the end. One fastener set: 4 × M2 × 8 and 7 × M2 × 6 (<a href="BOM.html#m2-fasteners-one-set">BOM.md</a>).</p>
+<p><img alt="Exploded view" src="img/exploded.png"></p>
 <hr>
 <h2 id="stage-0-fit-coupons-and-m2-threads-no-electronics">Stage 0: fit coupons and M2 threads (no electronics)</h2>
-<p><strong>Parts:</strong> PETG, <code>cad/print/plate_0_fit_coupons.3mf</code> (parts 06 and 07), one IN-14 tube, one NE-2, one B3F-1062-G, M2 × 6 and M2 × 8 screws, M2 tap.</p>
+<p><strong>Parts:</strong> PETG, <code>cad/print/plate_0_fit_coupons.3mf</code> (parts 06 and 07), one IN-14 tube, one printed button rod (part 04), a 25 mm offcut of your 3 mm acrylic, a scrap of 1.6 mm board, M2 × 6 and M2 × 8 screws, M2 tap.</p>
 <p><strong>Steps</strong>
 1. Print the coupons with the baseline settings in <a href="PRINTING.html">PRINTING.md</a>.
-2. Coupon 06: hold an IN-14 over the 19.4 mm opening and lower it straight in. The glass should pass with a small, even gap. Do not force it. Check the NE-2 in the 7 mm hole and the switch plunger in the 3.9 mm hole with the switch body sitting in its 7.4 mm pocket.
-3. Tap the two 1.7 mm pilot holes with an M2 tap, backing out every half-turn. Drive an M2 × 6 into the short post and an M2 × 8 into the tall block. Snug, then back out.
+2. Coupon 06: slide the acrylic offcut into the 3.3 mm slot (it must go in without force and not rattle), and slide a button rod through the guide (it must drop freely under its own weight).
+3. Tap the two 1.7 mm pilot holes with an M2 tap, backing out every half-turn. Drive an M2 × 6 through the board scrap into the standoff, and an M2 × 8 into the tall block. Snug, then back out.
 4. Coupon 07 (<strong>never powered</strong>, never used as a tube spacer): try your tube's 13 leads against the hole pattern. The pattern in <code>cad/DIMENSIONS.json</code> (13 × Ø1.0 mm on a 12.0 mm circle) is a placeholder; measure your tube's actual lead circle with calipers and update <code>in14_lead_circle_d</code>.</p>
-<p><strong>Measure:</strong> glass diameter of each of your six tubes; gap in the opening; thread engagement (turns before snug); the real lead circle diameter.</p>
+<p><strong>Measure:</strong> glass diameter and height of each of your six tubes (spacer plus glass must stay under 80 mm above the board; nominal is 62 mm); acrylic thickness; thread engagement (turns before snug); the real lead circle diameter.</p>
 <ul>
-<li><strong>PASS:</strong> every tube passes the opening without contact; screws bite firmly and do not strip.</li>
+<li><strong>PASS:</strong> acrylic slides in, rod drops freely, screws bite firmly and do not strip.</li>
 <li><strong>FIX:</strong> a tight hole → change the value in <code>cad/DIMENSIONS.json</code> and rerun <code>scripts/render_cad</code>. <strong>Never scale a whole part</strong> in the slicer to fix a hole. Stripped threads → try 1.6 mm pilots.</li>
-<li><strong>STOP:</strong> a tube only fits with force. Glass under stress can crack at the seal.</li>
+<li><strong>STOP:</strong> your tubes are taller than the case allows (they would touch the roof).</li>
 </ul>
 <hr>
 <h2 id="stage-1-low-voltage-section-no-hv-parts-powered">Stage 1: low-voltage section (no HV parts powered)</h2>
@@ -123,7 +124,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <p><strong>Parts:</strong> PS1 NCH8200HV, CHV, RH1, RH2, RS1, RS2, RS3. <strong>Still no tubes, lamps or anode resistors.</strong></p>
 <p><strong>Steps</strong>
 1. With everything unplugged, fit PS1, CHV, the bleeders and the sense divider. Clean and inspect; check the HV area for flux and solder balls.
-2. Bench supply 12.0 V, current limit <strong>300 mA</strong>. Guarded bench setup from <a href="SAFETY.html">SAFETY.md</a> rule 4: board out of its cover on an insulated surface behind a clear barrier. Connect USB and open the serial monitor, and clip the meter to TP4/TP1, all <strong>before</strong> applying power.
+2. Screw the board onto the floor standoffs (5 × M2 × 6) so it becomes the chassis. Bench supply 12.0 V, current limit <strong>300 mA</strong>. Guarded bench setup from <a href="SAFETY.html">SAFETY.md</a> rule 4: chassis without its case, on an insulated surface behind a clear barrier. Connect USB and open the serial monitor, and clip the meter to TP4/TP1, all <strong>before</strong> applying power.
 3. Insert the HV_ARM shunt (power off). Apply 12 V. The firmware starts HV if the time is valid. Expect <code>HV up: ~170 V</code>.
 4. Read TP4 on the meter. Compare with the firmware's <code>HV sense</code> in <code>STATUS</code>.
 5. Send <code>HVOFF</code>. Watch the meter fall. The firmware should report <code>HV decayed to ...</code> after 3 s.
@@ -139,7 +140,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <p><strong>Parts:</strong> T1–T6 with factory spacers, RA1–RA6, L1, L2, RL1, RL2, sleeving.</p>
 <p><strong>Steps</strong>
 1. Discharge gate (unplug, 60 s, TP4 below 10 V). Remove the shunt.
-2. Fit <strong>T1 only</strong> and RA1. This stage uses the same guarded bench setup as Stage 3 (board out of its cover, barrier, leads and USB connected before power). Tubes are direct-solder: keep the factory spacers, seat the tube square, solder the leads, and never bend them at the glass seal.
+2. Fit <strong>T1 only</strong> and RA1. This stage uses the same guarded bench setup as Stage 3 (chassis without its case, barrier, leads and USB connected before power). Tubes are direct-solder: keep the factory spacers, seat the tube square, solder the leads, and never bend them at the glass seal.
 3. Fit the shunt (power off), then power up. Use <code>EXERCISE</code> or set the time so T1 shows each digit. Confirm the digit that lights is the one intended: this is the real test of the bit order, <code>kOutReversed</code>, and the latch and clock timing.
 4. Measure the current of each digit. Two methods, chosen with your reviewer: (a) with power off and the rail discharged, lift one end of RA1 and clip the DMM in its mA range into the gap before powering up; or (b) clip DMM leads across RA1 before powering up, read the voltage, and divide by 22 kΩ. Never move probes while 12 V is on.
 5. Discharge gate. Fit the remaining tubes, anode resistors, lamps (leads sleeved) and lamp resistors. Repeat the digit check for every tube and both separators.
@@ -152,27 +153,29 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </ul>
 <hr>
 <h2 id="stage-5-closed-case-thermal-run">Stage 5: closed-case thermal run</h2>
-<p><strong>Steps:</strong> close the chosen enclosure completely (no USB: the port is inside), shunt fitted, all digits running, 25 °C room. Measure the 12 V current with an inline meter on the adapter side. Run for 2 hours, watching the tubes. Then unplug, pass the discharge gate, open, and immediately measure the Nano's regulator, PS1 and the anode resistors with a thermometer or thermal camera. Afterwards, connect USB (shunt out) and read <code>STATUS</code> for any fault.</p>
+<p><strong>Steps:</strong> close the alarm-clock case completely (no USB: the port is inside), shunt fitted, all digits running, 25 °C room. The case has no vents on purpose (it keeps HV enclosed); the model predicts an average internal rise of only a few kelvin (<a href="EQUATIONS.html#7-sealed-case-temperature">EQUATIONS.md</a>), and this stage checks the hot spots. Measure the 12 V current with an inline meter on the adapter side. Run for 2 hours, watching the tubes. Then unplug, pass the discharge gate, open, and immediately measure the Nano's regulator, PS1 and the anode resistors with a thermometer or thermal camera. Afterwards, connect USB (shunt out) and read <code>STATUS</code> for any fault.</p>
 <p><strong>Measure:</strong> temperatures, 12 V current at start and end, room temperature, time drift, any fault.</p>
 <ul>
 <li><strong>PASS:</strong> regulator comfortably below its limit (record the value; below about 70 °C case temperature is a reasonable target), no part too hot to touch briefly, HV steady.</li>
-<li><strong>FIX:</strong> hot regulator → the enclosure may need vents that do <strong>not</strong> expose HV; that is an enclosure design change.</li>
+<li><strong>FIX:</strong> hot regulator → the case may need baffled vents that do <strong>not</strong> expose HV; that is an enclosure design change.</li>
 <li><strong>STOP:</strong> any component discoloured or the case deformed.</li>
 </ul>
 <hr>
-<h2 id="stage-6-final-enclosure-assembly">Stage 6: final enclosure assembly</h2>
-<p><strong>Parts:</strong> your chosen enclosure set, cable clamp (03), four rubber feet, two cable ties.</p>
+<h2 id="stage-6-close-the-alarm-clock-case">Stage 6: close the alarm-clock case</h2>
+<p><strong>Parts:</strong> case (01), window panel (05), three button rods (04), cable clamp (03), clear silicone, four rubber feet, two cable ties.</p>
 <ol>
-<li>Discharge gate. Dress the pigtail through the rear opening, over the cradle, and fix it with the cable clamp (2 × M2 × 6).</li>
-<li><strong>All-printed:</strong> PCB to the hood posts with 5 × M2 × 6; bottom cover with 4 × M2 × 8.
-   <strong>Clear-top:</strong> acrylic into the frame with 4 × M2 × 6; PCB to the frame bosses with <strong>5 × M2 × 4</strong>; bottom cover with 4 × M2 × 8.</li>
-<li>Lower the enclosure over the tubes straight down. Never use the lid to align the tubes and never force glass through an opening.</li>
-<li>Stick the feet clear of the screw heads.</li>
-<li>Check: no gap anywhere shows HV copper, leads or PS1; buttons press and return.</li>
+<li>Discharge gate. Dress the pigtail through the rear opening, over the floor's cradle, and fix it with the cable clamp (2 × M2 × 6).</li>
+<li>Case upside down on a soft cloth: slide the window panel up into its slot from the open bottom, film peeled on the inside face only. Put three small dots of silicone in the slot (both top corners and the middle of the top edge). Let it cure.</li>
+<li>Drop the three rods into the holes in the top, cap first from outside: they hang by their caps.</li>
+<li>Fit the HV_ARM shunt (power off). Turn the case upright and lower it <strong>straight down</strong> over the chassis; the tubes go in without touching anything. Watch that each rod lands on its switch.</li>
+<li>Lay the clock on its back on a cloth and fit 4 × M2 × 8 through the floor into the corner blocks. Stick the feet clear of the screw heads. Peel the outer film.</li>
+<li>Check: nothing shows through any gap except the glowing digits; each cap clicks its switch and springs back.</li>
 </ol>
 <ul>
-<li><strong>PASS:</strong> closed, rigid, buttons work, no exposed HV. <strong>STOP:</strong> any gap exposes HV.</li>
+<li><strong>PASS:</strong> closed, rigid, buttons work, no exposed HV. <strong>STOP:</strong> any gap exposes HV, or a cap stays down.</li>
 </ul>
+<p><strong>To open later:</strong> unplug, wait 60 s, lay the clock on its back, remove the 4 floor screws, stand it up and lift the case straight up. The window and rods stay in the case. Measure TP4 to TP1 (top side, rear edge) below 10 V before touching anything else; the HV_ARM shunt is next to them.</p>
+<hr>
 <h2 id="stage-7-close-the-loop">Stage 7: close the loop</h2>
 <ol>
 <li>Fill in VALIDATION.md: every measurement, every deviation, every FIX you made, and who reviewed Stage 3.</li>

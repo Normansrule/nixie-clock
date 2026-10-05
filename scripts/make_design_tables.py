@@ -249,7 +249,6 @@ bottom = [
     ("F1", "1812L075/33DR", "Fuse:Fuse_1812", 211, 67),
     ("QP1", "DMP3098L-7", "Package_TO_SOT_SMD:SOT-23", 211, 61),
     ("QP2", "DMP3098L-7", "Package_TO_SOT_SMD:SOT-23", 100, 50),
-    ("JP1", "1x2 header + shunt (HV_ARM)", "Connector_PinHeader_2.54mm:PinHeader_1x02", 104, 57),
     ("J1", "12 V pigtail pads", "Nixie_RevC:WirePads_2 (to author)", 204, 67),
     ("J2", "CR2032 lead pads", "Nixie_RevC:WirePads_2 (to author)", 224, 45),
     ("C5", "47 uF 25 V radial", "Capacitor_THT:CP_Radial_D6.3mm_P2.50mm", 196, 60),
@@ -281,8 +280,13 @@ small = [
     ("QL5", "MMBT3906", 123, 11), ("RB6", "10 k 0805", 127, 11), ("RPU5", "100 k 0805", 131, 11),
     # HV enable, next to the converter input switch
     ("QE1", "MMBT3904", 96, 62), ("RB5", "10 k 0805", 100, 62), ("RPD5", "100 k 0805", 104, 62), ("RGP", "100 k 0805", 104, 50),
-    ("TP1", "GND", 180, 64), ("TP2", "V12", 184, 64), ("TP3", "V5", 188, 64), ("TP4", "HV170", 145, 63),
 ]
+# Service items on the TOP side along the rear edge: with the case lifted off the chassis you can measure
+# TP4 against TP1 and pull the HV_ARM shunt without reaching under the board (alarm-clock case).
+for ref, val, fp, x, y in (("JP1", "1x2 header + shunt (HV_ARM)", "Connector_PinHeader_2.54mm:PinHeader_1x02", 90, 66),
+                           ("TP1", "GND", "TestPoint:TestPoint_Pad_D1.5mm", 100, 68), ("TP4", "HV170", "TestPoint:TestPoint_Pad_D1.5mm", 106, 68),
+                           ("TP2", "V12", "TestPoint:TestPoint_Pad_D1.5mm", 180, 68), ("TP3", "V5", "TestPoint:TestPoint_Pad_D1.5mm", 186, 68)):
+    p(ref, val, fp, "top", x, y, 0, "top-side service access with the case lifted off")
 for ref, val, x, y in small:
     fp = ("Resistor_SMD:R_0805" if ref.startswith("R") else "Capacitor_SMD:C_0805" if ref.startswith("C")
           else "Package_TO_SOT_SMD:SOT-23" if ref.startswith("Q") else "TestPoint:TestPoint_Pad_D1.5mm")

@@ -78,10 +78,10 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <ul>
 <li><strong><a href="TOOLS.html">Tools</a></strong>: a live calculator for tube current, resistor power, converter load and discharge time, using the same formulas as <a href="EQUATIONS.html">Equations</a>. Its results are a model, not measurements.</li>
 <li><strong>Serial companion</strong>: connects to the clock's Arduino Nano at 115200 baud and sends the firmware's own commands: <code>STATUS</code>, set the clock from your computer's time, 12/24-hour, sleep window, <code>EXERCISE</code>, <code>RUN</code>, a large <strong>HV OFF</strong> button, and <code>CLEARFAULT</code>, which only works after you tick "I measured TP4 below 10 V and fixed the cause". It sends nothing the firmware does not already accept from the Arduino serial monitor.</li>
-<li>Every page of the build guide, the schematic PDF, the print plates and the acrylic DXF, available offline.</li>
+<li>Every page of the build guide, the schematic PDF, the print plates and the window-panel DXF, available offline.</li>
 </ul>
 <blockquote>
-<p><strong>Safety is unchanged.</strong> The USB port is under the bottom cover. Follow <a href="SAFETY.html#usb-the-shunt-and-the-serial-monitor">SAFETY.md</a>: connect USB before 12 V, and treat the HV rail as live until you have measured TP4. Connecting resets the Nano, and the firmware keeps any HV fault latched across that reset.</p>
+<p><strong>Safety is unchanged.</strong> The USB port is inside the closed case (lift the case off the chassis to reach it). Follow <a href="SAFETY.html#usb-the-shunt-and-the-serial-monitor">SAFETY.md</a>: connect USB before 12 V, and treat the HV rail as live until you have measured TP4. Connecting resets the Nano, and the firmware keeps any HV fault latched across that reset.</p>
 </blockquote>
 <h2 id="installing-the-desktop-app">Installing the desktop app</h2>
 <p>The builds are <strong>not code-signed</strong> (signing certificates cost money and Rev C is a prototype), so your operating system will warn you the first time:</p>

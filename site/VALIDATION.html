@@ -60,9 +60,9 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </thead>
 <tbody>
 <tr>
-<td>Equation arithmetic (34 checks)</td>
+<td>Equation arithmetic (38 checks, including the sealed-case temperature)</td>
 <td><code>tests/check_equations.py</code></td>
-<td>34 / 34 pass</td>
+<td>38 / 38 pass</td>
 <td>That the real tubes, converter or resistors behave like the model</td>
 </tr>
 <tr>
@@ -74,7 +74,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <tr>
 <td>Requirements and BOM (traceability, safety ratings in BOM.csv, bed fit, files exist)</td>
 <td><code>tests/check_requirements.py</code> (<strong>custom Python</strong>)</td>
-<td>134 / 134 pass</td>
+<td>142 / 142 pass</td>
 <td>Whether the requirements are met by real hardware</td>
 </tr>
 <tr>
@@ -115,8 +115,8 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </tr>
 <tr>
 <td>Enclosure computer-aided design (CAD) model</td>
-<td><code>tests/check_cad.py</code>: OpenCASCADE booleans between every part and nominal envelopes of the PCB, glass, spacers, lamps and switches</td>
-<td>32 / 32 pass</td>
+<td><code>tests/check_cad.py</code>: OpenCASCADE booleans between every alarm-clock case part and nominal envelopes of the PCB, glass, spacers, lamps and switches, plus enclosure rules (tubes fully inside, window fully glazed, rod and cable gaps, build volume)</td>
+<td>86 / 86 pass</td>
 <td>Physical fit of real, printed parts and real tubes</td>
 </tr>
 </tbody>
@@ -153,7 +153,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <td>2</td>
 </tr>
 <tr>
-<td>Printed fit: coupons, hood/frame, acrylic, screws</td>
+<td>Printed fit: coupons, case, floor, button rods, window panel, screws</td>
 <td>NOT DONE</td>
 <td>0, 6</td>
 </tr>
@@ -187,7 +187,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <h2 id="untested-assumptions">Untested assumptions</h2>
 <p>Each of these is a number or behaviour the design relies on and that nobody has measured on Rev C hardware.</p>
 <ol>
-<li>IN-14 bulb is about 19 mm (Tube-Tester), leaving 0.2 mm radial clearance in the 19.4 mm opening. Real tubes vary.</li>
+<li>IN-14 bulb is about 19 × 55 mm (Tube-Tester) on 7 mm factory spacers; the case leaves about 23 mm above the glass. Real tubes vary.</li>
 <li>IN-14 lead pattern (13 leads) is a <strong>placeholder</strong>: 12.0 mm circle, 1.0 mm holes. Measure your tubes.</li>
 <li>IN-14 maintaining voltage about 145 V; typical current 2.5 mA. With 22 kΩ at 170 V the model gives about 1.1 mA.</li>
 <li>NE-2 maintaining voltage about 60 V.
@@ -204,9 +204,11 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <ul>
 <li><strong>Anode resistor fault power.</strong> If the full 170 V rail appears across one 22 kΩ resistor (a shorted tube or cathode path), it dissipates 1.31 W, above its 1 W rating. The NCH8200HV data sheet documents no current limit. Options for a future revision: a 2 W part or two 11 kΩ 1 W in series, a current-limited HV supply, or an HV fuse. Rev C keeps the brief's 22 kΩ 1 W values.</li>
 <li><strong>Tube current well below typical.</strong> The 22 kΩ start value predicts about 45 % of the IN-14's typical 2.5 mA. Measure at Stage 4 before deciding anything.</li>
-<li><strong>Switch body vs 3 mm gap (changed from the brief).</strong> <code>tests/check_cad.py</code> found that the B3F body (about 3.5 mm) is taller than the 3 mm gap between the PCB and the top. The hood now has a 7.4 mm × 1 mm pocket over each switch; the acrylic top has <strong>9 mm</strong> holes over the switches instead of the brief's 3.9 mm (acrylic cannot be pocketed on a laser). The hood keeps 3.9 mm.</li>
-<li><strong>Ring gap around each tube.</strong> 0.2 mm nominal. The printed hood has baffle collars that block line of sight to the leads; the clear-top option has none, so the tube leads sit under clear acrylic behind a very thin ring gap. Reviewer to judge.</li>
-<li><strong>Clear-top frame printing.</strong> The frame prints upright; the acrylic seat ledge is chamfered to print without supports, but the five PCB bosses and the upper corner blocks overhang and need painted-on supports (see <a href="PRINTING.html">PRINTING.md</a>).</li>
+<li><strong>Enclosure changed from the brief: alarm-clock case.</strong> At the builder's request the low base with tubes standing out of it (and its two options, printed hood or acrylic top) was replaced by one fully enclosed case: tubes inside, a captive 3 mm smoked acrylic window, buttons pressed from the top through printed rods, and the PCB carried on floor standoffs. This removes the 0.2 mm ring gaps around the tubes and the need to pass glass through openings. Fasteners are now one set (4 × M2 × 8, 7 × M2 × 6). Test pads TP1–TP4 and the HV_ARM header moved to the top side so they can be reached with the case lifted off.</li>
+<li><strong>Button rods (new, unverified).</strong> Each rod rests on its switch by its own weight (about 0.03 N against a 1.47 N actuation force) with about 1 mm of free travel above the 0.25 mm switch travel. The height chain (standoffs, PCB, switch, roof) has not been measured; coupon 06 and Stage 6 check it.</li>
+<li><strong>Window retention.</strong> The panel rests on the floor and is held in its slot by three silicone dots, so it stays in the case when the case is lifted. Without the silicone it would drop out onto the tubes.</li>
+<li><strong>Sealed case, no vents.</strong> Kept closed on purpose so HV stays enclosed. The model predicts an average internal rise of about 3–5 K at about 2.7 W (<a href="EQUATIONS.html#7-sealed-case-temperature">EQUATIONS.md</a>); local hot spots (the Nano's regulator, PS1) are checked at Stage 5.</li>
+<li><strong>Case printing.</strong> The case prints upright and needs tree supports inside under the roof and in the window opening; support removal around the window slot must leave the slot clean (see <a href="PRINTING.html">PRINTING.md</a>).</li>
 <li><strong>USB back-feed.</strong> The converter can start from 2.5 V. With the shunt fitted and only USB connected, back-feed through the Nano could, in principle, reach it if QP2 were on. Firmware refuses HV below 10.8 V VIN, and the flashing procedure removes the shunt; Stage 2 checks that <code>HV_IN_12V</code> stays near 0 V whenever HV is not requested.</li>
 <li><strong>Serial monitor resets the Nano.</strong> Opening the serial monitor resets the board. The firmware therefore latches HV faults in EEPROM; it does not rely on the Nano staying powered. Confirmed in code only; Stage 2 checks it on a board.</li>
 <li><strong>Bottom-side keep-out above the cable clamp.</strong> Parts under the clamp region near the rear opening must stay below about 11 mm.</li>

@@ -1,6 +1,6 @@
 # Equations
 
-Each section goes intuition → equation → symbols and units → worked example → picture and test. Every number on this page is recomputed by [`tests/check_equations.py`](../tests/check_equations.py) (34 checks). They are **model numbers**, not measurements: Stage 4 of the [build guide](BUILD_GUIDE.md) replaces them with readings from your board.
+Each section goes intuition → equation → symbols and units → worked example → picture and test. Every number on this page is recomputed by [`tests/check_equations.py`](../tests/check_equations.py) (38 checks). They are **model numbers**, not measurements: Stage 4 of the [build guide](BUILD_GUIDE.md) replaces them with readings from your board.
 
 Inputs used throughout:
 
@@ -95,3 +95,17 @@ Inputs used throughout:
 **Worked example.** At the data sheet's ±2 parts per million (ppm) from 0 to 40 °C: ±0.17 s per day, ±63 s per year at worst. Real parts are usually better. The DS3231 also has an aging register for trimming, which Rev C firmware leaves at zero.
 
 **Test.** `DS3231 worst drift ...`. To measure your clock, set it against a reference, then compare after a week with `STATUS` over the serial port.
+
+## 7. Sealed-case temperature
+
+**Intuition.** The alarm-clock case has no vents (so the HV stays enclosed). All the power the clock uses ends up as heat inside and has to leave through the case surface.
+
+**Equation.** ΔT ≈ P / (h × A)
+
+**Symbols.** ΔT, the average rise of the inside air over the room, in kelvin (K); P, heat released inside, in W; h, the combined natural-convection and radiation coefficient of the outer surface, in W/(m²·K); A, the outer surface area, in m².
+
+**Worked example.** P ≈ 1.94 W / 0.86 (converter) + 7 V × 50 mA (the Nano's regulator) + 0.1 W (logic) ≈ **2.7 W**. A ≈ 2 × (0.234 × 0.112 + 0.080 × 0.112 + 0.234 × 0.080) ≈ 0.108 m². With h = 5 (pessimistic) ΔT ≈ **5 K**; with h = 10 (typical) ΔT ≈ 2.5 K.
+
+**What it means.** On average the inside barely warms. Hot spots are another matter: the Nano's linear regulator and the HV module run hotter than the air around them. Stage 5 of the build guide measures them after two hours closed.
+
+**Test.** `heat dissipated inside the case`, `average internal rise ...`.

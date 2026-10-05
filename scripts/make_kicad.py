@@ -286,8 +286,8 @@ for k, lst in DIGIT.items():
   (condition "A.NetClass == 'HV'")
   (constraint edge_clearance (min 2.0mm)))
 
-(rule "Top-side keep-out ring under the baffle collars"
-  (condition "A.insideArea('BAFFLE_KEEPOUT')")
+(rule "Keep the top side clear except tubes, lamps and switches (rule area named TOP_KEEPOUT)"
+  (condition "A.insideArea('TOP_KEEPOUT')")
   (constraint disallow footprint))
 ''')
 pro = {
@@ -351,7 +351,7 @@ def to_board(x, y):
 
 
 SIZE = {  # courtyard envelopes (mm) for placeholder footprints: w, h or ("circle", d)
-    "IN-14": ("circle", DIM["tube_opening_d"]), "NE-2": ("circle", DIM["separator_opening_d"]),
+    "IN-14": ("circle", DIM["tube_courtyard_d"]), "NE-2": ("circle", DIM["lamp_courtyard_d"]),
     "SW_B3F_4pin": (7.0, 7.0), "HV5522PJ-G": (18.0, 18.0), "Arduino_Nano_Classic": (44.0, 19.0),
     "NCH8200HV": (30.0, 21.0), "DS3231SN": (11.0, 11.5), "PTC": (5.6, 4.0), "PMOS_GSD": (3.4, 3.2),
     "NPN_BCE": (3.4, 3.2), "PNP_BCE": (3.4, 3.2), "Conn_1x02": (3.0, 5.6), "C_polarised": (7.0, 7.0),
@@ -372,8 +372,6 @@ def placeholder(ref, t, value):
             fp_circle(fp, layer, s[1] / 2 + grow, 0.05 if layer == pcbnew.F_CrtYd else 0.1)
         else:
             fp_rect(fp, layer, s[0] + 2 * grow, s[1] + 2 * grow, 0.05 if layer == pcbnew.F_CrtYd else 0.1)
-    if t == "IN-14":  # baffle collar footprint on the top side: keep this ring free of parts
-        fp_circle(fp, pcbnew.User_1, DIM["tube_opening_d"] / 2 + DIM["baffle_wall_t"], 0.1)
     # Through-board leads: reserve the area on the bottom side too.
     thru = {"IN-14": ("c", 7.0), "NE-2": ("c", 2.0), "SW_B3F_4pin": ("r", 7.0, 7.0)}.get(t)
     if thru and thru[0] == "c":

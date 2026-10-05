@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Printing the enclosure · Six-Tube Nixie Clock Rev C</title>
+<title>Printing and cutting the alarm-clock case · Six-Tube Nixie Clock Rev C</title>
 <meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
 <meta name="nixie-repo" content="">
 <meta name="theme-color" content="#120e0b">
@@ -42,9 +42,10 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </style></head><body>
 <header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html" class=on>Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
 <div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
-<main><h1 id="printing-the-enclosure">Printing the enclosure</h1>
+<main><h1 id="printing-and-cutting-the-alarm-clock-case">Printing and cutting the alarm-clock case</h1>
 <p>Everything here is a <strong>baseline, untested</strong> starting point. Print the fit coupons first and adjust <code>cad/DIMENSIONS.json</code>, not the slicer scale.</p>
-<h2 id="which-files-to-slice">Which files to slice</h2>
+<p><img alt="Alarm-clock case, model render" src="img/hero_alarm_clock.png"></p>
+<h2 id="which-files-to-use">Which files to use</h2>
 <table>
 <thead>
 <tr>
@@ -60,60 +61,54 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <td>Print orientation, already on the bed</td>
 </tr>
 <tr>
+<td><strong>Laser-cut this</strong></td>
+<td><code>cad/Window_panel_3mm_1to1.dxf</code></td>
+<td>2D, 1:1 millimetres</td>
+</tr>
+<tr>
 <td>CAD reference only</td>
-<td><code>cad/step/*.step</code>, <code>cad/Assembly_RevC_*.step</code></td>
+<td><code>cad/step/*.step</code>, <code>cad/Assembly_RevC_alarm_clock.step</code></td>
 <td>Assembly coordinates: <strong>do not slice</strong></td>
 </tr>
 <tr>
-<td>Never print</td>
-<td><code>cad/PCB_mechanical_RevC.step</code> (PCB, glass, spacers, lamps, switches)</td>
-<td>Envelopes for fit checks</td>
+<td>View only</td>
+<td><code>cad/view/*.stl</code> (whole clock, chassis)</td>
+<td>Includes glass and PCB envelopes: <strong>never print</strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Do not print</strong> any glass, PCB or switch body. <strong>Do not</strong> slice an assembly-coordinate STEP in place of a print-oriented part: the hood, for example, prints upside down.</p>
 <h2 id="parts-and-plates">Parts and plates</h2>
 <table>
 <thead>
 <tr>
 <th>Plate</th>
 <th>Parts</th>
-<th>Needed for</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>plate_0_fit_coupons.3mf</code></td>
 <td>06 fit coupon, 07 unpowered lead-pattern coupon</td>
-<td>Everyone, first</td>
+<td>Print first</td>
 </tr>
 <tr>
-<td><code>plate_A_all_printed_hood.3mf</code></td>
-<td>01 printed hood (upside down: top face on the bed)</td>
-<td>All-printed option</td>
+<td><code>plate_A_case_shell.3mf</code></td>
+<td>01 alarm-clock case (upright, open bottom on the bed)</td>
+<td>234 × 80 × 112 mm; tree supports (see below)</td>
 </tr>
 <tr>
-<td><code>plate_B_clear_top_frame.3mf</code></td>
-<td>04 acrylic frame (upright)</td>
-<td>Clear-top option</td>
-</tr>
-<tr>
-<td><code>plate_C_shared_floor_and_clamp.3mf</code></td>
-<td>02 bottom cover, 03 cable clamp</td>
-<td>Both options</td>
-</tr>
-<tr>
-<td><code>stl/05_optional_top_plate_3mm.stl</code></td>
-<td>Printed stand-in for the acrylic top</td>
-<td>Only if you cannot get acrylic cut; it will not be clear</td>
+<td><code>plate_B_floor_clamp_rods.3mf</code></td>
+<td>02 floor, 03 cable clamp, 3 × 04 button rods</td>
+<td>Rods stand cap-down; add a brim</td>
 </tr>
 </tbody>
 </table>
 <p>Coupon 07 carries only the IN-14 lead pattern. <strong>It is never a powered tube spacer.</strong> Keep the factory spacers on your tubes.</p>
-<p><img alt="Hood from below" src="img/hood_underside.png"></p>
-<p><img alt="Clear-top frame" src="img/frame_from_above.png"></p>
-<h2 id="printer-bed">Printer bed</h2>
-<p>The hood and frame are 234 × 80 mm. You need at least about 240 × 85 mm of usable bed. A 220 × 220 mm bed is too small even diagonally.</p>
+<p>Print the button rods in the <strong>same colour as the case</strong>: they sit just to the right of the window, behind the smoked panel.</p>
+<p><img alt="Case from below: window slot rails, button guides, corner blocks" src="img/case_underside.png"></p>
+<h2 id="printer">Printer</h2>
+<p>Every part fits a Bambu Lab P1S (256 × 256 × 256 mm). Any printer with at least 240 × 85 mm of bed and 115 mm of height works.</p>
 <h2 id="baseline-settings-petg-matte">Baseline settings (PETG, matte)</h2>
 <table>
 <thead>
@@ -141,38 +136,43 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </tr>
 <tr>
 <td>Supports</td>
-<td><strong>Off</strong> for the hood, floor, clamp and coupons. <strong>Frame (04): painted supports</strong> under the five PCB bosses and the four upper corner blocks only</td>
+<td><strong>Case (01):</strong> tree supports, automatic, with <em>on build plate only</em> turned <strong>off</strong>. They form inside under the roof and the three button guides, and in the window opening; the outside needs none. <strong>Everything else:</strong> none</td>
 </tr>
 <tr>
 <td>Brim</td>
-<td>5 mm on the hood and frame helps long, thin PETG parts stay flat</td>
+<td>5 mm on the case and the rods</td>
+</tr>
+<tr>
+<td>Seam</td>
+<td>Aligned at the back, so the front face and window bezel stay clean</td>
 </tr>
 </tbody>
 </table>
 <h2 id="inspect-in-the-slicer-before-printing">Inspect in the slicer before printing</h2>
 <ul>
-<li><strong>Holes:</strong> the 1.7 mm pilots show as holes in every post, including the blind ones in the hood that stop 1 mm under the visible top.</li>
-<li><strong>Posts:</strong> the five PCB posts and the four corner blocks are solid, not hollow.</li>
-<li><strong>Baffles:</strong> the hood's collars around the tube and lamp openings are present; they block line of sight to HV leads.</li>
-<li><strong>Switch pockets:</strong> three 7.4 mm square pockets on the hood underside.</li>
-<li><strong>Frame ledge:</strong> the stepped 45° chamfer under the acrylic seat.</li>
-<li><strong>Cable path:</strong> the 4.2 mm rear opening, and the cradle and two bosses on the floor.</li>
+<li><strong>Window slot:</strong> two vertical rails inside the front wall, a top stop above the window, and a 3.3 mm slot open at the bottom.</li>
+<li><strong>Button guides:</strong> three tubes hanging from the roof at the right-hand end, with 6.6 mm holes through the top.</li>
+<li><strong>Corner blocks:</strong> four solid blocks in the bottom corners, each with a 1.7 mm pilot hole.</li>
+<li><strong>Floor standoffs:</strong> five 5 mm posts on part 02, 19.4 mm tall, each with a 1.7 mm pilot at the top.</li>
+<li><strong>Cable path:</strong> the 4.2 mm rear hole, and the cradle and two bosses on the floor.</li>
+<li><strong>Grille:</strong> the dimples on the left end are blind (they do not go through the wall).</li>
 </ul>
 <h2 id="after-printing">After printing</h2>
 <ul>
-<li>Tap every 1.7 mm pilot with an M2 tap. Clear chips.</li>
-<li>Check the acrylic (or printed plate 05) drops into the frame without force.</li>
-<li>Check each tube opening with a real tube; never force glass.</li>
+<li>Tap every 1.7 mm pilot with an M2 tap; clear the chips.</li>
+<li>Check that each rod slides freely in its guide.</li>
+<li>Remove all support material from inside the case, especially around the window slot.</li>
 </ul>
+<h2 id="window-panel">Window panel</h2>
+<p>Cut <code>cad/Window_panel_3mm_1to1.dxf</code> (layer <code>CUT</code>, millimetres, 1:1) from <strong>3 mm cast acrylic</strong>. Smoked grey gives the classic alarm-clock look: the glowing digits show through and the rest of the inside disappears. Clear also works. Before cutting, confirm the laser software reads it as 206 × 92.8 mm, and peel the protective film only at assembly.</p>
+<p>The panel slides up into its slot from the open bottom of the case. Before the case goes on, put three small dots of clear neutral-cure silicone in the slot (both top corners and the middle of the top edge) so the panel stays in the case when you lift the case off later.</p>
 <h2 id="changing-a-dimension">Changing a dimension</h2>
 <ol>
-<li>Edit the value in <code>cad/DIMENSIONS.json</code> (for example <code>tube_opening_d</code>).</li>
-<li>Run <code>scripts/render_cad</code>. It rebuilds every STEP, STL, 3MF, plate, the DXF and the preview images, then runs the geometry checks, so the outputs never drift from the source.</li>
+<li>Edit the value in <code>cad/DIMENSIONS.json</code> (for example <code>window_x</code> or <code>button_hole_d</code>).</li>
+<li>Run <code>scripts/render_cad</code>. It rebuilds every STEP, STL, 3MF, plate, the DXF, the drawings and the previews, then runs the geometry checks, so the outputs never drift from the source.</li>
 <li>Reprint the coupon. Record the change in <a href="VALIDATION.html">VALIDATION.md</a>.</li>
 </ol>
-<p><strong>Never scale a part uniformly to fix a hole.</strong> That moves every screw post too.</p>
-<h2 id="acrylic-top">Acrylic top</h2>
-<p>Cut <code>cad/Acrylic_top_3mm_1to1.dxf</code> (layer <code>CUT</code>, millimetres, 1:1) from <strong>3 mm clear cast acrylic</strong>. Before cutting, confirm the laser software reads it as 228.8 × 74.8 mm. The tube holes are 19.4 mm, the lamp holes 7 mm, the switch holes 9 mm (to clear the switch bodies), and the four corner screw holes 2.4 mm.</p></main>
+<p><strong>Never scale a part uniformly to fix a hole.</strong> That moves every screw post too.</p></main>
 <footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
 <script>
 (function(){

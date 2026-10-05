@@ -23,7 +23,6 @@ U3,DS3231SN#,Package_SO:SOIC-16W_7.5x10.3mm,bottom,186,18,0,planning position
 F1,1812L075/33DR,Fuse:Fuse_1812,bottom,211,67,0,planning position
 QP1,DMP3098L-7,Package_TO_SOT_SMD:SOT-23,bottom,211,61,0,planning position
 QP2,DMP3098L-7,Package_TO_SOT_SMD:SOT-23,bottom,100,50,0,planning position
-JP1,1x2 header + shunt (HV_ARM),Connector_PinHeader_2.54mm:PinHeader_1x02,bottom,104,57,0,planning position
 J1,12 V pigtail pads,Nixie_RevC:WirePads_2 (to author),bottom,204,67,0,planning position
 J2,CR2032 lead pads,Nixie_RevC:WirePads_2 (to author),bottom,224,45,0,planning position
 C5,47 uF 25 V radial,Capacitor_THT:CP_Radial_D6.3mm_P2.50mm,bottom,196,60,0,planning position
@@ -43,6 +42,11 @@ RA5,22 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizon
 RA6,22 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,212,35,90,HV: keep >=2 mm creepage from LV nets
 RL1,220 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,86,35,90,planning position
 RL2,220 k 1% 1 W PR01,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,bottom,156,35,90,planning position
+JP1,1x2 header + shunt (HV_ARM),Connector_PinHeader_2.54mm:PinHeader_1x02,top,90,66,0,top-side service access with the case lifted off
+TP1,GND,TestPoint:TestPoint_Pad_D1.5mm,top,100,68,0,top-side service access with the case lifted off
+TP4,HV170,TestPoint:TestPoint_Pad_D1.5mm,top,106,68,0,top-side service access with the case lifted off
+TP2,V12,TestPoint:TestPoint_Pad_D1.5mm,top,180,68,0,top-side service access with the case lifted off
+TP3,V5,TestPoint:TestPoint_Pad_D1.5mm,top,186,68,0,top-side service access with the case lifted off
 C1,100 nF 0805,Capacitor_SMD:C_0805,bottom,93,12,0,planning position
 C3,10 uF 0805,Capacitor_SMD:C_0805,bottom,93,16,0,planning position
 C2,100 nF 0805,Capacitor_SMD:C_0805,bottom,165,12,0,planning position
@@ -75,7 +79,3 @@ QE1,MMBT3904,Package_TO_SOT_SMD:SOT-23,bottom,96,62,0,planning position
 RB5,10 k 0805,Resistor_SMD:R_0805,bottom,100,62,0,planning position
 RPD5,100 k 0805,Resistor_SMD:R_0805,bottom,104,62,0,planning position
 RGP,100 k 0805,Resistor_SMD:R_0805,bottom,104,50,0,planning position
-TP1,GND,TestPoint:TestPoint_Pad_D1.5mm,bottom,180,64,0,planning position
-TP2,V12,TestPoint:TestPoint_Pad_D1.5mm,bottom,184,64,0,planning position
-TP3,V5,TestPoint:TestPoint_Pad_D1.5mm,bottom,188,64,0,planning position
-TP4,HV170,TestPoint:TestPoint_Pad_D1.5mm,bottom,145,63,0,planning position

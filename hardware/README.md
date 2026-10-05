@@ -27,7 +27,7 @@
 1. Open `Nixie_RevC.kicad_pro` in KiCad 7 or newer. Redraw the root sheet into readable blocks (the generated one is a label-connected parts list).
 2. Replace placeholders with real footprints: PLCC-44 for the HV5522PJ-G, SOIC-16W for the DS3231SN, the IN-14 direct-solder pattern **measured from your tubes**, the NCH8200HV **measured from your module**.
 3. Run native ERC. Fix everything or document every waiver.
-4. Route 4 layers with `Nixie_RevC.kicad_dru`. Keep HV on one side of the board, away from the Nano and the logic. Keep the top side clear under the hood's baffle rings.
+4. Route 4 layers with `Nixie_RevC.kicad_dru`. Keep HV on one side of the board, away from the Nano and the logic. Keep the top side to tubes, lamps, switches, the HV_ARM header and the TP1–TP4 test pads along the rear edge (reached with the alarm-clock case lifted off).
 5. Run native DRC. Have the HV layout reviewed by someone experienced.
 6. Only then plot Gerbers and drill files. Record all of it in `docs/VALIDATION.md`.
 

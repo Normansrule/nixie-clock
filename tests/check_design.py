@@ -101,36 +101,34 @@ x1, y1 = x0 + DIM["pcb_l"], y0 + DIM["pcb_w"]
 off = [p["ref"] for p in place if not (x0 < float(p["x_mm"]) < x1 and y0 < float(p["y_mm"]) < y1)]
 rule("all placement points inside the PCB outline", not off, ", ".join(off))
 top = sorted(p["ref"] for p in place if p["side"] == "top")
-rule("top side carries only tubes, lamps and buttons", all(r[0] in "TLS" for r in top), ", ".join(top))
+rule("top side carries only tubes, lamps, switches, test pads and the HV_ARM header", all(r[0] in "TLS" or r == "JP1" for r in top), ", ".join(top))
+rule("TP1 (GND) and TP4 (HV) are on the top side, next to each other, for measuring with the case lifted",
+     refs["TP1"]["side"] == "top" and refs["TP4"]["side"] == "top" and math.dist((float(refs["TP1"]["x_mm"]), float(refs["TP1"]["y_mm"])), (float(refs["TP4"]["x_mm"]), float(refs["TP4"]["y_mm"]))) <= 10)
 
 # --- Enclosure geometry ---
 tubes = DIM["tube_centers"]
 rule("tube pitch pairs match (30 mm within a pair)", all(tubes[i + 1][0] - tubes[i][0] == 30 for i in (0, 2, 4)))
 rule("separators centred between pairs", [s[0] for s in DIM["separator_centers"]] == [(tubes[1][0] + tubes[2][0]) / 2, (tubes[3][0] + tubes[4][0]) / 2])
-r_open = DIM["tube_opening_d"] / 2
-holes = [(x, y, r_open) for x, y in tubes] + [(x, y, DIM["separator_opening_d"] / 2) for x, y in DIM["separator_centers"]]
-holes += [(x, y, DIM["button_opening_d"] / 2) for x, y in DIM["buttons"].values()]
-posts = [(x, y, DIM["pcb_post_d"] / 2) for x, y in DIM["pcb_screws"]]
-min_gap = min(math.dist(a[:2], b[:2]) - a[2] - b[2] for i, a in enumerate(holes + posts) for b in (holes + posts)[i + 1:])
-rule("openings and PCB posts do not overlap (min web >= 1.5 mm)", min_gap >= 1.5, f"min web {min_gap:.2f} mm")
-inner = DIM["wall_t"]
-edge = min(min(x - r, y - r, DIM["base_l"] - x - r, DIM["base_w"] - y - r) for x, y, r in holes)
-rule("top openings clear the side walls", edge > inner, f"{edge:.1f} mm from outer edge")
-rule("glass fits the opening (nominal)", DIM["tube_glass_d"] < DIM["tube_opening_d"])
-rule("button protrudes above the top (7 mm tall switch)", DIM["pcb_top_z"] + DIM["button_height_above_pcb"] > DIM["base_h"])
-gap_all = DIM["base_h"] - DIM["top_t"] - DIM["pcb_top_z"]
-rule("PCB top to hood underside leaves room for the top-side budget", gap_all >= DIM["top_side_height_budget"], f"{gap_all} mm")
-eng_printed = 6 - DIM["pcb_t"]
-eng_clear = 4 - DIM["pcb_t"]
-post_len = DIM["base_h"] - DIM["top_t"] - DIM["pcb_top_z"]
-rule("all-printed M2x6 PCB screw stays inside post + top skin", eng_printed < post_len + DIM["top_t"] - 0.5, f"{eng_printed} mm into {post_len + DIM['top_t']} mm")
-rule("clear-top M2x4 PCB screw stops below the acrylic", eng_clear <= post_len, f"{eng_clear} mm into {post_len} mm post")
-rule("clear-top M2x6 PCB screw WOULD strike the acrylic (why M2x4)", eng_printed > post_len, f"{eng_printed} mm vs {post_len} mm")
+r_tube = DIM["tube_courtyard_d"] / 2
+keep = [(x, y, r_tube) for x, y in tubes] + [(x, y, DIM["lamp_courtyard_d"] / 2) for x, y in DIM["separator_centers"]]
+keep += [(x, y, DIM["button_body"] * 0.71) for x, y in DIM["buttons"].values()]
+posts = [(x, y, DIM["pcb_post_d"] / 2 + 1.9) for x, y in DIM["pcb_screws"]]   # standoff + M2 screw head
+min_gap = min(math.dist(a[:2], b[:2]) - a[2] - b[2] for i, a in enumerate(keep + posts) for b in (keep + posts)[i + 1:])
+rule("tubes, lamps, switches and PCB screw heads do not overlap (min gap >= 1 mm)", min_gap >= 1.0, f"min gap {min_gap:.2f} mm")
+wx0, wx1 = DIM["window_x"]
+rule("window spans all six tubes", wx0 < tubes[0][0] - DIM["tube_glass_d"] / 2 and tubes[-1][0] + DIM["tube_glass_d"] / 2 < wx1)
+rule("button rods sit outside the window width (hidden behind the case front)", all(x - DIM["rod_d"] / 2 > wx1 for x, _ in DIM["buttons"].values()))
+flat = (DIM["top_edge_r"], DIM["base_w"] - DIM["top_edge_r"])
+rule("button caps sit on the flat part of the top", all(flat[0] < y - DIM["rod_cap_d"] / 2 and y + DIM["rod_cap_d"] / 2 < flat[1] for _, y in DIM["buttons"].values()))
+rule("window top is below where the top edge starts to curve", DIM["window_z"][1] + DIM["bezel_step"] <= DIM["case_h"] - DIM["top_edge_r"])
+tube_top = DIM["pcb_top_z"] + DIM["tube_spacer_h"] + DIM["tube_glass_h"]
+rule("tubes fully inside the case (glass top below the roof)", tube_top < DIM["case_h"] - DIM["roof_t"] - 2, f"{tube_top:g} vs roof {DIM['case_h'] - DIM['roof_t']:g}")
+rule("PCB edge clears the window slot rails", DIM["pcb_offset_y"] > DIM["wall_t"] + DIM["window_panel_t"] + DIM["window_slot_clearance"] + DIM["window_rail_lip"])
 co = DIM["rear_cable_opening_z"] - DIM["rear_cable_opening_d"] / 2
 rule("rear cable opening sits above the floor", co > DIM["floor_t"], f"bottom edge z={co}")
-f = DIM["fasteners"]
-rule("all-printed set = 4x M2x8 + 7x M2x6", f["all_printed"]["M2x8"] == 4 and f["all_printed"]["M2x6"] == 7)
-rule("clear-top set = 4x M2x8 + 5x M2x4 + 6x M2x6", (f["clear_top"]["M2x8"], f["clear_top"]["M2x4"], f["clear_top"]["M2x6"]) == (4, 5, 6))
+f = DIM["fasteners"]["alarm_case"]
+rule("one fastener set: 4x M2x8 + 7x M2x6", f["M2x8"] == 4 and f["M2x6"] == 7)
+rule("M2x6 PCB screw: engagement in standoff <= 8 mm pilot", 6 - DIM["pcb_t"] <= 8)
 
 w = max(len(n) for n, _, _ in results)
 fails = 0

@@ -16,6 +16,7 @@ import build_cad as B  # noqa: E402
 OUT = ROOT / "docs" / "img"
 OUT.mkdir(parents=True, exist_ok=True)
 BG = (0.078, 0.067, 0.059)
+PEEL = False  # depth peeling showed translucent parts through opaque walls on the headless renderer
 
 
 def actor_from_shape(shape, color, opacity=1.0, tol=0.08, specular=0.15, emissive=False):
@@ -70,7 +71,7 @@ def digit_actor(ch, x, y, z, height=17.0):
 def render(actors, path, cam_pos, focal, size=(1600, 820), view_angle=24, caption=None):
     r = vtk.vtkRenderer()
     r.SetBackground(*BG)
-    r.SetUseDepthPeeling(1)
+    r.SetUseDepthPeeling(int(PEEL))
     r.SetMaximumNumberOfPeels(40)
     r.SetOcclusionRatio(0.0)
     for a in actors:
@@ -126,36 +127,47 @@ def render(actors, path, cam_pos, focal, size=(1600, 820), view_angle=24, captio
     pw.Write()
 
 
+def scene(env, digits="100842", panel_opacity=0.38, z_chassis=0.0, z_shell=0.0, z_rods=0.0, y_panel=0.0, shell=True, panel=True, rods=True):
+    dark = (0.13, 0.13, 0.14)
+    mv = lambda shp, z: shp.translate((0, 0, z)) if z else shp
+    acts = []
+    for k, v in env.items():
+        col, op, em, spec = {"PCB": ((0.05, 0.28, 0.11), 1, False, 0.15), "glass": ((1.0, 0.8, 0.6), 0.16, False, 0.9),
+                             "spacer": ((0.1, 0.1, 0.1), 1, False, 0.15), "lamp": ((1.0, 0.45, 0.1), 0.95, True, 0.15),
+                             "button": ((0.35, 0.35, 0.36), 1, False, 0.15)}[k.split("_")[0]]
+        acts.append(actor_from_shape(mv(v, z_chassis), col, op, specular=spec, emissive=em))
+    acts.append(actor_from_shape(mv(B.bottom_cover(), z_chassis), (0.2, 0.2, 0.21)))
+    acts.append(actor_from_shape(mv(B.cable_clamp(), z_chassis), (0.85, 0.52, 0.22)))
+    zdig = B.PCB_TOP_Z + B.SPACER_H + 24 + z_chassis
+    acts += [digit_actor(ch, x, y, zdig) for ch, (x, y) in zip(digits, B.TUBES)]
+    for x, y in (B.BUTTONS.values() if rods else []):
+        acts.append(actor_from_shape(mv(B.button_rod(x, y), z_rods), (0.24, 0.24, 0.25), specular=0.3))  # printed in the case colour
+    if shell:
+        acts.append(actor_from_shape(mv(B.case_shell(), z_shell), dark, specular=0.12))
+    if panel:
+        acts.append(actor_from_shape(B.window_panel().translate((0, y_panel, 0)), (0.3, 0.26, 0.22), panel_opacity, specular=1.0))
+    return acts
+
+
 def main():
     env = B.pcb_mechanical()
-    dark = (0.13, 0.13, 0.14)
-    glass = [actor_from_shape(v, (1.0, 0.8, 0.6), 0.16, specular=0.9) for k, v in env.items() if k.startswith("glass")]
-    lamps = [actor_from_shape(v, (1.0, 0.45, 0.1), 0.95, emissive=True) for k, v in env.items() if k.startswith("lamp")]
-    spacers = [actor_from_shape(v, (0.1, 0.1, 0.1)) for k, v in env.items() if k.startswith("spacer")]
-    buttons = [actor_from_shape(v, (0.35, 0.35, 0.36)) for k, v in env.items() if k.startswith("button")]
-    pcb = actor_from_shape(env["PCB"], (0.05, 0.22, 0.1))
-    zdig = B.PCB_TOP_Z + B.SPACER_H + 24
-    digits = [digit_actor(ch, x, y, zdig) for ch, (x, y) in zip("123456", B.TUBES)]
-    floor = actor_from_shape(B.bottom_cover(), dark)
-    hood = actor_from_shape(B.printed_hood(), dark, specular=0.08)
-    frame = actor_from_shape(B.acrylic_frame(), dark, specular=0.08)
-    acrylic = actor_from_shape(B.top_plate(), (0.8, 0.92, 1.0), 0.22, specular=1.0)
-
-    front = ((117 + 95, -420, 190), (117, 38, 42))
-    render([floor, hood] + buttons + lamps + digits + glass, OUT / "hero_all_printed.png", *front,
-           caption="Rev C - all-printed hood (model)")
-    render([floor, frame, pcb] + spacers + buttons + lamps + digits + [acrylic] + glass, OUT / "hero_clear_top.png", *front,
-           caption="Rev C - printed frame + 3 mm clear cast-acrylic top (model)")
-    render([actor_from_shape(B.printed_hood(), (0.6, 0.6, 0.63))], OUT / "hood_underside.png",
-           (117 + 120, -260, -260), (117, 40, 15), caption="01 printed hood from below: baffle collars, PCB posts, corner blocks, button pockets")
-    render([actor_from_shape(B.acrylic_frame(), (0.6, 0.6, 0.63))], OUT / "frame_from_above.png",
-           (117 + 60, -200, 360), (117, 40, 10), caption="04 acrylic frame: chamfered seat ledge, corner blocks, PCB bosses")
-    for name in ("02_bottom_cover", "03_cable_clamp", "06_fit_coupon", "07_unpowered_lead_pattern_coupon"):
-        fn, flip = B.PARTS[name]
+    for old in ("hero_all_printed.png", "hero_clear_top.png", "hood_underside.png", "frame_from_above.png", "part_02_bottom_cover.png"):
+        (OUT / old).unlink(missing_ok=True)
+    render(scene(env), OUT / "hero_alarm_clock.png", (117 + 150, -390, 210), (117, 40, 52), view_angle=27,
+           caption="Rev C alarm-clock case: fully enclosed, smoked window (model)")
+    render(scene(env, panel_opacity=0.3), OUT / "hero_front.png", (117, -470, 70), (117, 40, 54), view_angle=24,
+           caption="Front view (model)")
+    render(scene(env, shell=False, panel=False, rods=False), OUT / "chassis.png", (117 + 160, -330, 220), (117, 40, 35), view_angle=27,
+           caption="Chassis: floor + PCB + tubes, case removed (model)")
+    shell = actor_from_shape(B.case_shell().rotate((117, 40, 56), (118, 40, 56), 180), (0.6, 0.6, 0.63))
+    render([shell], OUT / "case_underside.png", (117 + 230, -330, 520), (117, 40, 60),
+           caption="01 case from below: window slot rails, button guides, corner blocks")
+    for name in ("02_floor", "03_cable_clamp", "04_button_rod", "06_fit_coupon", "07_unpowered_lead_pattern_coupon"):
+        fn, flip, _ = B.PARTS[name]
         s = B.print_orient(fn(), flip)
         bb = s.val().BoundingBox()
         c = ((bb.xmin + bb.xmax) / 2, (bb.ymin + bb.ymax) / 2, bb.zmax / 2)
-        d = max(bb.xlen, bb.ylen) * 1.9
+        d = max(bb.xlen, bb.ylen, bb.zlen) * 1.9
         render([actor_from_shape(s, (0.85, 0.52, 0.22), specular=0.2)], OUT / f"part_{name}.png",
                (c[0] + d * 0.45, c[1] - d, c[2] + d * 0.8), c, size=(900, 560), caption=f"{name} (print orientation)")
     exploded(env)
@@ -174,27 +186,16 @@ def label3d(text, pos, color=(0.96, 0.91, 0.86)):
 
 
 def exploded(env):
-    """Exploded clear-top assembly: floor, frame, PCB with tubes, acrylic, each lifted apart."""
-    dz = {"floor": -55, "clamp": -55, "frame": 0, "pcb": 52, "acrylic": 78}
-    dark = (0.16, 0.16, 0.17)
-    mv = lambda shape, z: shape.translate((0, 0, z))
-    acts = [actor_from_shape(mv(B.bottom_cover(), dz["floor"]), dark),
-            actor_from_shape(mv(B.cable_clamp(), dz["clamp"]), (0.85, 0.52, 0.22)),
-            actor_from_shape(mv(B.acrylic_frame(), dz["frame"]), dark, specular=0.08),
-            actor_from_shape(mv(B.top_plate(), dz["acrylic"]), (0.8, 0.92, 1.0), 0.3, specular=1.0)]
-    for k, v in env.items():
-        col, op, em = {"PCB": ((0.05, 0.3, 0.12), 1, False), "glass": ((1.0, 0.8, 0.6), 0.2, False), "spacer": ((0.1, 0.1, 0.1), 1, False),
-                       "lamp": ((1.0, 0.45, 0.1), 0.95, True), "button": ((0.35, 0.35, 0.36), 1, False)}[k.split("_")[0]]
-        acts.append(actor_from_shape(mv(v, dz["pcb"]), col, op, emissive=em))
-    zdig = B.PCB_TOP_Z + B.SPACER_H + 24 + dz["pcb"]
-    acts += [digit_actor(ch, x, y, zdig) for ch, (x, y) in zip("123456", B.TUBES)]
-    xl = B.BASE_L + 14
-    acts += [label3d("02 bottom cover + 03 cable clamp  (4x M2x8)", (xl, 40, dz["floor"] + 2)),
-             label3d("04 printed frame (PETG)", (xl, 40, dz["frame"] + 14)),
-             label3d("PCB 218x64 mm + 6x IN-14 + 2x NE-2  (5x M2x4)", (xl, 40, dz["pcb"] + 22)),
-             label3d("3 mm clear cast acrylic top  (4x M2x6)", (xl, 40, dz["acrylic"] + 30))]
-    render(acts, OUT / "exploded.png", (117 + 330, -520, 330), (175, 40, 20), size=(1600, 1000), view_angle=26,
-           caption="Exploded view - clear-top option (model)")
+    """Exploded view: chassis (floor + PCB + tubes), window panel, case and button rods pulled apart."""
+    z_shell, z_rods, y_panel = 135, 200, -95
+    acts = scene(env, z_shell=z_shell, z_rods=z_rods, y_panel=y_panel, panel_opacity=0.55)
+    xl = B.L + 12
+    acts += [label3d("2  chassis: floor + PCB + tubes (5x M2x6)", (xl, 40, 10)),
+             label3d("1  smoked acrylic window slides into the case", (B.PANEL_X1 - 30, y_panel, -2)),
+             label3d("3  case lowers over (4x M2x8 from below)", (xl, 40, z_shell + 60)),
+             label3d("4  button rods drop into the top", (xl, 40, z_rods + 100))]
+    render(acts, OUT / "exploded.png", (117 + 420, -640, 420), (180, 10, 130), size=(1600, 1150), view_angle=30,
+           caption="Exploded view: numbers show the assembly order (model)")
 
 
 if __name__ == "__main__":

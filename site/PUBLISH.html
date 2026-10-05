@@ -54,7 +54,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <li>signs <code>gh</code> in as the account in <code>OWNER</code> (<strong>the one interactive step</strong>, only the first time: a browser code appears). If <code>gh</code> already knows that account it just switches to it;</li>
 <li>pushes over SSH when <code>~/.ssh/config</code> has a host alias for that account (for example <code>github-normansrule</code>), otherwise over HTTPS with the <code>gh</code> token and the <code>workflow</code> permission;</li>
 <li>finds <code>nixie-clock.zip</code> in <code>~/Downloads</code> or, under WSL, in your Windows Downloads folder;</li>
-<li>unpacks it to <code>~/nixie-clock</code> (its own folder, and it refuses to run git anywhere else, which matters if your home folder is itself a git repository);</li>
+<li>unpacks it to <code>~/nixie-clock</code> (its own folder, and it refuses to run git anywhere else, which matters if your home folder is itself a git repository). If the repository is already there, it is brought exactly in line with the ZIP: files the new version no longer has are removed, so old and new designs never mix;</li>
 <li>commits, creates the public repository, pushes <code>main</code>, turns on Pages, waits for the site, tags the desktop release and prints all the links.</li>
 </ol>
 <p>It is safe to run again: every step checks what already exists and only does what is missing. Everything runs inside <code>( ... )</code>, so an error stops the script without closing your terminal. Change <code>OWNER</code> on the first line if the repository should belong to a different GitHub account.</p>
@@ -80,8 +80,13 @@ echo &quot;Pushing to $URL&quot;
 ZIP=&quot;$HOME/Downloads/$REPO.zip&quot;
 [ -f &quot;$ZIP&quot; ] || ZIP=&quot;$(ls -t /mnt/c/Users/*/Downloads/$REPO*.zip 2&gt;/dev/null | head -n1 || true)&quot;
 [ -f &quot;$ZIP&quot; ] || { echo &quot;Could not find $REPO.zip in ~/Downloads or /mnt/c/Users/*/Downloads&quot;; false; }
-# 5. Unpack to ~/nixie-clock and refuse to continue anywhere else
-unzip -oq &quot;$ZIP&quot; -d &quot;$HOME&quot;
+# 5. Unpack to ~/nixie-clock: a fresh folder, or an existing repository brought exactly in line with the ZIP
+#    (files the new ZIP no longer has are removed; .git and local build folders are kept)
+TMP=&quot;$(mktemp -d)&quot;; unzip -q &quot;$ZIP&quot; -d &quot;$TMP&quot;
+[ -f &quot;$TMP/$REPO/docs/SAFETY.md&quot; ] || { echo &quot;$ZIP does not contain the $REPO folder&quot;; false; }
+mkdir -p &quot;$DEST&quot;
+rsync -a --delete --exclude '.git/' --exclude 'node_modules/' --exclude '.venv/' --exclude '.build/' --exclude 'app/www/' --exclude 'app/dist/' --exclude 'fab/' &quot;$TMP/$REPO/&quot; &quot;$DEST/&quot;
+rm -rf &quot;$TMP&quot;
 cd &quot;$DEST&quot;
 [ &quot;$PWD&quot; = &quot;$DEST&quot; ] &amp;&amp; [ -f docs/SAFETY.md ] &amp;&amp; [ -f app/package.json ] || { echo &quot;Not in the unpacked repository: stopping&quot;; false; }
 # 6. Start the repository on branch main and make sure git is using this folder, not a parent repository
@@ -91,7 +96,7 @@ git config user.name &gt;/dev/null || git config user.name &quot;$OWNER&quot;
 git config user.email &gt;/dev/null || git config user.email &quot;$(gh api user --jq .id)+$OWNER@users.noreply.github.com&quot;
 # 7. Commit everything (skipped if nothing changed)
 git add -A
-git diff --cached --quiet || git commit -qm &quot;Six-Tube Nixie Clock Rev C: build guide, KiCad, CAD, firmware, website and desktop app&quot;
+git diff --cached --quiet || git commit -qm &quot;Six-Tube Nixie Clock Rev C: alarm-clock case, build guide, KiCad, CAD, firmware, website and desktop app&quot;
 # 8. Create the public GitHub repository if it does not exist, and point origin at it
 gh repo view &quot;$OWNER/$REPO&quot; &gt;/dev/null 2&gt;&amp;1 || gh repo create &quot;$OWNER/$REPO&quot; --public -d &quot;Six-tube IN-14 Nixie clock: build guide, KiCad, CadQuery, firmware, website and desktop app (Rev C, unvalidated)&quot; --homepage &quot;https://$(printf %s &quot;$OWNER&quot; | tr '[:upper:]' '[:lower:]').github.io/$REPO/&quot;
 git remote add origin &quot;$URL&quot; 2&gt;/dev/null || git remote set-url origin &quot;$URL&quot;

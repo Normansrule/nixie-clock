@@ -41,47 +41,48 @@ def svg(w, h, body, title):
 
 
 def dimensions():
-    s = 3.2                     # px per mm
-    L, W_, H = D["base_l"], D["base_w"], D["base_h"]
-    ox, oy = 70, 96             # top view origin (front-left corner at bottom-left)
-    Y = lambda y: oy + (W_ - y) * s
-    b = [f'<text class="ti" x="24" y="34">Enclosure: top and front views (mm)</text>',
-         f'<text class="sm" x="24" y="52">From cad/DIMENSIONS.json. Fit allowances marked VERIFY there are unmeasured.</text>',
-         f'<rect class="o" x="{ox}" y="{oy}" width="{L * s}" height="{W_ * s}" rx="{D["corner_r"] * s}"/>']
-    for i, (x, y) in enumerate(D["tube_centers"], 1):
-        b.append(f'<circle class="t" cx="{ox + x * s}" cy="{Y(y)}" r="{D["tube_opening_d"] / 2 * s}"/>'
-                 f'<text class="sm" x="{ox + x * s}" y="{Y(y) + 4}" text-anchor="middle">T{i}</text>')
-    for x, y in D["separator_centers"]:
-        b.append(f'<circle class="t" cx="{ox + x * s}" cy="{Y(y)}" r="{D["separator_opening_d"] / 2 * s}"/>')
-    for k, (x, y) in D["buttons"].items():
-        b.append(f'<circle class="h" cx="{ox + x * s}" cy="{Y(y)}" r="{D["button_opening_d"] / 2 * s}"/>'
-                 f'<text class="sm" x="{ox + x * s - 9}" y="{Y(y) + 3}" text-anchor="end">{k}</text>')
-    for x, y in D["case_screws"]:
-        b.append(f'<circle class="h" cx="{ox + x * s}" cy="{Y(y)}" r="{D["m2_clearance_d"] / 2 * s}"/>')
-    b.append(dim_h(ox, ox + L * s, oy - 14, f"{L:g}"))
-    b.append(dim_v(ox - 14, oy, oy + W_ * s, f"{W_:g}"))
-    t = D["tube_centers"]
-    yb = oy + W_ * s + 22
-    b.append(dim_h(ox + t[0][0] * s, ox + t[1][0] * s, yb, f"{t[1][0] - t[0][0]:g}"))
-    b.append(dim_h(ox + t[1][0] * s, ox + t[2][0] * s, yb, f"{t[2][0] - t[1][0]:g}"))
-    b.append(dim_h(ox, ox + t[0][0] * s, yb, f"{t[0][0]:g}"))
-    b.append(f'<text class="dt" x="{ox + t[0][0] * s}" y="{Y(t[0][1]) - D["tube_opening_d"] / 2 * s - 6}" text-anchor="middle">Ø{D["tube_opening_d"]:g}</text>')
-    b.append(f'<text class="dt" x="{ox + L * s + 12}" y="{Y(t[0][1]) + 4}">tube row y = {t[0][1]:g}</text>')
-    b.append(f'<text class="dt" x="{ox + L * s - 12}" y="{oy + W_ * s - 8}" text-anchor="end">corner R{D["corner_r"]:g} · 4 × M2 case screws</text>')
-    # front view
-    fy = yb + 70
-    tube_top = D["pcb_top_z"] + D["tube_spacer_h"] + D["tube_glass_h"]
-    Z = lambda z: fy + (tube_top - z) * s
-    b.append(f'<text class="lb" x="{ox}" y="{fy - 12}">Front view</text>')
-    b.append(f'<rect class="o" x="{ox}" y="{Z(H)}" width="{L * s}" height="{H * s}" rx="4"/>')
-    for x, _ in t:
-        g = D["tube_glass_d"] / 2
-        b.append(f'<rect class="t" x="{ox + (x - g) * s}" y="{Z(tube_top)}" width="{2 * g * s}" height="{(tube_top - H) * s}" rx="{g * s}"/>')
+    """Alarm-clock case: front view (window, tubes, buttons) and side view (profile)."""
+    s = 3.0
+    L, W_, H = D["base_l"], D["base_w"], D["case_h"]
+    R, CR = D["top_edge_r"], D["corner_r"]
+    wx0, wx1 = D["window_x"]
+    wz0, wz1 = D["window_z"]
+    rod_top = H + D["rod_cap_gap"] + D["rod_cap_t"]
+    ox, oy = 80, 124
+    Z = lambda z: oy + (rod_top - z) * s
+    b = [f'<text class="ti" x="24" y="34">Alarm-clock case: front and side views (mm)</text>',
+         f'<text class="sm" x="24" y="52">From cad/DIMENSIONS.json. Fully enclosed: the tubes sit inside, behind a 3 mm smoked acrylic window. Values marked VERIFY there are unmeasured.</text>',
+         f'<text class="lb" x="{ox}" y="{oy - 44}">Front</text>']
+    b.append(f'<path class="o" d="M{ox} {Z(0)} V{Z(H - R)} Q{ox} {Z(H)} {ox + R * s} {Z(H)} H{ox + (L - R) * s} Q{ox + L * s} {Z(H)} {ox + L * s} {Z(H - R)} V{Z(0)} Z"/>')
+    b.append(f'<rect class="h" x="{ox + (wx0 - D["bezel_step"]) * s}" y="{Z(wz1 + D["bezel_step"])}" width="{(wx1 - wx0 + 2 * D["bezel_step"]) * s}" height="{(wz1 - wz0 + 2 * D["bezel_step"]) * s}" rx="{(D["window_r"] + D["bezel_step"]) * s}"/>')
+    b.append(f'<rect class="o" x="{ox + wx0 * s}" y="{Z(wz1)}" width="{(wx1 - wx0) * s}" height="{(wz1 - wz0) * s}" rx="{D["window_r"] * s}"/>')
+    g = D["tube_glass_d"] / 2
+    z0 = D["pcb_top_z"] + D["tube_spacer_h"]
+    for i, (x, _) in enumerate(D["tube_centers"], 1):
+        b.append(f'<rect class="t" x="{ox + (x - g) * s}" y="{Z(z0 + D["tube_glass_h"])}" width="{2 * g * s}" height="{D["tube_glass_h"] * s}" rx="{g * s}" stroke-dasharray="3 3"/>'
+                 f'<text x="{ox + x * s}" y="{Z(z0 + 30)}" fill="{GLOW}" font-size="30" text-anchor="middle">{"100842"[i - 1]}</text>')
+    for x, y in D["buttons"].values():
+        b.append(f'<rect x="{ox + (x - D["rod_cap_d"] / 2) * s}" y="{Z(rod_top)}" width="{D["rod_cap_d"] * s}" height="{D["rod_cap_t"] * s}" rx="3" fill="{MUTE}"/>')
+    b.append(dim_h(ox, ox + L * s, oy - 28, f"{L:g}"))
     b.append(dim_v(ox - 14, Z(H), Z(0), f"{H:g}"))
-    b.append(dim_v(ox + L * s + 40, Z(tube_top), Z(0), f"≈{tube_top:.0f}"))
-    b.append(f'<text class="sm" x="{ox}" y="{Z(0) + 20}">Glass Ø{D["tube_glass_d"]:g} × {D["tube_glass_h"]:g} on {D["tube_spacer_h"]:g} mm factory spacers; PCB top at z = {D["pcb_top_z"]:g}</text>')
-    h = Z(0) + 40
-    (IMG / "dimensions.svg").write_text(svg(ox * 2 + L * s + 40, h, "".join(b), "Enclosure dimensions"))
+    b.append(dim_h(ox + wx0 * s, ox + wx1 * s, Z(0) + 22, f"window {wx1 - wx0:g} × {wz1 - wz0:g}"))
+    b.append(f'<text class="dt" x="{ox + L * s - 4}" y="{Z(rod_top) - 6}" text-anchor="end">SET · H · M caps on top</text>')
+    # side view
+    sx = ox + L * s + 70
+    b.append(f'<text class="lb" x="{sx}" y="{oy - 44}">Side</text>')
+    b.append(f'<path class="o" d="M{sx} {Z(0)} V{Z(H - R)} Q{sx} {Z(H)} {sx + R * s} {Z(H)} H{sx + (W_ - R) * s} Q{sx + W_ * s} {Z(H)} {sx + W_ * s} {Z(H - R)} V{Z(0)} Z"/>')
+    for _, y in D["buttons"].values():
+        b.append(f'<rect x="{sx + (y - D["rod_cap_d"] / 2) * s}" y="{Z(rod_top)}" width="{D["rod_cap_d"] * s}" height="{D["rod_cap_t"] * s}" rx="3" fill="{MUTE}"/>')
+    ty = D["tube_centers"][0][1]
+    b.append(f'<rect class="t" x="{sx + (ty - g) * s}" y="{Z(z0 + D["tube_glass_h"])}" width="{2 * g * s}" height="{D["tube_glass_h"] * s}" rx="{g * s}" stroke-dasharray="3 3"/>')
+    b.append(f'<line class="h" x1="{sx + D["pcb_offset_y"] * s}" y1="{Z(D["pcb_top_z"])}" x2="{sx + (D["pcb_offset_y"] + D["pcb_w"]) * s}" y2="{Z(D["pcb_top_z"])}" stroke-width="3"/>')
+    b.append(f'<line class="h" x1="{sx + D["wall_t"] * s + 4}" y1="{Z(D["floor_t"])}" x2="{sx + D["wall_t"] * s + 4}" y2="{Z(D["floor_t"] + D["window_panel_h"])}" stroke-width="3" stroke="#8a6a50"/>')
+    b.append(dim_h(sx, sx + W_ * s, oy - 28, f"{W_:g}"))
+    b.append(dim_v(sx + W_ * s + 40, Z(rod_top), Z(0), f"{rod_top:g}"))
+    b.append(f'<text class="sm" x="{sx}" y="{Z(0) + 20}">front ←  window panel · PCB · tube</text>')
+    h = Z(0) + 50
+    b.append(f'<text class="sm" x="{ox}" y="{h - 8}">Top edges rounded R{R:g}, corners R{CR:g}. Glass Ø{D["tube_glass_d"]:g} × {D["tube_glass_h"]:g} on {D["tube_spacer_h"]:g} mm spacers; PCB top at z = {D["pcb_top_z"]:g}. Dashed = tube glass inside the case.</text>')
+    (IMG / "dimensions.svg").write_text(svg(sx + W_ * s + 110, h + 10, "".join(b), "Alarm-clock case dimensions"))
 
 
 def pcb():
@@ -95,8 +96,7 @@ def pcb():
          f'<text class="sm" x="24" y="52">{L:g} × {W_:g} × {D["pcb_t"]:g} mm, {D["pcb_layers"]} layers. Coordinates in enclosure frame; PCB corner at ({px:g}, {py:g}). Not a fabrication drawing until the gate in MANUFACTURING.md passes.</text>',
          f'<rect class="o" x="{ox}" y="{oy}" width="{L * s}" height="{W_ * s}"/>']
     for i, (x, y) in enumerate(D["tube_centers"], 1):
-        b.append(f'<circle class="t" cx="{X(x)}" cy="{Y(y)}" r="{D["tube_opening_d"] / 2 * s}" stroke-dasharray="3 3"/>'
-                 f'<circle class="h" cx="{X(x)}" cy="{Y(y)}" r="{(D["tube_opening_d"] / 2 + D["baffle_wall_t"]) * s}" stroke-dasharray="1 3"/>'
+        b.append(f'<circle class="t" cx="{X(x)}" cy="{Y(y)}" r="{D["tube_courtyard_d"] / 2 * s}" stroke-dasharray="3 3"/>'
                  f'<text class="lb" x="{X(x)}" y="{Y(y) + 4}" text-anchor="middle">T{i}</text>'
                  f'<text class="sm" x="{X(x)}" y="{Y(y) + 17}" text-anchor="middle">({x:g}, {y:g})</text>')
     for i, (x, y) in enumerate(D["separator_centers"], 1):
@@ -110,8 +110,8 @@ def pcb():
     b.append(dim_v(ox - 16, oy, oy + W_ * s, f"{W_:g}"))
     yl = oy + W_ * s + 30
     items = [("o", f"Ø2.2 non-plated M2 hole; dashed ring = Ø{D['pcb_post_d']:g} post / screw-head keep-out"),
-             ("t", "tube (dashed = Ø19.4 opening) and lamp positions"),
-             ("h", "dotted = 21.8 mm baffle ring: keep the top side clear")]
+             ("t", "tube (dashed = Ø19.4 courtyard) and lamp positions; top side carries only tubes, lamps and switches"),
+             ("h", "switch: pressed from the case top through a printed rod")]
     for i, (c, t) in enumerate(items):
         b.append(f'<line class="{c}" x1="{ox}" y1="{yl + i * 18 - 4}" x2="{ox + 24}" y2="{yl + i * 18 - 4}"/><text class="sm" x="{ox + 32}" y="{yl + i * 18}">{t}</text>')
     (IMG / "pcb_drawing.svg").write_text(svg(ox * 2 + L * s, yl + 60, "".join(b), "PCB mechanical drawing"))
@@ -135,8 +135,8 @@ def make_it():
     W_, gap, bw, bh = 1000, 20, 300, 112
     cells = [
         ("1  Buy parts", [f"hardware/BOM.csv: {n_lines} lines, {n_parts} parts", "hardware/BOM_mechanical.csv", "safety items: rating or better only"], "ready"),
-        ("2  3D print (PETG)", ["cad/print/*.3mf plates", "coupons first, then hood or frame", "fits a 256 mm bed (Bambu Lab P1S)"], "ready"),
-        ("3  Laser cut", ["cad/Acrylic_top_3mm_1to1.dxf", "3 mm clear CAST acrylic", "clear-top option only"], "ready"),
+        ("2  3D print (PETG)", ["cad/print/*.3mf plates", "coupons, then case, floor, 3 rods", "fits a Bambu Lab P1S (256 mm)"], "ready"),
+        ("3  Laser cut", ["cad/Window_panel_3mm_1to1.dxf", "3 mm smoked CAST acrylic", "206 x 92.8 mm window panel"], "ready"),
         ("4  PCB fabrication", ["hardware/ KiCad project", "not routed yet: no Gerbers", "scripts/make_fab_outputs.sh gate"], "blocked"),
         ("5  Assemble", ["docs/BUILD_GUIDE.md stages 1-4", "LV first, HV last, one tube first", "discharge gate every time"], "waits"),
         ("6  Program", ["firmware/Nixie_RevC/*.ino", "or build/Nixie_RevC.hex + avrdude", "compiles; never run on a board"], "ready"),
@@ -158,7 +158,7 @@ def build_flow():
     stages = [("0", "Fit coupons", "print, check tube, tap M2", "ok"), ("1", "Low voltage", "12 V, polarity, V5", "ok"),
               ("2", "Logic + RTC", "no HV module; fault latch", "ok"), ("!", "HV gate", "experienced reviewer signs", "gate"),
               ("3", "HV supply", "170 V, measure discharge", "hv"), ("4", "Tubes", "one digit, then all six", "hv"),
-              ("5", "Thermal", "2 h closed case", "hv"), ("6", "Enclosure", "no HV visible", "ok"), ("7", "Record", "VALIDATION.md", "ok")]
+              ("5", "Thermal", "2 h closed case", "hv"), ("6", "Close case", "window in, case over", "ok"), ("7", "Record", "VALIDATION.md", "ok")]
     bw, bh, gap = 104, 92, 10
     W_ = 48 + 9 * bw + 8 * gap
     b = [f'<text class="ti" x="24" y="34">Build stages: each ends in PASS, FIX or STOP</text>']

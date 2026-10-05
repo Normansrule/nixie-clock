@@ -9,7 +9,7 @@ This page is the rulebook. The [build guide](BUILD_GUIDE.md) points back here at
 1. **No mains inside the clock.** Power comes only from an external, *isolated*, regulated 12 V adapter with a centre-positive 5.5 × 2.1 mm plug. The clock never touches line voltage. Do not substitute a non-isolated supply, a bench supply without current limit during bring-up, or a battery pack of unknown voltage.
 2. **Off is not safe until you have measured it.** Firmware "HV off", dark tubes, unplugging the adapter and pulling the HV_ARM shunt all stop the converter. **None of them proves the HV rail (net `HV170`, test pad TP4) is discharged.** Only a meter reading does.
 3. **Measure before every touch.** Before your hands, tools or probes go near the board: unplug 12 V, wait at least 60 seconds, then measure TP4 to TP1 (ground). Continue only below **10 V**. If the reading is not falling as the bleeder predicts, **STOP**: a bleeder resistor may be open, and the capacitors can hold charge for a long time.
-4. **Enclosed in use; guarded during bring-up.** In normal use the clock never runs with the bottom cover off, the hood or frame removed, or with any gap that exposes HV copper, leads or the converter. The only exception is guarded bench bring-up (Stages 3 and 4 of the build guide), where the board must be measured: then it sits on an insulated surface behind a clear barrier, on a current-limited supply, with meter leads and USB connected **before** power is applied, hands off while energised, never unattended.
+4. **Enclosed in use; guarded during bring-up.** In normal use the clock only runs fully closed: case screwed to the floor, window in place, rods in their holes, so no HV copper, lead or the converter can be reached. The only exception is guarded bench bring-up (Stages 3 and 4 of the build guide), where the board must be measured: then the chassis (floor + PCB) sits on an insulated surface behind a clear barrier, on a current-limited supply, with meter leads and USB connected **before** power is applied, hands off while energised, never unattended.
 5. **Experienced review first.** Before the HV_ARM shunt goes in for the first time, someone experienced with high-voltage DC circuits reviews the populated board, the enclosure and your measuring setup.
 
 ## What protects you in the design, and what does not
@@ -41,7 +41,7 @@ These parts are **safety items and must never be "value-engineered" away**: the 
 
 ## USB, the shunt and the serial monitor
 
-The Nano's USB port sits under the bottom cover. Two situations:
+The Nano sits under the PCB, inside the closed case; its USB port is reached from the side of the chassis once the case is lifted off. Two situations:
 
 - **Guarded bring-up (Stages 3–4):** USB may stay connected with the shunt fitted, but connect it before applying 12 V and never plug or unplug it while 12 V is on. Opening the serial monitor resets the Nano; the firmware keeps any HV fault latched in EEPROM across that reset, so HV cannot quietly restart after a fault. A USB isolator between the computer and the clock is a sensible extra.
 - **Flashing firmware:** follow the steps below every time.
@@ -49,7 +49,7 @@ The Nano's USB port sits under the bottom cover. Two situations:
 ### Flashing
 
 1. Unplug the 12 V adapter. Remove the HV_ARM shunt only after the discharge check below.
-2. Wait 60 seconds, remove the bottom cover, **measure TP4 below 10 V**, then remove the HV_ARM shunt.
+2. Wait 60 seconds. Lay the clock on its back, remove the 4 floor screws, stand it up and lift the case straight off. **Measure TP4 to TP1 below 10 V** (both on the top side at the rear edge), then remove the HV_ARM shunt next to them.
 3. Connect USB only after that. With the shunt out, USB power cannot reach the converter. This matters because the NCH8200HV starts from as little as 2.5 V input, and USB can back-feed a few volts into the 12 V rail through the Nano's regulator.
 4. Refit the shunt only when you are about to close the case for a powered test.
 

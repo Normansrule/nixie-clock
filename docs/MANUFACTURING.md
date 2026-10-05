@@ -8,7 +8,7 @@ Everything needed to make a Rev C clock from open files, in the order you would 
 |---|---|---|
 | Buy parts | [`hardware/BOM.csv`](../hardware/BOM.csv) (electrical, 29 lines, 71 parts) · [`hardware/BOM_mechanical.csv`](../hardware/BOM_mechanical.csv) · readable version: [BOM.md](BOM.md) | Ready |
 | 3D print | `cad/print/*.3mf` plates, or single parts in `cad/stl/` and `cad/3mf/` · [PRINTING.md](PRINTING.md) | Ready (fit unverified: print coupons first) |
-| Laser cut | [`cad/Acrylic_top_3mm_1to1.dxf`](../cad/Acrylic_top_3mm_1to1.dxf), 3 mm clear cast acrylic | Ready (clear-top option only) |
+| Laser cut | [`cad/Window_panel_3mm_1to1.dxf`](../cad/Window_panel_3mm_1to1.dxf), 3 mm smoked (or clear) cast acrylic, 206 × 92.8 mm | Ready |
 | PCB fabrication | `hardware/` KiCad project → `scripts/make_fab_outputs.sh` | **Blocked**: board not routed; release gate below |
 | PCB assembly | [BUILD_GUIDE.md](BUILD_GUIDE.md) Stages 1–4, `hardware/COMPONENT_PLACEMENT.csv` | Waits for the PCB |
 | Wiring | Section 4 below, [WIRING.md](WIRING.md) | Ready |
@@ -19,15 +19,15 @@ Everything needed to make a Rev C clock from open files, in the order you would 
 ## 1. Buy parts
 
 - Use `hardware/BOM.csv`. The `spec` column is the requirement; `substitution` says when a generic part is fine. **Lines marked `safety_critical = yes` must be bought at the stated rating or better**: the 1 W anode and lamp resistors, the ≥250 V high-voltage capacitor (CHV), the ≥200 V bleeder and sense resistors, the fuse, the P-channel transistors, the HV5522 drivers and the HV module.
-- `hardware/BOM_mechanical.csv` lists the enclosure, fasteners and off-board items, with an `option` column: buy `both` plus **one** of `all_printed` or `clear_top`.
+- `hardware/BOM_mechanical.csv` lists the alarm-clock case, fasteners and off-board items (one set: 4 × M2 × 8, 7 × M2 × 6).
 - Buy integrated circuits from authorised distributors; buy tubes from sellers who test them.
 
 ## 2. 3D print and laser cut
 
-- Bambu Lab P1S (256 × 256 mm bed) or any printer with at least 240 × 85 mm of usable bed: the hood and frame are 234 × 80 mm.
-- PETG, 0.20 mm layers, 4 walls, 5 top and bottom layers, 20–25 % infill. Only the clear-top frame needs painted supports (under its five PCB bosses and four upper corner blocks).
-- Print `plate_0_fit_coupons.3mf` first and check it against a real tube, switch and M2 screw before printing anything large.
-- Acrylic: cut the DXF at 1:1 in millimetres from 3 mm **cast** acrylic; confirm 228.8 × 74.8 mm in the laser software first.
+- Bambu Lab P1S (256 mm cube) or any printer with at least 240 × 85 mm of bed and 115 mm of height: the case is 234 × 80 × 112 mm.
+- PETG, 0.20 mm layers, 4 walls, 5 top and bottom layers, 20–25 % infill. Only the case needs supports (automatic tree supports, inside under the roof and in the window opening). Print the button rods in the case colour.
+- Print `plate_0_fit_coupons.3mf` first and check it against an acrylic offcut, a button rod and M2 screws before printing anything large.
+- Acrylic: cut the DXF at 1:1 in millimetres from 3 mm **cast** acrylic, smoked grey for the classic look; confirm 206 × 92.8 mm in the laser software first.
 
 ![Exploded view](img/exploded.png)
 
@@ -59,7 +59,7 @@ Everything needed to make a Rev C clock from open files, in the order you would 
 | Finish | ENIG (electroless nickel immersion gold): flat pads suit the 44-lead plastic leaded chip carrier (PLCC-44) drivers |
 | Solder mask / silkscreen | Matte black or green / white |
 | HV clearance | ≥1.0 mm between HV and low-voltage nets on every layer, ≥0.65 mm HV to HV, ≥2.0 mm HV to board edge (from `Nixie_RevC.kicad_dru`; check against IPC-2221B) |
-| Top side | Only tubes, lamps and switches; keep the 21.8 mm baffle rings around each tube clear |
+| Top side | Only tubes, lamps, switches, the HV_ARM header and test pads TP1–TP4 (along the rear edge, for measuring with the case lifted off) |
 | Electrical test | Request 100 % flying-probe test |
 
 ## 4. Wiring harness
@@ -89,7 +89,7 @@ avrdude -p m328p -c arduino -P /dev/ttyUSB0 -b 115200 -D -U flash:w:firmware/Nix
 ## 7. Test, label, record
 
 - Record every unit in a copy of [`hardware/TEST_RECORD.csv`](../hardware/TEST_RECORD.csv) (one file per serial number). Any STOP result ends the build until it is fixed.
-- Print [`docs/labels.pdf`](labels.pdf) at 100 % on vinyl sticker paper: the HV warning and rating plate go on the bottom cover, the small 170 V markers inside the case near PS1 and TP4, and the HV_ARM tag next to JP1.
+- Print [`docs/labels.pdf`](labels.pdf) at 100 % on vinyl sticker paper: the HV warning and rating plate go on the underside of the floor, the small 170 V markers inside the case near PS1 and TP4, and the HV_ARM tag next to JP1.
 
 ![Labels](img/labels.png)
 

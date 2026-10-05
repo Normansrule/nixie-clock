@@ -43,7 +43,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html" class=on>Equations</a><a href="PRINTING.html">Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
 <div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
 <main><h1 id="equations">Equations</h1>
-<p>Each section goes intuition → equation → symbols and units → worked example → picture and test. Every number on this page is recomputed by <a href="repo:tests/check_equations.py"><code>tests/check_equations.py</code></a> (34 checks). They are <strong>model numbers</strong>, not measurements: Stage 4 of the <a href="BUILD_GUIDE.html">build guide</a> replaces them with readings from your board.</p>
+<p>Each section goes intuition → equation → symbols and units → worked example → picture and test. Every number on this page is recomputed by <a href="repo:tests/check_equations.py"><code>tests/check_equations.py</code></a> (38 checks). They are <strong>model numbers</strong>, not measurements: Stage 4 of the <a href="BUILD_GUIDE.html">build guide</a> replaces them with readings from your board.</p>
 <p>Inputs used throughout:</p>
 <table>
 <thead>
@@ -182,7 +182,14 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <p><strong>Intuition.</strong> The DS3231 is a temperature-compensated crystal clock, so it drifts far less than an ordinary watch crystal, but not zero.</p>
 <p><strong>Equation.</strong> drift per day = accuracy (ppm) × 10⁻⁶ × 86 400 s</p>
 <p><strong>Worked example.</strong> At the data sheet's ±2 parts per million (ppm) from 0 to 40 °C: ±0.17 s per day, ±63 s per year at worst. Real parts are usually better. The DS3231 also has an aging register for trimming, which Rev C firmware leaves at zero.</p>
-<p><strong>Test.</strong> <code>DS3231 worst drift ...</code>. To measure your clock, set it against a reference, then compare after a week with <code>STATUS</code> over the serial port.</p></main>
+<p><strong>Test.</strong> <code>DS3231 worst drift ...</code>. To measure your clock, set it against a reference, then compare after a week with <code>STATUS</code> over the serial port.</p>
+<h2 id="7-sealed-case-temperature">7. Sealed-case temperature</h2>
+<p><strong>Intuition.</strong> The alarm-clock case has no vents (so the HV stays enclosed). All the power the clock uses ends up as heat inside and has to leave through the case surface.</p>
+<p><strong>Equation.</strong> ΔT ≈ P / (h × A)</p>
+<p><strong>Symbols.</strong> ΔT, the average rise of the inside air over the room, in kelvin (K); P, heat released inside, in W; h, the combined natural-convection and radiation coefficient of the outer surface, in W/(m²·K); A, the outer surface area, in m².</p>
+<p><strong>Worked example.</strong> P ≈ 1.94 W / 0.86 (converter) + 7 V × 50 mA (the Nano's regulator) + 0.1 W (logic) ≈ <strong>2.7 W</strong>. A ≈ 2 × (0.234 × 0.112 + 0.080 × 0.112 + 0.234 × 0.080) ≈ 0.108 m². With h = 5 (pessimistic) ΔT ≈ <strong>5 K</strong>; with h = 10 (typical) ΔT ≈ 2.5 K.</p>
+<p><strong>What it means.</strong> On average the inside barely warms. Hot spots are another matter: the Nano's linear regulator and the HV module run hotter than the air around them. Stage 5 of the build guide measures them after two hours closed.</p>
+<p><strong>Test.</strong> <code>heat dissipated inside the case</code>, <code>average internal rise ...</code>.</p></main>
 <footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
 <script>
 (function(){

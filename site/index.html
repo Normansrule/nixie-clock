@@ -46,19 +46,20 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <blockquote>
 <p><strong>Caution:</strong> <strong>About 170 V of direct current (DC) inside: hazardous and potentially lethal.</strong> Power only from an external, isolated 12 V adapter (no mains inside). Dark tubes, software "off" or a pulled shunt do <strong>not</strong> mean safe: <strong>measure test pad TP4 below 10 V</strong> before touching. Read <strong><a href="SAFETY.html">SAFETY.md</a></strong> first.</p>
 </blockquote>
-<p><strong>An open-source clock with six real IN-14 Nixie tubes that you can make yourself.</strong> It comes with a 3D-printable enclosure, a laser-cut top, a bill of materials (BOM), pin-by-pin wiring, KiCad files, firmware, requirements, labels and a staged build guide, plus a website and a desktop app. <strong>The one missing piece is a routed circuit board</strong>: the path to it is in <a href="MANUFACTURING.html">MANUFACTURING.md</a>.</p>
+<p><strong>An open-source alarm-clock-style clock with six real IN-14 Nixie tubes, fully enclosed behind a smoked window, that you can make yourself.</strong> It comes with a 3D-printable enclosure, a laser-cut top, a bill of materials (BOM), pin-by-pin wiring, KiCad files, firmware, requirements, labels and a staged build guide, plus a website and a desktop app. <strong>The one missing piece is a routed circuit board</strong>: the path to it is in <a href="MANUFACTURING.html">MANUFACTURING.md</a>.</p>
 <p><img alt="status" src="https://img.shields.io/badge/status-unvalidated%20prototype-orange"> <img alt="high voltage" src="https://img.shields.io/badge/inside-170%20V%20DC-red"> <img alt="PCB" src="https://img.shields.io/badge/PCB-not%20yet%20routed-lightgrey"> <img alt="license" src="https://img.shields.io/badge/license-MIT-blue"></p>
+<p><img alt="Alarm-clock case with a smoked window, model render" src="img/hero_alarm_clock.png"></p>
 <table>
 <thead>
 <tr>
-<th>Clear acrylic top</th>
-<th>All-printed hood</th>
+<th>Front</th>
+<th>Inside (case lifted off)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><img alt="Clear-top option, model render" src="img/hero_clear_top.png"></td>
-<td><img alt="All-printed option, model render" src="img/hero_all_printed.png"></td>
+<td><img alt="Front view, model render" src="img/hero_front.png"></td>
+<td><img alt="Chassis with the case removed, model render" src="img/chassis.png"></td>
 </tr>
 </tbody>
 </table>
@@ -76,7 +77,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <tbody>
 <tr>
 <td>📏 <strong>Size</strong></td>
-<td>234 × 80 × 30 mm base, about 86 mm tall with tubes</td>
+<td>234 × 80 × 112 mm, about 116 mm to the top of the buttons</td>
 </tr>
 <tr>
 <td>🔆 <strong>Display</strong></td>
@@ -92,11 +93,11 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </tr>
 <tr>
 <td>🧱 <strong>Enclosure</strong></td>
-<td>PETG print (fits a Bambu Lab P1S) · optional 3 mm clear cast-acrylic top · <strong>M2 screws only</strong></td>
+<td>Fully enclosed alarm-clock case: PETG print (fits a Bambu Lab P1S) · 3 mm smoked cast-acrylic window · SET / H / M buttons on top · <strong>M2 screws only</strong></td>
 </tr>
 <tr>
 <td>💲 <strong>Parts</strong></td>
-<td>About $379 (all-printed) or $391 (clear-top) planning estimate, before tax</td>
+<td>About $390 planning estimate before tax (not re-priced for the new case)</td>
 </tr>
 </tbody>
 </table>
@@ -105,6 +106,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <p>Full process, PCB specification and the release gate: <strong><a href="MANUFACTURING.html">MANUFACTURING.md</a></strong>.</p>
 <h2 id="-see-it-in-3d">🧊 See it in 3D</h2>
 <p><img alt="Exploded view" src="img/exploded.png"></p>
+<p><strong>How it goes together:</strong> the window slides up into the case, the PCB with its tubes screws onto the floor (the <em>chassis</em>), and the case lowers over it. No glass ever passes through an opening, and nothing high-voltage can be reached once the four floor screws are in.</p>
 <p>GitHub shows <code>.stl</code> files in an interactive 3D viewer: click one to rotate it.</p>
 <table>
 <thead>
@@ -116,9 +118,9 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </thead>
 <tbody>
 <tr>
-<td><a href="repo:cad/view/Assembly_RevC_clear_top_VIEW_ONLY.stl">Clear-top assembly</a> · <a href="repo:cad/view/Assembly_RevC_all_printed_VIEW_ONLY.stl">All-printed assembly</a></td>
-<td><a href="repo:cad/stl/01_printed_hood.stl">01 hood</a> · <a href="repo:cad/stl/02_bottom_cover.stl">02 floor</a> · <a href="repo:cad/stl/03_cable_clamp.stl">03 clamp</a> · <a href="repo:cad/stl/04_optional_acrylic_frame.stl">04 frame</a> · <a href="repo:cad/stl/06_fit_coupon.stl">06 fit coupon</a> · <a href="repo:cad/stl/07_unpowered_lead_pattern_coupon.stl">07 lead coupon</a> · ready plates in <a href="repo:cad/print/"><code>cad/print/</code></a></td>
-<td><a href="downloads/Acrylic_top_3mm_1to1.dxf">Acrylic top DXF</a> (3 mm cast, 1:1)</td>
+<td><a href="repo:cad/view/Assembly_RevC_alarm_clock_VIEW_ONLY.stl">Whole clock</a> · <a href="repo:cad/view/Chassis_RevC_case_removed_VIEW_ONLY.stl">Chassis, case off</a></td>
+<td><a href="repo:cad/stl/01_alarm_case_shell.stl">01 case</a> · <a href="repo:cad/stl/02_floor.stl">02 floor</a> · <a href="repo:cad/stl/03_cable_clamp.stl">03 clamp</a> · <a href="repo:cad/stl/04_button_rod.stl">04 button rod ×3</a> · <a href="repo:cad/stl/06_fit_coupon.stl">06 fit coupon</a> · <a href="repo:cad/stl/07_unpowered_lead_pattern_coupon.stl">07 lead coupon</a> · ready plates in <a href="repo:cad/print/"><code>cad/print/</code></a></td>
+<td><a href="downloads/Window_panel_3mm_1to1.dxf">Window panel DXF</a> (3 mm smoked cast acrylic, 1:1)</td>
 </tr>
 </tbody>
 </table>
@@ -181,7 +183,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <p>Step by step, with parts, measurements and PASS / FIX / STOP at every stage: <strong><a href="BUILD_GUIDE.html">BUILD_GUIDE.md</a></strong>. Record each unit in <a href="downloads/TEST_RECORD.csv"><code>hardware/TEST_RECORD.csv</code></a> and stick on the <a href="downloads/labels.pdf">labels</a>.</p>
 <h2 id="-requirements">✅ Requirements</h2>
 <p><img alt="Requirement status" src="img/requirements_status.svg"></p>
-<p>37 requirements, each traced to the part of the design that meets it and to how it is verified: <a href="REQUIREMENTS.html">REQUIREMENTS.md</a>.</p>
+<p>40 requirements, each traced to the part of the design that meets it and to how it is verified: <a href="REQUIREMENTS.html">REQUIREMENTS.md</a>.</p>
 <h2 id="-website-app-and-tools">💻 Website, app and tools</h2>
 <table>
 <thead>
@@ -215,7 +217,7 @@ docs/                SAFETY · BUILD_GUIDE · MANUFACTURING · BOM · WIRING · 
 hardware/            KiCad project · NET_MAP.csv · BOM.csv · BOM_mechanical.csv · REQUIREMENTS.csv
                      COMPONENT_PLACEMENT.csv · TEST_RECORD.csv · REVIEW_SIGNOFF.md · native-check reports
 firmware/Nixie_RevC/ Nixie_RevC.ino · display_core.h · build/Nixie_RevC.hex
-cad/                 DIMENSIONS.json · stl/ · 3mf/ · print/ · step/ · view/ · acrylic DXF · assembly STEP
+cad/                 DIMENSIONS.json · stl/ · 3mf/ · print/ · step/ · view/ · window DXF · assembly STEP
 source/build_cad.py  CadQuery model of record
 scripts/             generators, checks, publish/ship/release helpers, gated fab-output script
 tests/               equation, design, requirement, CAD and firmware checks

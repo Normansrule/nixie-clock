@@ -19,6 +19,6 @@
   (condition "A.NetClass == 'HV'")
   (constraint edge_clearance (min 2.0mm)))
 
-(rule "Top-side keep-out ring under the baffle collars"
-  (condition "A.insideArea('BAFFLE_KEEPOUT')")
+(rule "Keep the top side clear except tubes, lamps and switches (rule area named TOP_KEEPOUT)"
+  (condition "A.insideArea('TOP_KEEPOUT')")
   (constraint disallow footprint))

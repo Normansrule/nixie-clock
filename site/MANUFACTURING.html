@@ -66,8 +66,8 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </tr>
 <tr>
 <td>Laser cut</td>
-<td><a href="downloads/Acrylic_top_3mm_1to1.dxf"><code>cad/Acrylic_top_3mm_1to1.dxf</code></a>, 3 mm clear cast acrylic</td>
-<td>Ready (clear-top option only)</td>
+<td><a href="downloads/Window_panel_3mm_1to1.dxf"><code>cad/Window_panel_3mm_1to1.dxf</code></a>, 3 mm smoked (or clear) cast acrylic, 206 × 92.8 mm</td>
+<td>Ready</td>
 </tr>
 <tr>
 <td>PCB fabrication</td>
@@ -104,15 +104,15 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <h2 id="1-buy-parts">1. Buy parts</h2>
 <ul>
 <li>Use <code>hardware/BOM.csv</code>. The <code>spec</code> column is the requirement; <code>substitution</code> says when a generic part is fine. <strong>Lines marked <code>safety_critical = yes</code> must be bought at the stated rating or better</strong>: the 1 W anode and lamp resistors, the ≥250 V high-voltage capacitor (CHV), the ≥200 V bleeder and sense resistors, the fuse, the P-channel transistors, the HV5522 drivers and the HV module.</li>
-<li><code>hardware/BOM_mechanical.csv</code> lists the enclosure, fasteners and off-board items, with an <code>option</code> column: buy <code>both</code> plus <strong>one</strong> of <code>all_printed</code> or <code>clear_top</code>.</li>
+<li><code>hardware/BOM_mechanical.csv</code> lists the alarm-clock case, fasteners and off-board items (one set: 4 × M2 × 8, 7 × M2 × 6).</li>
 <li>Buy integrated circuits from authorised distributors; buy tubes from sellers who test them.</li>
 </ul>
 <h2 id="2-3d-print-and-laser-cut">2. 3D print and laser cut</h2>
 <ul>
-<li>Bambu Lab P1S (256 × 256 mm bed) or any printer with at least 240 × 85 mm of usable bed: the hood and frame are 234 × 80 mm.</li>
-<li>PETG, 0.20 mm layers, 4 walls, 5 top and bottom layers, 20–25 % infill. Only the clear-top frame needs painted supports (under its five PCB bosses and four upper corner blocks).</li>
-<li>Print <code>plate_0_fit_coupons.3mf</code> first and check it against a real tube, switch and M2 screw before printing anything large.</li>
-<li>Acrylic: cut the DXF at 1:1 in millimetres from 3 mm <strong>cast</strong> acrylic; confirm 228.8 × 74.8 mm in the laser software first.</li>
+<li>Bambu Lab P1S (256 mm cube) or any printer with at least 240 × 85 mm of bed and 115 mm of height: the case is 234 × 80 × 112 mm.</li>
+<li>PETG, 0.20 mm layers, 4 walls, 5 top and bottom layers, 20–25 % infill. Only the case needs supports (automatic tree supports, inside under the roof and in the window opening). Print the button rods in the case colour.</li>
+<li>Print <code>plate_0_fit_coupons.3mf</code> first and check it against an acrylic offcut, a button rod and M2 screws before printing anything large.</li>
+<li>Acrylic: cut the DXF at 1:1 in millimetres from 3 mm <strong>cast</strong> acrylic, smoked grey for the classic look; confirm 206 × 92.8 mm in the laser software first.</li>
 </ul>
 <p><img alt="Exploded view" src="img/exploded.png"></p>
 <h2 id="3-pcb-fabrication-blocked-until-the-release-gate-passes">3. PCB fabrication (blocked until the release gate passes)</h2>
@@ -169,7 +169,7 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </tr>
 <tr>
 <td>Top side</td>
-<td>Only tubes, lamps and switches; keep the 21.8 mm baffle rings around each tube clear</td>
+<td>Only tubes, lamps, switches, the HV_ARM header and test pads TP1–TP4 (along the rear edge, for measuring with the case lifted off)</td>
 </tr>
 <tr>
 <td>Electrical test</td>
@@ -220,7 +220,7 @@ avrdude -p m328p -c arduino -P /dev/ttyUSB0 -b 115200 -D -U flash:w:firmware/Nix
 <h2 id="7-test-label-record">7. Test, label, record</h2>
 <ul>
 <li>Record every unit in a copy of <a href="downloads/TEST_RECORD.csv"><code>hardware/TEST_RECORD.csv</code></a> (one file per serial number). Any STOP result ends the build until it is fixed.</li>
-<li>Print <a href="downloads/labels.pdf"><code>docs/labels.pdf</code></a> at 100 % on vinyl sticker paper: the HV warning and rating plate go on the bottom cover, the small 170 V markers inside the case near PS1 and TP4, and the HV_ARM tag next to JP1.</li>
+<li>Print <a href="downloads/labels.pdf"><code>docs/labels.pdf</code></a> at 100 % on vinyl sticker paper: the HV warning and rating plate go on the underside of the floor, the small 170 V markers inside the case near PS1 and TP4, and the HV_ARM tag next to JP1.</li>
 </ul>
 <p><img alt="Labels" src="img/labels.png"></p>
 <ul>

@@ -11,7 +11,7 @@ Paste the block below **once** into an Ubuntu terminal (Windows Subsystem for Li
 2. signs `gh` in as the account in `OWNER` (**the one interactive step**, only the first time: a browser code appears). If `gh` already knows that account it just switches to it;
 3. pushes over SSH when `~/.ssh/config` has a host alias for that account (for example `github-normansrule`), otherwise over HTTPS with the `gh` token and the `workflow` permission;
 4. finds `nixie-clock.zip` in `~/Downloads` or, under WSL, in your Windows Downloads folder;
-5. unpacks it to `~/nixie-clock` (its own folder, and it refuses to run git anywhere else, which matters if your home folder is itself a git repository);
+5. unpacks it to `~/nixie-clock` (its own folder, and it refuses to run git anywhere else, which matters if your home folder is itself a git repository). If the repository is already there, it is brought exactly in line with the ZIP: files the new version no longer has are removed, so old and new designs never mix;
 6. commits, creates the public repository, pushes `main`, turns on Pages, waits for the site, tags the desktop release and prints all the links.
 
 It is safe to run again: every step checks what already exists and only does what is missing. Everything runs inside `( ... )`, so an error stops the script without closing your terminal. Change `OWNER` on the first line if the repository should belong to a different GitHub account.
@@ -39,8 +39,13 @@ echo "Pushing to $URL"
 ZIP="$HOME/Downloads/$REPO.zip"
 [ -f "$ZIP" ] || ZIP="$(ls -t /mnt/c/Users/*/Downloads/$REPO*.zip 2>/dev/null | head -n1 || true)"
 [ -f "$ZIP" ] || { echo "Could not find $REPO.zip in ~/Downloads or /mnt/c/Users/*/Downloads"; false; }
-# 5. Unpack to ~/nixie-clock and refuse to continue anywhere else
-unzip -oq "$ZIP" -d "$HOME"
+# 5. Unpack to ~/nixie-clock: a fresh folder, or an existing repository brought exactly in line with the ZIP
+#    (files the new ZIP no longer has are removed; .git and local build folders are kept)
+TMP="$(mktemp -d)"; unzip -q "$ZIP" -d "$TMP"
+[ -f "$TMP/$REPO/docs/SAFETY.md" ] || { echo "$ZIP does not contain the $REPO folder"; false; }
+mkdir -p "$DEST"
+rsync -a --delete --exclude '.git/' --exclude 'node_modules/' --exclude '.venv/' --exclude '.build/' --exclude 'app/www/' --exclude 'app/dist/' --exclude 'fab/' "$TMP/$REPO/" "$DEST/"
+rm -rf "$TMP"
 cd "$DEST"
 [ "$PWD" = "$DEST" ] && [ -f docs/SAFETY.md ] && [ -f app/package.json ] || { echo "Not in the unpacked repository: stopping"; false; }
 # 6. Start the repository on branch main and make sure git is using this folder, not a parent repository
@@ -50,7 +55,7 @@ git config user.name >/dev/null || git config user.name "$OWNER"
 git config user.email >/dev/null || git config user.email "$(gh api user --jq .id)+$OWNER@users.noreply.github.com"
 # 7. Commit everything (skipped if nothing changed)
 git add -A
-git diff --cached --quiet || git commit -qm "Six-Tube Nixie Clock Rev C: build guide, KiCad, CAD, firmware, website and desktop app"
+git diff --cached --quiet || git commit -qm "Six-Tube Nixie Clock Rev C: alarm-clock case, build guide, KiCad, CAD, firmware, website and desktop app"
 # 8. Create the public GitHub repository if it does not exist, and point origin at it
 gh repo view "$OWNER/$REPO" >/dev/null 2>&1 || gh repo create "$OWNER/$REPO" --public -d "Six-tube IN-14 Nixie clock: build guide, KiCad, CadQuery, firmware, website and desktop app (Rev C, unvalidated)" --homepage "https://$(printf %s "$OWNER" | tr '[:upper:]' '[:lower:]').github.io/$REPO/"
 git remote add origin "$URL" 2>/dev/null || git remote set-url origin "$URL"

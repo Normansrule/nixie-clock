@@ -33,8 +33,8 @@ PAGES = [  # (source, output, nav label)
     ("docs/DEVELOP.md", "DEVELOP.html", "Develop"),
     ("CREDITS.md", "CREDITS.html", "Credits"),
 ]
-DOWNLOADS = ["cad/Acrylic_top_3mm_1to1.dxf", "cad/print/plate_0_fit_coupons.3mf", "cad/print/plate_A_all_printed_hood.3mf",
-             "cad/print/plate_B_clear_top_frame.3mf", "cad/print/plate_C_shared_floor_and_clamp.3mf",
+DOWNLOADS = ["cad/Window_panel_3mm_1to1.dxf", "cad/print/plate_0_fit_coupons.3mf", "cad/print/plate_A_case_shell.3mf",
+             "cad/print/plate_B_floor_clamp_rods.3mf",
              "docs/Nixie_RevC_schematic.pdf", "hardware/NET_MAP.csv", "hardware/BOM.csv", "hardware/BOM_mechanical.csv",
              "hardware/REQUIREMENTS.csv", "hardware/TEST_RECORD.csv", "docs/labels.pdf"]
 

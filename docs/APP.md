@@ -12,9 +12,9 @@ The same content comes in three forms. Pick whichever suits you; they all show t
 
 - **[Tools](tools.html)**: a live calculator for tube current, resistor power, converter load and discharge time, using the same formulas as [Equations](EQUATIONS.md). Its results are a model, not measurements.
 - **Serial companion**: connects to the clock's Arduino Nano at 115200 baud and sends the firmware's own commands: `STATUS`, set the clock from your computer's time, 12/24-hour, sleep window, `EXERCISE`, `RUN`, a large **HV OFF** button, and `CLEARFAULT`, which only works after you tick "I measured TP4 below 10 V and fixed the cause". It sends nothing the firmware does not already accept from the Arduino serial monitor.
-- Every page of the build guide, the schematic PDF, the print plates and the acrylic DXF, available offline.
+- Every page of the build guide, the schematic PDF, the print plates and the window-panel DXF, available offline.
 
-> **Safety is unchanged.** The USB port is under the bottom cover. Follow [SAFETY.md](SAFETY.md#usb-the-shunt-and-the-serial-monitor): connect USB before 12 V, and treat the HV rail as live until you have measured TP4. Connecting resets the Nano, and the firmware keeps any HV fault latched across that reset.
+> **Safety is unchanged.** The USB port is inside the closed case (lift the case off the chassis to reach it). Follow [SAFETY.md](SAFETY.md#usb-the-shunt-and-the-serial-monitor): connect USB before 12 V, and treat the HV rail as live until you have measured TP4. Connecting resets the Nano, and the firmware keeps any HV fault latched across that reset.
 
 ## Installing the desktop app
 

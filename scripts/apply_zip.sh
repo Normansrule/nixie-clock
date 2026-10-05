@@ -15,7 +15,7 @@ unzip -q "$ZIP" -d "$TMP"
 [ -f "$TMP/nixie-clock/docs/SAFETY.md" ] || { echo "$ZIP does not look like nixie-clock.zip"; exit 1; }
 OLDVER="$(python3 -c 'import json; print(json.load(open("app/package.json"))["version"])' 2>/dev/null || echo 0.0.0)"
 rsync -a --delete --exclude '.git/' --exclude 'node_modules/' --exclude '.venv/' --exclude '.build/' \
-  --exclude 'app/www/' --exclude 'app/dist/' "$TMP/nixie-clock/" "$ROOT/"
+  --exclude 'app/www/' --exclude 'app/dist/' --exclude 'fab/' "$TMP/nixie-clock/" "$ROOT/"
 # Never move the desktop app version backwards (a ZIP may predate your last release).
 python3 - "$OLDVER" <<'PY'
 import json, sys
