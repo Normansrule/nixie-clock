@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Woodwork and brass · Six-Tube Nixie Clock Rev C</title>
+<meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
+<meta name="nixie-repo" content="">
+<meta name="theme-color" content="#120e0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{--bg:#120e0b;--panel:#1c1612;--ink:#f3e8dc;--mute:#b6a594;--line:#3a2f27;--glow:#ff8a1f;--glow2:#ffb45e;--hv:#ff5a3c;--link:#ffb45e;--code:#241c16}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#2a1a0e 0%,var(--bg) 60%) fixed;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link);text-underline-offset:2px}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:rgba(18,14,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand b{color:var(--glow);text-shadow:0 0 12px rgba(255,138,31,.8),0 0 2px #ffcf99;font-family:ui-monospace,Menlo,monospace;font-size:20px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav a{color:var(--mute);text-decoration:none;padding:4px 9px;border-radius:999px;font-size:14px}
+nav a.on,nav a:hover{color:var(--bg);background:var(--glow)}
+.warn{background:linear-gradient(90deg,#3a130b,#2a1209);border-bottom:1px solid #7a2a17;color:#ffd9c9;font-size:14px}
+.warn div{max-width:1080px;margin:0 auto;padding:7px 16px}.warn strong{color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1,h2,h3{line-height:1.25;scroll-margin-top:90px}h1{font-size:2.1rem;margin:.2em 0 .6em}
+h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{color:var(--glow2)}
+img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#14110f}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#241b15;color:var(--glow2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+code{background:var(--code);padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;position:relative}pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:var(--glow);color:var(--bg);border:0;border-radius:6px;padding:4px 10px;font-weight:600;cursor:pointer}
+blockquote{margin:1.2em 0;padding:10px 18px;border-left:4px solid var(--hv);background:#241310;border-radius:0 10px 10px 0}
+blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
+.hero{position:relative;margin:-8px 0 28px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.hero img{display:block;border:0;border-radius:0}
+.hero .cap{position:absolute;left:18px;bottom:14px;right:18px;font-size:13px;color:var(--mute)}
+.tubes{font-family:ui-monospace,Menlo,monospace;font-size:clamp(34px,8vw,64px);letter-spacing:.12em;color:var(--glow);text-shadow:0 0 18px rgba(255,138,31,.9),0 0 3px #ffd9ad;margin:6px 0 2px}
+.tubes i{font-style:normal;font-size:.5em;vertical-align:middle;color:#ff6a1a;margin:0 .15em}
+footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
+@media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
+</style></head><body>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html">Printing</a><a href="WOODWORK.html" class=on>Woodwork</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
+<main><h1 id="woodwork-and-brass">Woodwork and brass</h1>
+<p>The heirloom look comes from five hardwood boards mitred into a box, a brass bezel around the window, brass feet and brass button caps. None of this is electrical, and none of it carries a precise fit: the printed inner case does that, so the woodwork can be forgiving. Everything here is a <strong>baseline, untested</strong> plan, like the rest of Rev C.</p>
+<p><img alt="Woodwork: five mitred boards and the brass bezel, model render" src="img/woodwork.png"></p>
+<blockquote>
+<p><strong>Warning:</strong> <strong>Do all woodwork and brass work before any electronics go near the case.</strong> Brass swarf and filings are conductive: one chip near a 170 V trace is a short. Vacuum the inner case and the wood box before assembly. Walnut dust irritates skin and airways: wear a dust mask and extract dust.</p>
+</blockquote>
+<h2 id="what-you-make">What you make</h2>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Outer size (mm)</th>
+<th>Joints</th>
+<th>From</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>08 front</td>
+<td>254 × 121.5 × 9.5</td>
+<td>45° mitre on both ends and the top edge; window opening 198 × 68, R12</td>
+<td><code>cad/dxf/Wood_boards_1to1.dxf</code></td>
+</tr>
+<tr>
+<td>09 back</td>
+<td>254 × 121.5 × 9.5</td>
+<td>Mitre both ends and the top; cable notch 8 × 10 in the bottom edge</td>
+<td>same</td>
+</tr>
+<tr>
+<td>10, 11 ends</td>
+<td>100 × 121.5 × 9.5</td>
+<td>Mitre both vertical edges and the top</td>
+<td>same</td>
+</tr>
+<tr>
+<td>12 top</td>
+<td>254 × 100 × 9.5</td>
+<td>Mitre all four edges; 3 holes Ø8; 4 pilots Ø1.6 × 6.5 deep from below</td>
+<td>same</td>
+</tr>
+<tr>
+<td>13 brass bezel</td>
+<td>214 × 84 × 1</td>
+<td>6 holes Ø2.4</td>
+<td><code>cad/dxf/Brass_bezel_1mm_1to1.dxf</code></td>
+</tr>
+<tr>
+<td>14 brass feet × 4</td>
+<td>Ø14 × 8</td>
+<td>Hole Ø2.4, counterbore Ø4.2 × 2.2, 1 mm chamfer</td>
+<td><code>cad/step/14_brass_foot.step</code></td>
+</tr>
+</tbody>
+</table>
+<p>Sizes are the <strong>outer faces</strong> of the mitred boards; grain runs along the long side of each board. The finished box is 254 × 100 × 121.5 mm, 129.5 mm tall on its feet, and weighs about 530 g in walnut. STEP models of every board are in <code>cad/step/08_…</code> to <code>12_…</code>.</p>
+<h2 id="wood">Wood</h2>
+<ul>
+<li><strong>Black walnut</strong> is the default. Oak, cherry and ash work too; avoid soft, resinous woods.</li>
+<li>Buy one board <strong>planed to 9.5 mm, 130 mm wide and about 1.1 m long</strong>. Let it sit indoors for a week first.</li>
+<li>Cut the four sides from one length, in order <strong>front · right end · back · left end</strong>, so the grain wraps continuously round the corners. The top comes from what is left.</li>
+</ul>
+<h2 id="steps">Steps</h2>
+<ol>
+<li><strong>Print the inner case first.</strong> It is the gauge for everything that follows.</li>
+<li><strong>Cut the boards</strong> about 1 mm long, then mitre them at exactly 45° on a table saw with a sled, a mitre saw, or a mitre box and shooting board. Test the angle on offcuts: four test pieces must close into a square with no gap.</li>
+<li><strong>Window opening</strong> in the front: drill a 10 mm hole inside each corner, saw between them with a coping, scroll or jig saw, and file to the line. Or send the front DXF to a CNC or laser service. The cut edge is hidden behind the brass bezel, so it does not need to be perfect.</li>
+<li><strong>Cable notch</strong> in the bottom edge of the back, 8 mm wide and 10 mm high, centred 40 mm from the right-hand end as seen from the front.</li>
+<li><strong>Glue-up (tape-hinge method).</strong> Lay the four sides face down in order, ends touching, and tape across each joint. Wrap the inner case in cling film (so glue cannot stick to it), spread PVA glue on the mitres, roll the boards up round the inner case and tape the last joint. Then glue the top on, again with the wrapped inner case inside as the form, and tape or clamp it. Wipe squeeze-out with a damp cloth.</li>
+<li><strong>Holes in the top, drilled through the inner case so they line up.</strong> With the glue dry, put the inner case (film off) into the box. From inside, drill each of the four roof holes with a <strong>1.6 mm</strong> bit set to stop 9.5 mm past the inside of the roof (3 mm roof + 6.5 mm into the wood): it must <strong>not</strong> break through the top. Then drill a 6 mm pilot up through each of the three button guides, take the inner case out, and open those three holes to 8 mm from outside.</li>
+<li><strong>Round over</strong> every outer edge to about R3 with a 3 mm roundover bit or a sanding block. Sand 120 → 180 → 240, wipe with a damp cloth to raise the grain, then 320.</li>
+<li><strong>Finish</strong> the outside with two or three coats of hardwax or Danish oil, then paste wax. Leave the inside faces bare or give them one coat; keep finish out of the screw pilots.</li>
+<li><strong>Brass bezel.</strong> Have the DXF cut by a laser or waterjet service, or cut it from 1 mm sheet with a fret saw and files. Deburr, then brush in one direction with a fine abrasive pad (or polish), degrease and clear-lacquer it, or leave it to patina. Centre it on the window, mark the six holes, drill 1.6 mm pilots 6.5 mm deep, cut each thread with a <strong>steel</strong> M2 × 6 first, then drive the <strong>waxed brass</strong> M2 × 6 pan-head screws. Brass screws snap easily in walnut.</li>
+<li><strong>Brass feet.</strong> Cut four 8 mm slices from 14 mm brass bar, face them flat, drill 2.4 mm through the centre, counterbore 4.2 mm × 2.2 mm deep on the bottom face, chamfer the bottom edge, and polish. No lathe? Print part 14 in silk brass instead.</li>
+<li><strong>Button rods.</strong> Print part 04 in silk brass, or turn them from brass (6 mm shaft, 10.5 mm cap, 96.5 mm overall, 4.2 mm × 2 mm cup in the bottom). Solid brass rods weigh about 0.24 N each, still well under the switches' 1.47 N actuation force.</li>
+<li><strong>Fit the box.</strong> Vacuum everything. Slip the box over the inner case and drive 4 × M2 × 8 up through the roof into the pilots. The wood is never glued to the inner case, so it can come off again.</li>
+</ol>
+<p><strong>PASS / FIX / STOP</strong> for this work is in the <a href="BUILD_GUIDE.html#woodwork-and-brass-no-electronics-any-time">build guide</a>.</p>
+<h2 id="why-the-wood-is-cladding-not-the-enclosure">Why the wood is cladding, not the enclosure</h2>
+<ul>
+<li><strong>Precision lives in the print.</strong> The window slot, the button guides and the screw blocks are printed to tenths of a millimetre; wood moves with the seasons. A 0.5 mm gap on every side lets it.</li>
+<li><strong>High voltage stays inside the printed case.</strong> The wood never touches the circuit board, the tubes or any HV part, and the case is never run with only the wood around it.</li>
+<li><strong>Combustibility.</strong> Wood and PETG both burn; no flammability rating is claimed for either. The anode-resistor fault power in <a href="VALIDATION.html#open-items">VALIDATION.md</a> is an open item for the same reason.</li>
+<li><strong>Heat.</strong> The wood adds insulation. With it, the modelled average rise inside the sealed case is about 3–5 K (<a href="EQUATIONS.html#7-sealed-case-temperature">EQUATIONS.md</a>); Stage 5 of the build guide measures the hot spots with the box on.</li>
+</ul></main>
+<footer><div>Six-Tube Nixie Clock, Rev C · UNVALIDATED ENGINEERING PROTOTYPE · no Gerbers shipped · MIT license · generated from the repository by scripts/build_site.py</div></footer>
+<script>
+(function(){
+  // Repository for "repo:" links: a slug baked in by the desktop app, else derived from *.github.io, else local files.
+  var meta=document.querySelector('meta[name="nixie-repo"]'), slug=meta&&meta.content?meta.content:'';
+  var host=location.hostname;
+  if(!slug&&host.endsWith('.github.io')) slug=host.split('.')[0]+'/'+(location.pathname.split('/')[1]||'nixie-clock');
+  document.querySelectorAll('a[href^="repo:"]').forEach(function(a){
+    var p=a.getAttribute('href').slice(5), dir=/\/$/.test(p.split('#')[0]);
+    a.href=slug?('https://github.com/'+slug+'/'+(dir?'tree':'blob')+'/main/'+p):('../'+p);
+  });
+  // Installable, offline web app (not inside the desktop app, which already works offline).
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function(){});
+  document.querySelectorAll('pre:not(.log)').forEach(function(pre){
+    var b=document.createElement('button');b.className='copy';b.textContent='Copy';
+    b.onclick=function(){navigator.clipboard.writeText(pre.innerText.replace(/\nCopy$/,'')).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)})};
+    pre.appendChild(b);
+  });
+  var t=document.getElementById('clock');
+  if(t){var f=function(){var d=new Date(),z=function(n){return('0'+n).slice(-2)};t.innerHTML=z(d.getHours())+z(d.getMinutes()).replace(/^/,'<i>&#9679;</i>')+z(d.getSeconds()).replace(/^/,'<i>&#9679;</i>')};f();setInterval(f,1000)}
+})();
+</script></body></html>

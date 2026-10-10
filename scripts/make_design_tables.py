@@ -282,7 +282,7 @@ small = [
     ("QE1", "MMBT3904", 96, 62), ("RB5", "10 k 0805", 100, 62), ("RPD5", "100 k 0805", 104, 62), ("RGP", "100 k 0805", 104, 50),
 ]
 # Service items on the TOP side along the rear edge: with the case lifted off the chassis you can measure
-# TP4 against TP1 and pull the HV_ARM shunt without reaching under the board (alarm-clock case).
+# TP4 against TP1 and pull the HV_ARM shunt without reaching under the board (enclosed case).
 for ref, val, fp, x, y in (("JP1", "1x2 header + shunt (HV_ARM)", "Connector_PinHeader_2.54mm:PinHeader_1x02", 90, 66),
                            ("TP1", "GND", "TestPoint:TestPoint_Pad_D1.5mm", 100, 68), ("TP4", "HV170", "TestPoint:TestPoint_Pad_D1.5mm", 106, 68),
                            ("TP2", "V12", "TestPoint:TestPoint_Pad_D1.5mm", 180, 68), ("TP3", "V5", "TestPoint:TestPoint_Pad_D1.5mm", 186, 68)):

@@ -8,7 +8,9 @@ Everything needed to make a Rev C clock from open files, in the order you would 
 |---|---|---|
 | Buy parts | [`hardware/BOM.csv`](../hardware/BOM.csv) (electrical, 29 lines, 71 parts) · [`hardware/BOM_mechanical.csv`](../hardware/BOM_mechanical.csv) · readable version: [BOM.md](BOM.md) | Ready |
 | 3D print | `cad/print/*.3mf` plates, or single parts in `cad/stl/` and `cad/3mf/` · [PRINTING.md](PRINTING.md) | Ready (fit unverified: print coupons first) |
-| Laser cut | [`cad/Window_panel_3mm_1to1.dxf`](../cad/Window_panel_3mm_1to1.dxf), 3 mm smoked (or clear) cast acrylic, 206 × 92.8 mm | Ready |
+| Laser / waterjet cut | [`cad/dxf/Window_panel_3mm_1to1.dxf`](../cad/dxf/Window_panel_3mm_1to1.dxf) (3 mm smoked cast acrylic, 206 × 92.8 mm) · [`cad/dxf/Brass_bezel_1mm_1to1.dxf`](../cad/dxf/Brass_bezel_1mm_1to1.dxf) (1 mm brass, 214 × 84 mm) | Ready |
+| Woodwork | [`cad/dxf/Wood_boards_1to1.dxf`](../cad/dxf/Wood_boards_1to1.dxf), five 9.5 mm walnut boards, 45° mitres · [WOODWORK.md](WOODWORK.md) | Ready |
+| Brass feet | [`cad/step/14_brass_foot.step`](../cad/step/14_brass_foot.step), four slices of 14 mm brass bar (or print in silk brass) | Ready |
 | PCB fabrication | `hardware/` KiCad project → `scripts/make_fab_outputs.sh` | **Blocked**: board not routed; release gate below |
 | PCB assembly | [BUILD_GUIDE.md](BUILD_GUIDE.md) Stages 1–4, `hardware/COMPONENT_PLACEMENT.csv` | Waits for the PCB |
 | Wiring | Section 4 below, [WIRING.md](WIRING.md) | Ready |
@@ -19,15 +21,17 @@ Everything needed to make a Rev C clock from open files, in the order you would 
 ## 1. Buy parts
 
 - Use `hardware/BOM.csv`. The `spec` column is the requirement; `substitution` says when a generic part is fine. **Lines marked `safety_critical = yes` must be bought at the stated rating or better**: the 1 W anode and lamp resistors, the ≥250 V high-voltage capacitor (CHV), the ≥200 V bleeder and sense resistors, the fuse, the P-channel transistors, the HV5522 drivers and the HV module.
-- `hardware/BOM_mechanical.csv` lists the alarm-clock case, fasteners and off-board items (one set: 4 × M2 × 8, 7 × M2 × 6).
+- `hardware/BOM_mechanical.csv` lists the heirloom case (printed, cut, wood and brass parts), fasteners and off-board items. M2 only: 4 × M2 × 16, 4 × M2 × 8, 7 × M2 × 6, 6 × M2 × 6 brass.
 - Buy integrated circuits from authorised distributors; buy tubes from sellers who test them.
 
-## 2. 3D print and laser cut
+## 2. 3D print, cut, woodwork
 
-- Bambu Lab P1S (256 mm cube) or any printer with at least 240 × 85 mm of bed and 115 mm of height: the case is 234 × 80 × 112 mm.
-- PETG, 0.20 mm layers, 4 walls, 5 top and bottom layers, 20–25 % infill. Only the case needs supports (automatic tree supports, inside under the roof and in the window opening). Print the button rods in the case colour.
-- Print `plate_0_fit_coupons.3mf` first and check it against an acrylic offcut, a button rod and M2 screws before printing anything large.
-- Acrylic: cut the DXF at 1:1 in millimetres from 3 mm **cast** acrylic, smoked grey for the classic look; confirm 206 × 92.8 mm in the laser software first.
+- Bambu Lab P1S (256 mm cube) or any printer with at least 240 × 85 mm of bed and 115 mm of height: the inner case is 234 × 80 × 112 mm.
+- Black PETG, 0.20 mm layers, 4 walls, 5 top and bottom layers, 20–25 % infill. Only the inner case needs supports (automatic tree supports, inside under the roof and in the window opening). Print the button rods in silk brass. Details: [PRINTING.md](PRINTING.md).
+- Print `plate_0_fit_coupons.3mf` first and check it against an acrylic offcut, a button rod, a hardwood offcut and M2 screws before printing anything large.
+- Acrylic: cut the window DXF at 1:1 in millimetres from 3 mm **cast** acrylic, smoked grey or bronze; confirm 206 × 92.8 mm in the laser software first.
+- Brass: send the bezel DXF to a laser or waterjet service (or fret-saw it from 1 mm sheet).
+- Wood: five mitred boards from one 130 mm × 1.1 m walnut board, glued round the printed inner case as a form, oiled. Step by step in [WOODWORK.md](WOODWORK.md).
 
 ![Exploded view](img/exploded.png)
 
@@ -57,7 +61,7 @@ Everything needed to make a Rev C clock from open files, in the order you would 
 | Thickness | 1.6 mm FR-4 (glass-epoxy), Tg ≥ 150 °C |
 | Copper | 1 oz outer, 0.5 oz inner |
 | Finish | ENIG (electroless nickel immersion gold): flat pads suit the 44-lead plastic leaded chip carrier (PLCC-44) drivers |
-| Solder mask / silkscreen | Matte black or green / white |
+| Solder mask / silkscreen | Matte black (looks best through the smoked window; any colour works) / white |
 | HV clearance | ≥1.0 mm between HV and low-voltage nets on every layer, ≥0.65 mm HV to HV, ≥2.0 mm HV to board edge (from `Nixie_RevC.kicad_dru`; check against IPC-2221B) |
 | Top side | Only tubes, lamps, switches, the HV_ARM header and test pads TP1–TP4 (along the rear edge, for measuring with the case lifted off) |
 | Electrical test | Request 100 % flying-probe test |

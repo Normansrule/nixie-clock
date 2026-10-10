@@ -118,16 +118,21 @@ rule("tubes, lamps, switches and PCB screw heads do not overlap (min gap >= 1 mm
 wx0, wx1 = DIM["window_x"]
 rule("window spans all six tubes", wx0 < tubes[0][0] - DIM["tube_glass_d"] / 2 and tubes[-1][0] + DIM["tube_glass_d"] / 2 < wx1)
 rule("button rods sit outside the window width (hidden behind the case front)", all(x - DIM["rod_d"] / 2 > wx1 for x, _ in DIM["buttons"].values()))
-flat = (DIM["top_edge_r"], DIM["base_w"] - DIM["top_edge_r"])
-rule("button caps sit on the flat part of the top", all(flat[0] < y - DIM["rod_cap_d"] / 2 and y + DIM["rod_cap_d"] / 2 < flat[1] for _, y in DIM["buttons"].values()))
-rule("window top is below where the top edge starts to curve", DIM["window_z"][1] + DIM["bezel_step"] <= DIM["case_h"] - DIM["top_edge_r"])
+wo = DIM["wood_t"] + DIM["wood_fit_gap"]
+flat = (-wo + DIM["wood_edge_r"], DIM["base_w"] + wo - DIM["wood_edge_r"])
+rule("button caps sit on the flat part of the wood top", all(flat[0] < y - DIM["rod_cap_d"] / 2 and y + DIM["rod_cap_d"] / 2 < flat[1] for _, y in DIM["buttons"].values()))
+bz_top = DIM["window_z"][1] + DIM["bezel_inner_margin"] + DIM["bezel_width"]
+rule("brass bezel stays below the roundover of the wood top edge", bz_top <= DIM["case_h"] + DIM["wood_t"] - DIM["wood_edge_r"] - 5, f"bezel top z={bz_top:g}")
+rule("wood boards are thicker than the bezel and roof screw pilots", DIM["wood_t"] > DIM["wood_pilot_depth"] + 2)
 tube_top = DIM["pcb_top_z"] + DIM["tube_spacer_h"] + DIM["tube_glass_h"]
 rule("tubes fully inside the case (glass top below the roof)", tube_top < DIM["case_h"] - DIM["roof_t"] - 2, f"{tube_top:g} vs roof {DIM['case_h'] - DIM['roof_t']:g}")
 rule("PCB edge clears the window slot rails", DIM["pcb_offset_y"] > DIM["wall_t"] + DIM["window_panel_t"] + DIM["window_slot_clearance"] + DIM["window_rail_lip"])
 co = DIM["rear_cable_opening_z"] - DIM["rear_cable_opening_d"] / 2
 rule("rear cable opening sits above the floor", co > DIM["floor_t"], f"bottom edge z={co}")
-f = DIM["fasteners"]["alarm_case"]
-rule("one fastener set: 4x M2x8 + 7x M2x6", f["M2x8"] == 4 and f["M2x6"] == 7)
+f = DIM["fasteners"]["heirloom_case"]
+rule("fasteners are M2 only", all(k.startswith("M2x") for k in f if not k.startswith("_")))
+rule("fastener set: 4x M2x16 + 4x M2x8 + 7x M2x6 + 6x M2x6 brass", (f["M2x16"], f["M2x8"], f["M2x6"], f["M2x6_brass"]) == (4, 4, 7, 6))
+rule("one foot per floor screw, one roof screw per pilot", f["M2x16"] == len(DIM["case_screws"]) and f["M2x8"] == len(DIM["roof_screws"]) and f["M2x6_brass"] == len(DIM["bezel_screws"]))
 rule("M2x6 PCB screw: engagement in standoff <= 8 mm pilot", 6 - DIM["pcb_t"] <= 8)
 
 w = max(len(n) for n, _, _ in results)

@@ -56,6 +56,14 @@ for m in mech:
     if m["file"] not in ("-", "") and m["file"] != "hardware/":
         rule(f"mechanical BOM file exists: {m['file']}", (ROOT / m["file"]).exists())
 
+import json  # noqa: E402
+fz = json.loads((ROOT / "cad" / "DIMENSIONS.json").read_text())["fasteners"]["heirloom_case"]
+qty = {m["item"]: int(m["qty"]) for m in mech if m["option"] == "fasteners"}
+rule("fastener lines in BOM_mechanical.csv match DIMENSIONS.json", qty.get("M2 x 16 socket-head screw") == fz["M2x16"] and qty.get("M2 x 8 screw") == fz["M2x8"]
+     and qty.get("M2 x 6 screw") == fz["M2x6"] and qty.get("M2 x 6 brass pan-head screw") == fz["M2x6_brass"], str(qty))
+rule("every BOM_mechanical.csv fastener is M2", all(m["item"].startswith("M2 ") for m in mech if m["option"] == "fasteners"))
+rule("sleeving line keeps its >=300 V rating", any("300 V" in m["spec"] and "SAFETY ITEM" in m["spec"] for m in mech if "sleeving" in m["item"].lower()))
+
 w = max(len(n) for n, _, _ in res)
 fails = 0
 for n, ok, d in res:

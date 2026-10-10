@@ -1,6 +1,6 @@
 # Equations
 
-Each section goes intuition → equation → symbols and units → worked example → picture and test. Every number on this page is recomputed by [`tests/check_equations.py`](../tests/check_equations.py) (38 checks). They are **model numbers**, not measurements: Stage 4 of the [build guide](BUILD_GUIDE.md) replaces them with readings from your board.
+Each section goes intuition → equation → symbols and units → worked example → picture and test. Every number on this page is recomputed by [`tests/check_equations.py`](../tests/check_equations.py) (39 checks). They are **model numbers**, not measurements: Stage 4 of the [build guide](BUILD_GUIDE.md) replaces them with readings from your board.
 
 Inputs used throughout:
 
@@ -98,14 +98,14 @@ Inputs used throughout:
 
 ## 7. Sealed-case temperature
 
-**Intuition.** The alarm-clock case has no vents (so the HV stays enclosed). All the power the clock uses ends up as heat inside and has to leave through the case surface.
+**Intuition.** The case has no vents (so the HV stays enclosed). All the power the clock uses ends up as heat inside and has to leave through the case surface. The walnut box looks good but is an insulator, so it is part of the path the heat must cross.
 
-**Equation.** ΔT ≈ P / (h × A)
+**Equation.** ΔT ≈ P / (U × A), with U = 1 / (1/h + t_wood / k_wood)
 
-**Symbols.** ΔT, the average rise of the inside air over the room, in kelvin (K); P, heat released inside, in W; h, the combined natural-convection and radiation coefficient of the outer surface, in W/(m²·K); A, the outer surface area, in m².
+**Symbols.** ΔT, the average rise of the inside air over the room, in kelvin (K); P, heat released inside, in W; A, the outer surface area, in m²; h, the combined natural-convection and radiation coefficient of the outer surface, in W/(m²·K); t_wood, the board thickness, in m; k_wood, the wood's thermal conductivity across the grain, in W/(m·K); U, the overall coefficient, in W/(m²·K).
 
-**Worked example.** P ≈ 1.94 W / 0.86 (converter) + 7 V × 50 mA (the Nano's regulator) + 0.1 W (logic) ≈ **2.7 W**. A ≈ 2 × (0.234 × 0.112 + 0.080 × 0.112 + 0.234 × 0.080) ≈ 0.108 m². With h = 5 (pessimistic) ΔT ≈ **5 K**; with h = 10 (typical) ΔT ≈ 2.5 K.
+**Worked example.** P ≈ 1.94 W / 0.86 (converter) + 7 V × 50 mA (the Nano's regulator) + 0.1 W (logic) ≈ **2.7 W**. A ≈ 2 × (0.254 × 0.100 + 0.254 × 0.1215 + 0.100 × 0.1215) ≈ 0.137 m². Walnut: t_wood / k_wood ≈ 0.0095 / 0.15 ≈ 0.063 m²·K/W (k assumed). With h = 5 (pessimistic), U ≈ 3.8 and ΔT ≈ **5.2 K**; with h = 10 (typical), U ≈ 6.1 and ΔT ≈ 3.2 K. The wood resistance is applied to every face, which is pessimistic for the PETG floor and the acrylic window; the printed inner wall and the inside air film are ignored.
 
-**What it means.** On average the inside barely warms. Hot spots are another matter: the Nano's linear regulator and the HV module run hotter than the air around them. Stage 5 of the build guide measures them after two hours closed.
+**What it means.** On average the inside barely warms, even with the wood on. Hot spots are another matter: the Nano's linear regulator and the HV module run hotter than the air around them. Stage 5 of the build guide measures them after two hours closed, with the wood box fitted.
 
-**Test.** `heat dissipated inside the case`, `average internal rise ...`.
+**Test.** `heat dissipated inside the case`, `wood wall resistance`, `average internal rise ...`.

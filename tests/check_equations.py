@@ -67,14 +67,19 @@ check("HV output power incl. bleeder + sense", V_HV * (i_load + i_bleed + V_HV /
 p_hv = V_HV * (i_load + i_bleed + V_HV / (R_SENSE_TOP + R_SENSE_BOT) * 1e3) / 1e3
 check("12 V input current, all lit, 86 % efficiency + 50 mA logic", p_hv / 0.86 / 12 + 0.050, 0.23, 0.25, "A")
 
-# 6. Sealed alarm-clock case: average internal temperature rise  dT = P / (h * A)
+# 6. Sealed wood-clad case: average internal temperature rise  dT = P / (U * A),  U = 1 / (1/h + t_wood / k_wood)
 #    P: converter input + Nano regulator (7 V x 50 mA) + drivers/logic (assumed 0.1 W)
+#    A: outer box of the hardwood case (fillets ignored). The wood resistance is applied to every face,
+#    which is pessimistic for the PETG floor and the acrylic window. The printed inner wall and the inside
+#    air film are ignored, as before.
 P_case = p_hv / 0.86 + 7 * 0.050 + 0.1
-A_case = 2 * (0.234 * 0.112 + 0.080 * 0.112 + 0.234 * 0.080)    # m2, outer box (fillets ignored)
+A_case = 2 * (0.254 * 0.100 + 0.254 * 0.1215 + 0.100 * 0.1215)    # m2
+R_WOOD = 0.0095 / 0.15                                            # m2K/W: 9.5 mm walnut, k ~0.15 W/mK across the grain (assumed)
 check("heat dissipated inside the case", P_case, 2.6, 2.8, "W")
-check("case outer area", A_case, 0.10, 0.11, "m2")
-check("average internal rise, h = 5 W/m2K (pessimistic)", P_case / (5 * A_case), 5.0, 5.4, "K")
-check("average internal rise, h = 10 W/m2K (typical natural convection + radiation)", P_case / (10 * A_case), 2.5, 2.7, "K")
+check("case outer area (wood box)", A_case, 0.136, 0.138, "m2")
+check("wood wall resistance", R_WOOD, 0.063, 0.064, "m2K/W")
+check("average internal rise, h = 5 W/m2K (pessimistic)", P_case / (A_case / (1 / 5 + R_WOOD)), 5.1, 5.4, "K")
+check("average internal rise, h = 10 W/m2K (typical natural convection + radiation)", P_case / (A_case / (1 / 10 + R_WOOD)), 3.1, 3.4, "K")
 
 # 3. Bleeder / discharge  tau = R * C ; t(V) = tau * ln(V0 / V)
 r_par = 1 / (1 / R_BLEED + 1 / (R_SENSE_TOP + R_SENSE_BOT))

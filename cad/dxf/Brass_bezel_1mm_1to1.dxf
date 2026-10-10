@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461318.1471527778
+2461320.1844675927
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461318.1471527778
+2461320.1844675927
   9
 $TDUUPDATE
  40
@@ -549,7 +549,7 @@ $SPLINESEGS
   9
 $HANDSEED
   5
-98
+A8
   9
 $SURFTAB1
  70
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{BB4D14F5-9374-418F-8AC1-015DBE23806C}
+{B1D78745-75EC-49C1-A664-FE9F4EAC4F06}
   9
 $VERSIONGUID
   2
-{A0138515-1739-43AA-AF71-0D15ABEF01B2}
+{8F9A38D7-7227-4441-A10F-6FE93826BAD6}
   9
 $EXTNAMES
 290
@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -2233,7 +2233,7 @@ LAYER
 100
 AcDbSymbolTable
  70
-4
+6
   0
 LAYER
   5
@@ -2312,6 +2312,54 @@ Continuous
 LAYER
   5
 8B
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+DRILL
+ 70
+0
+ 62
+3
+  6
+Continuous
+370
+-3
+390
+13
+347
+21
+  0
+LAYER
+  5
+8C
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+MITRE_45
+ 70
+0
+ 62
+5
+  6
+Continuous
+370
+-3
+390
+13
+347
+21
+  0
+LAYER
+  5
+8D
 330
 1
 100
@@ -3133,7 +3181,7 @@ ACAD
   0
 APPID
   5
-95
+A5
 330
 3
 100
@@ -3147,7 +3195,7 @@ HATCHBACKGROUNDCOLOR
   0
 APPID
   5
-96
+A6
 330
 3
 100
@@ -5259,54 +5307,6 @@ ENTITIES
   0
 LINE
   5
-8C
-330
-17
-100
-AcDbEntity
-  8
-CUT
-100
-AcDbLine
- 10
-2.0
- 20
-0.0
- 30
-0.0
- 11
-204.0
- 21
-0.0
- 31
-0.0
-  0
-LINE
-  5
-8D
-330
-17
-100
-AcDbEntity
-  8
-CUT
-100
-AcDbLine
- 10
-206.0
- 20
-2.0
- 30
-0.0
- 11
-206.0
- 21
-90.8
- 31
-0.0
-  0
-LINE
-  5
 8E
 330
 17
@@ -5317,15 +5317,15 @@ CUT
 100
 AcDbLine
  10
-204.0
+20.0
  20
-92.8
+0.0
  30
 0.0
  11
-2.0
+194.0
  21
-92.8
+0.0
  31
 0.0
   0
@@ -5341,19 +5341,19 @@ CUT
 100
 AcDbLine
  10
-0.0
+214.0
  20
-90.8
+20.0
  30
 0.0
  11
-0.0
+214.0
  21
-2.0
+64.0
  31
 0.0
   0
-ARC
+LINE
   5
 90
 330
@@ -5363,23 +5363,21 @@ AcDbEntity
   8
 CUT
 100
-AcDbCircle
+AcDbLine
  10
-204.0
+194.0
  20
-2.0
+84.0
  30
 0.0
- 40
-2.0
-100
-AcDbArc
- 50
-270.0
- 51
+ 11
+20.0
+ 21
+84.0
+ 31
 0.0
   0
-ARC
+LINE
   5
 91
 330
@@ -5389,21 +5387,19 @@ AcDbEntity
   8
 CUT
 100
-AcDbCircle
+AcDbLine
  10
-204.0
+0.0
  20
-90.8
+64.0
  30
 0.0
- 40
-2.0
-100
-AcDbArc
- 50
+ 11
 0.0
- 51
-90.0
+ 21
+20.0
+ 31
+0.0
   0
 ARC
   5
@@ -5417,19 +5413,19 @@ CUT
 100
 AcDbCircle
  10
-2.0
+194.0
  20
-90.8
+20.0
  30
 0.0
  40
-2.0
+20.0
 100
 AcDbArc
  50
-90.0
+270.0
  51
-180.0
+0.0
   0
 ARC
   5
@@ -5443,13 +5439,65 @@ CUT
 100
 AcDbCircle
  10
-2.0
+194.0
  20
-2.0
+64.0
  30
 0.0
  40
-2.0
+20.0
+100
+AcDbArc
+ 50
+0.0
+ 51
+90.0
+  0
+ARC
+  5
+94
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+20.0
+ 20
+64.0
+ 30
+0.0
+ 40
+20.0
+100
+AcDbArc
+ 50
+90.0
+ 51
+180.0
+  0
+ARC
+  5
+95
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+20.0
+ 20
+20.0
+ 30
+0.0
+ 40
+20.0
 100
 AcDbArc
  50
@@ -5457,9 +5505,329 @@ AcDbArc
  51
 270.0
   0
+LINE
+  5
+96
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbLine
+ 10
+20.0
+ 20
+9.0
+ 30
+0.0
+ 11
+194.0
+ 21
+9.0
+ 31
+0.0
+  0
+LINE
+  5
+97
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbLine
+ 10
+205.0
+ 20
+20.0
+ 30
+0.0
+ 11
+205.0
+ 21
+64.0
+ 31
+0.0
+  0
+LINE
+  5
+98
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbLine
+ 10
+194.0
+ 20
+75.0
+ 30
+0.0
+ 11
+20.0
+ 21
+75.0
+ 31
+0.0
+  0
+LINE
+  5
+99
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbLine
+ 10
+9.0
+ 20
+64.0
+ 30
+0.0
+ 11
+9.0
+ 21
+20.0
+ 31
+0.0
+  0
+ARC
+  5
+9A
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+194.0
+ 20
+20.0
+ 30
+0.0
+ 40
+11.0
+100
+AcDbArc
+ 50
+270.0
+ 51
+0.0
+  0
+ARC
+  5
+9B
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+194.0
+ 20
+64.0
+ 30
+0.0
+ 40
+11.0
+100
+AcDbArc
+ 50
+0.0
+ 51
+90.0
+  0
+ARC
+  5
+9C
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+20.0
+ 20
+64.0
+ 30
+0.0
+ 40
+11.0
+100
+AcDbArc
+ 50
+90.0
+ 51
+180.0
+  0
+ARC
+  5
+9D
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+20.0
+ 20
+20.0
+ 30
+0.0
+ 40
+11.0
+100
+AcDbArc
+ 50
+180.0
+ 51
+270.0
+  0
+CIRCLE
+  5
+9E
+330
+17
+100
+AcDbEntity
+  8
+DRILL
+100
+AcDbCircle
+ 10
+4.5
+ 20
+42.0
+ 30
+0.0
+ 40
+1.2
+  0
+CIRCLE
+  5
+9F
+330
+17
+100
+AcDbEntity
+  8
+DRILL
+100
+AcDbCircle
+ 10
+209.5
+ 20
+42.0
+ 30
+0.0
+ 40
+1.2
+  0
+CIRCLE
+  5
+A0
+330
+17
+100
+AcDbEntity
+  8
+DRILL
+100
+AcDbCircle
+ 10
+57.0
+ 20
+79.5
+ 30
+0.0
+ 40
+1.2
+  0
+CIRCLE
+  5
+A1
+330
+17
+100
+AcDbEntity
+  8
+DRILL
+100
+AcDbCircle
+ 10
+157.0
+ 20
+79.5
+ 30
+0.0
+ 40
+1.2
+  0
+CIRCLE
+  5
+A2
+330
+17
+100
+AcDbEntity
+  8
+DRILL
+100
+AcDbCircle
+ 10
+57.0
+ 20
+4.5
+ 30
+0.0
+ 40
+1.2
+  0
+CIRCLE
+  5
+A3
+330
+17
+100
+AcDbEntity
+  8
+DRILL
+100
+AcDbCircle
+ 10
+157.0
+ 20
+4.5
+ 30
+0.0
+ 40
+1.2
+  0
 TEXT
   5
-94
+A4
 330
 17
 100
@@ -5471,17 +5839,17 @@ AcDbText
  10
 0.0
  20
-97.8
+89.0
  30
 0.0
  40
 2.5
   1
-Rev C alarm-clock window panel: 3 mm CAST acrylic, smoked grey (or clear). 1:1 mm. VERIFY scale before cutting.
+13 brass bezel: 1 mm brass sheet (CuZn37 / C272 or C260), laser, waterjet or fret saw. 6 holes 2.4 mm. 1:1 mm.
  11
 0.0
  21
-97.8
+89.0
  31
 0.0
 100
@@ -6577,7 +6945,7 @@ CREATED_BY_EZDXF
   3
 WRITTEN_BY_EZDXF
 350
-97
+A7
   0
 DICTIONARYVAR
   5
@@ -6589,7 +6957,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-04T03:31:54.759950+00:00
+1.4.4 @ 2026-10-06T04:25:38.508815+00:00
   0
 VISUALSTYLE
   5
@@ -7293,7 +7661,7 @@ X-Ray
   0
 DICTIONARYVAR
   5
-97
+A7
 330
 2D
 100
@@ -7301,7 +7669,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-04T03:31:54.763268+00:00
+1.4.4 @ 2026-10-06T04:25:38.512411+00:00
   0
 ENDSEC
   0

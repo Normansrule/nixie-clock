@@ -18,7 +18,7 @@ Only after that does Stage 1 have a board to populate. Stages 0 and the firmware
 
 **Tools:** temperature-controlled soldering iron, flux, DMM rated CAT II 600 V or better with clip leads, bench supply with adjustable current limit (for Stages 1–3), USB Mini-B data cable, M2 tap and holder, calipers, safety glasses.
 
-**The enclosure** is a fully enclosed alarm-clock case: the tubes stand inside, seen through a smoked acrylic window, and SET, H and M are pressed from the top. The PCB screws onto five standoffs on the printed floor, making a **chassis** you can work on by itself; the case lowers over it at the end. One fastener set: 4 × M2 × 8 and 7 × M2 × 6 ([BOM.md](BOM.md#m2-fasteners-one-set)).
+**The enclosure** is a fully enclosed heirloom case: a printed black **inner case** carries every functional feature (window slot, button guides, floor-screw blocks), and a mitred **walnut box** with a brass bezel slips over it, held by four screws into its top board. The tubes stand inside, seen through a smoked acrylic window; SET, H and M are pressed from the top through brass-coloured rods. The PCB screws onto five standoffs on the printed floor, making a **chassis** you can work on by itself; the case lowers over it at the end and four brass feet screw it shut. M2 screws only ([BOM.md](BOM.md#m2-fasteners)). The inner case alone is a complete enclosure, so you can build and test everything before the woodwork is done.
 
 ![Exploded view](img/exploded.png)
 
@@ -26,19 +26,34 @@ Only after that does Stage 1 have a board to populate. Stages 0 and the firmware
 
 ## Stage 0: fit coupons and M2 threads (no electronics)
 
-**Parts:** PETG, `cad/print/plate_0_fit_coupons.3mf` (parts 06 and 07), one IN-14 tube, one printed button rod (part 04), a 25 mm offcut of your 3 mm acrylic, a scrap of 1.6 mm board, M2 × 6 and M2 × 8 screws, M2 tap.
+**Parts:** PETG, `cad/print/plate_0_fit_coupons.3mf` (parts 06 and 07), one IN-14 tube, one printed button rod (part 04), a 25 mm offcut of your 3 mm acrylic, a scrap of 1.6 mm board, an offcut of your 9.5 mm hardwood, M2 × 6 (steel and brass) and M2 × 8 screws, M2 tap, 1.6 mm drill.
 
 **Steps**
 1. Print the coupons with the baseline settings in [PRINTING.md](PRINTING.md).
 2. Coupon 06: slide the acrylic offcut into the 3.3 mm slot (it must go in without force and not rattle), and slide a button rod through the guide (it must drop freely under its own weight).
 3. Tap the two 1.7 mm pilot holes with an M2 tap, backing out every half-turn. Drive an M2 × 6 through the board scrap into the standoff, and an M2 × 8 into the tall block. Snug, then back out.
-4. Coupon 07 (**never powered**, never used as a tube spacer): try your tube's 13 leads against the hole pattern. The pattern in `cad/DIMENSIONS.json` (13 × Ø1.0 mm on a 12.0 mm circle) is a placeholder; measure your tube's actual lead circle with calipers and update `in14_lead_circle_d`.
+4. Hardwood offcut: drill a 1.6 mm pilot 6.5 mm deep, drive a **steel** M2 × 6 first to cut the thread, back it out, wax a **brass** M2 × 6 and drive it in. Brass screws are soft and snap easily in walnut; this is how the six bezel screws go in.
+5. Coupon 07 (**never powered**, never used as a tube spacer): try your tube's 13 leads against the hole pattern. The pattern in `cad/DIMENSIONS.json` (13 × Ø1.0 mm on a 12.0 mm circle) is a placeholder; measure your tube's actual lead circle with calipers and update `in14_lead_circle_d`.
 
 **Measure:** glass diameter and height of each of your six tubes (spacer plus glass must stay under 80 mm above the board; nominal is 62 mm); acrylic thickness; thread engagement (turns before snug); the real lead circle diameter.
 
-- **PASS:** acrylic slides in, rod drops freely, screws bite firmly and do not strip.
-- **FIX:** a tight hole → change the value in `cad/DIMENSIONS.json` and rerun `scripts/render_cad`. **Never scale a whole part** in the slicer to fix a hole. Stripped threads → try 1.6 mm pilots.
+- **PASS:** acrylic slides in, rod drops freely, screws bite firmly and do not strip, the brass screw seats without twisting off.
+- **FIX:** a tight hole → change the value in `cad/DIMENSIONS.json` and rerun `scripts/render_cad`. **Never scale a whole part** in the slicer to fix a hole. Stripped threads → try 1.6 mm pilots. Brass screw twists → 1.7 mm pilot in the wood.
 - **STOP:** your tubes are taller than the case allows (they would touch the roof).
+
+---
+
+## Woodwork and brass (no electronics, any time)
+
+Follow **[WOODWORK.md](WOODWORK.md)**: cut the five mitred boards from `cad/dxf/Wood_boards_1to1.dxf`, glue them into a box with the tape-hinge method (the printed inner case, wrapped in cling film, is the form), round the outer edges, oil, then fit the brass bezel. Make or print the four brass feet (part 14).
+
+![Woodwork: five mitred boards and the brass bezel](img/woodwork.png)
+
+**Measure:** outer size of the box; the gap between the box and the printed inner case on each side; whether the top board sits flat on the inner-case roof.
+
+- **PASS:** the box slips over the inner case by hand with a small, even gap (about 0.5 mm a side); the four M2 × 8 roof screws pull the top board down flat; the bezel lies flat with all six brass screws seated; the rods move freely through the 8 mm holes in the top.
+- **FIX:** box too tight → sand the inside faces (never the inner case). Open mitre → fill with glue and sanding dust, sand flush. Rod rubs the wood → open the hole to 8.5 mm.
+- **STOP:** the box only goes on by force (it would crack at a mitre in winter); any wood touching the window panel.
 
 ---
 
@@ -142,30 +157,30 @@ All of these must be true. Write the date and the reviewer's name in VALIDATION.
 
 ## Stage 5: closed-case thermal run
 
-**Steps:** close the alarm-clock case completely (no USB: the port is inside), shunt fitted, all digits running, 25 °C room. The case has no vents on purpose (it keeps HV enclosed); the model predicts an average internal rise of only a few kelvin ([EQUATIONS.md](EQUATIONS.md#7-sealed-case-temperature)), and this stage checks the hot spots. Measure the 12 V current with an inline meter on the adapter side. Run for 2 hours, watching the tubes. Then unplug, pass the discharge gate, open, and immediately measure the Nano's regulator, PS1 and the anode resistors with a thermometer or thermal camera. Afterwards, connect USB (shunt out) and read `STATUS` for any fault.
+**Steps:** close the heirloom case completely, wood box fitted (no USB: the port is inside), shunt fitted, all digits running, 25 °C room. The case has no vents on purpose (it keeps HV enclosed); the model predicts an average internal rise of only a few kelvin ([EQUATIONS.md](EQUATIONS.md#7-sealed-case-temperature)), and this stage checks the hot spots. Measure the 12 V current with an inline meter on the adapter side. Run for 2 hours, watching the tubes. Then unplug, pass the discharge gate, open, and immediately measure the Nano's regulator, PS1 and the anode resistors with a thermometer or thermal camera. Afterwards, connect USB (shunt out) and read `STATUS` for any fault.
 
 **Measure:** temperatures, 12 V current at start and end, room temperature, time drift, any fault.
 
 - **PASS:** regulator comfortably below its limit (record the value; below about 70 °C case temperature is a reasonable target), no part too hot to touch briefly, HV steady.
-- **FIX:** hot regulator → the case may need baffled vents that do **not** expose HV; that is an enclosure design change.
+- **FIX:** hot regulator → the case may need baffled vents that do **not** expose HV; that is an enclosure design change. Do not run the clock with the wood box removed to cool it: the printed inner case is the HV enclosure, the wood is only cladding.
 - **STOP:** any component discoloured or the case deformed.
 
 ---
 
-## Stage 6: close the alarm-clock case
+## Stage 6: close the heirloom case
 
-**Parts:** case (01), window panel (05), three button rods (04), cable clamp (03), clear silicone, four rubber feet, two cable ties.
+**Parts:** inner case (01) with the wood box screwed on (Woodwork above), window panel (05), three button rods (04), cable clamp (03), four brass feet (14), 4 × M2 × 16, clear silicone, four felt washers, two cable ties.
 
 1. Discharge gate. Dress the pigtail through the rear opening, over the floor's cradle, and fix it with the cable clamp (2 × M2 × 6).
 2. Case upside down on a soft cloth: slide the window panel up into its slot from the open bottom, film peeled on the inside face only. Put three small dots of silicone in the slot (both top corners and the middle of the top edge). Let it cure.
-3. Drop the three rods into the holes in the top, cap first from outside: they hang by their caps.
-4. Fit the HV_ARM shunt (power off). Turn the case upright and lower it **straight down** over the chassis; the tubes go in without touching anything. Watch that each rod lands on its switch.
-5. Lay the clock on its back on a cloth and fit 4 × M2 × 8 through the floor into the corner blocks. Stick the feet clear of the screw heads. Peel the outer film.
+3. Turn the case upright and drop the three rods into the holes in the top, shaft first: they hang by their brass caps.
+4. Fit the HV_ARM shunt (power off). Lower the case **straight down** over the chassis; the tubes go in without touching anything. Watch that each rod lands on its switch.
+5. Lay the clock on its back on a cloth. At each corner, put an M2 × 16 through a brass foot (counterbore outward) and the floor, into the corner block. Snug, not tight. Add the felt washers. Peel the outer film from the window.
 6. Check: nothing shows through any gap except the glowing digits; each cap clicks its switch and springs back.
 
 - **PASS:** closed, rigid, buttons work, no exposed HV. **STOP:** any gap exposes HV, or a cap stays down.
 
-**To open later:** unplug, wait 60 s, lay the clock on its back, remove the 4 floor screws, stand it up and lift the case straight up. The window and rods stay in the case. Measure TP4 to TP1 (top side, rear edge) below 10 V before touching anything else; the HV_ARM shunt is next to them.
+**To open later:** unplug, wait 60 s, lay the clock on its back, remove the 4 screws through the brass feet, stand it up and lift the case (wood and inner case together) straight up. The window and rods stay in the case. Measure TP4 to TP1 (top side, rear edge) below 10 V before touching anything else; the HV_ARM shunt is next to them.
 
 ---
 

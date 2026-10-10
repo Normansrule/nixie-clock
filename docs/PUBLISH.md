@@ -55,7 +55,7 @@ git config user.name >/dev/null || git config user.name "$OWNER"
 git config user.email >/dev/null || git config user.email "$(gh api user --jq .id)+$OWNER@users.noreply.github.com"
 # 7. Commit everything (skipped if nothing changed)
 git add -A
-git diff --cached --quiet || git commit -qm "Six-Tube Nixie Clock Rev C: alarm-clock case, build guide, KiCad, CAD, firmware, website and desktop app"
+git diff --cached --quiet || git commit -qm "Six-Tube Nixie Clock Rev C: walnut and brass heirloom case, build guide, KiCad, CAD, firmware, website and desktop app"
 # 8. Create the public GitHub repository if it does not exist, and point origin at it
 gh repo view "$OWNER/$REPO" >/dev/null 2>&1 || gh repo create "$OWNER/$REPO" --public -d "Six-tube IN-14 Nixie clock: build guide, KiCad, CadQuery, firmware, website and desktop app (Rev C, unvalidated)" --homepage "https://$(printf %s "$OWNER" | tr '[:upper:]' '[:lower:]').github.io/$REPO/"
 git remote add origin "$URL" 2>/dev/null || git remote set-url origin "$URL"

@@ -1,29 +1,47 @@
 {
-  "_about": "Single source of truth for Rev C mechanical geometry: the fully enclosed alarm-clock case and the PCB it carries. Units: millimetres. Enclosure coordinates: origin at the front-left-bottom outer corner of the case, +X to the right, +Y toward the back, +Z up. The numerals face -Y (the front window). Any key listed in _verify is a fit allowance or third-party dimension that has NOT been measured on real parts. source/build_cad.py reads this file; do not hard-code numbers there.",
+  "_about": "Single source of truth for Rev C mechanical geometry: the heirloom case (a printed inner case that carries every functional feature, clad in mitred hardwood with a brass bezel and brass feet) and the PCB it carries. Units: millimetres. Enclosure coordinates: origin at the front-left-bottom outer corner of the PRINTED INNER CASE, +X to the right, +Y toward the back, +Z up; the hardwood adds wood_t + wood_fit_gap around it (so it starts at x = y = -10). The numerals face -Y (the front window). Any key listed in _verify is a fit allowance or third-party dimension that has NOT been measured on real parts. source/build_cad.py reads this file; do not hard-code numbers there.",
   "revision": "C",
-  "enclosure": "alarm-clock case (fully enclosed, front window)",
+  "enclosure": "heirloom case: printed inner case + mitred hardwood cladding + brass bezel and feet (fully enclosed, front window)",
   "status": "UNVALIDATED ENGINEERING PROTOTYPE",
   "_verify": [
-    "tube_glass_d", "tube_glass_h", "tube_spacer_h", "tube_courtyard_d",
-    "button_height_above_pcb", "button_body_h", "button_hole_d", "rod_d", "rod_cap_gap",
-    "window_slot_clearance", "window_panel_t",
-    "m2_pilot_d", "m2_clearance_d", "m2_head_counterbore_d", "m2_head_counterbore_depth",
-    "floor_clearance", "cable_d", "cable_pinch", "in14_lead_count", "in14_lead_circle_d", "in14_lead_hole_d",
-    "rear_cable_opening_d"
+    "tube_glass_d",
+    "tube_glass_h",
+    "tube_spacer_h",
+    "tube_courtyard_d",
+    "button_height_above_pcb",
+    "button_body_h",
+    "button_hole_d",
+    "rod_d",
+    "rod_cap_gap",
+    "window_slot_clearance",
+    "window_panel_t",
+    "m2_pilot_d",
+    "m2_clearance_d",
+    "m2_head_counterbore_d",
+    "m2_head_counterbore_depth",
+    "floor_clearance",
+    "cable_d",
+    "cable_pinch",
+    "in14_lead_count",
+    "in14_lead_circle_d",
+    "in14_lead_hole_d",
+    "rear_cable_opening_d",
+    "wood_fit_gap",
+    "wood_t",
+    "m2_wood_pilot_d",
+    "wood_k_w_per_m_k"
   ],
-
   "base_l": 234.0,
   "base_w": 80.0,
   "case_h": 112.0,
-  "corner_r": 10.0,
-  "top_edge_r": 16.0,
+  "corner_r": 3.0,
+  "top_edge_r": 3.0,
   "wall_t": 2.4,
   "roof_t": 3.0,
   "floor_t": 3.0,
   "floor_clearance": 0.25,
   "corner_block": 10.0,
   "corner_block_h": 12.0,
-
   "pcb_l": 218.0,
   "pcb_w": 64.0,
   "pcb_t": 1.6,
@@ -32,33 +50,121 @@
   "pcb_offset_y": 8.0,
   "pcb_top_z": 24.0,
   "bottom_side_height_budget": 18.0,
-
-  "tube_centers": [[32, 35], [62, 35], [102, 35], [132, 35], [172, 35], [202, 35]],
-  "separator_centers": [[82, 35], [152, 35]],
-  "buttons": {"SET": [218, 24], "H": [218, 38], "M": [218, 52]},
-  "pcb_screws": [[13, 13], [117, 13], [221, 13], [13, 67], [221, 67]],
-  "case_screws": [[7, 7], [227, 7], [7, 73], [227, 73]],
-
+  "tube_centers": [
+    [
+      32,
+      35
+    ],
+    [
+      62,
+      35
+    ],
+    [
+      102,
+      35
+    ],
+    [
+      132,
+      35
+    ],
+    [
+      172,
+      35
+    ],
+    [
+      202,
+      35
+    ]
+  ],
+  "separator_centers": [
+    [
+      82,
+      35
+    ],
+    [
+      152,
+      35
+    ]
+  ],
+  "buttons": {
+    "SET": [
+      218,
+      24
+    ],
+    "H": [
+      218,
+      38
+    ],
+    "M": [
+      218,
+      52
+    ]
+  },
+  "pcb_screws": [
+    [
+      13,
+      13
+    ],
+    [
+      117,
+      13
+    ],
+    [
+      221,
+      13
+    ],
+    [
+      13,
+      67
+    ],
+    [
+      221,
+      67
+    ]
+  ],
+  "case_screws": [
+    [
+      7,
+      7
+    ],
+    [
+      227,
+      7
+    ],
+    [
+      7,
+      73
+    ],
+    [
+      227,
+      73
+    ]
+  ],
   "tube_glass_d": 19.0,
   "tube_glass_h": 55.0,
   "tube_spacer_h": 7.0,
   "tube_courtyard_d": 19.4,
   "lamp_courtyard_d": 7.0,
   "lamp_h": 13.0,
-
-  "window_x": [20.0, 214.0],
-  "window_z": [28.0, 92.0],
+  "window_x": [
+    20.0,
+    214.0
+  ],
+  "window_z": [
+    28.0,
+    92.0
+  ],
   "window_r": 10.0,
-  "bezel_step": 3.0,
-  "bezel_depth": 1.0,
   "window_panel_t": 3.0,
-  "window_panel_x": [14.0, 220.0],
+  "window_panel_x": [
+    14.0,
+    220.0
+  ],
   "window_panel_h": 92.8,
   "window_panel_r": 2.0,
   "window_slot_clearance": 0.3,
   "window_rail_lip": 1.2,
   "window_rail_top_z": 99.0,
-
   "button_height_above_pcb": 7.0,
   "button_body": 6.0,
   "button_body_h": 3.5,
@@ -71,27 +177,25 @@
   "rod_cap_gap": 1.0,
   "rod_cup_d": 4.2,
   "rod_cup_depth": 2.0,
-  "_button_note": "Alarm-clock style: SET, H and M are pressed from the top of the case. A printed rod (part 04) rests on each switch plunger by its own weight (about 0.03 N, far below the 1.47 N actuation force) and its cap stands about 1 mm proud of the top. Switch travel is about 0.25 mm. VERIFY with coupon 06 and the real switches.",
-
-  "grille_rows": 5,
-  "grille_cols": 7,
-  "grille_pitch": 6.0,
-  "grille_d": 2.6,
-  "grille_depth": 0.8,
-  "grille_center_yz": [40.0, 55.0],
-
+  "_button_note": "Alarm-clock style: SET, H and M are pressed from the top of the case. A rod (part 04, printed in silk-brass filament or turned from brass) rests on each switch plunger by its own weight (about 0.03 N printed, about 0.23 N in brass, both far below the 1.47 N actuation force); it is guided by the inner case and passes an 8 mm hole in the wood top, and its cap stands about 1 mm proud of the wood. Switch travel is about 0.25 mm. VERIFY with coupon 06 and the real switches.",
   "rear_cable_opening_d": 4.2,
   "rear_cable_opening_x": 204.0,
   "rear_cable_opening_z": 5.8,
-
   "pcb_post_d": 5.0,
-
   "m2_pilot_d": 1.7,
   "m2_clearance_d": 2.4,
   "m2_head_counterbore_d": 4.2,
   "m2_head_counterbore_depth": 1.5,
-
-  "clamp_screws": [[194, 70], [214, 70]],
+  "clamp_screws": [
+    [
+      194,
+      70
+    ],
+    [
+      214,
+      70
+    ]
+  ],
   "clamp_boss_d": 5.5,
   "clamp_boss_h": 2.0,
   "clamp_len": 28.0,
@@ -99,12 +203,86 @@
   "clamp_bar_t": 2.6,
   "cable_d": 4.0,
   "cable_pinch": 0.4,
-
   "in14_lead_count": 13,
   "in14_lead_circle_d": 12.0,
   "in14_lead_hole_d": 1.0,
-
   "fasteners": {
-    "alarm_case": {"M2x8": 4, "M2x6": 7, "_uses": "4x M2x8 floor to case, 5x M2x6 PCB to floor standoffs, 2x M2x6 cable clamp"}
-  }
+    "heirloom_case": {
+      "M2x16": 4,
+      "M2x8": 4,
+      "M2x6": 7,
+      "M2x6_brass": 6,
+      "_uses": "4x M2x16 through the brass feet and floor into the inner case; 4x M2x8 up through the inner-case roof into the wood top; 5x M2x6 PCB to floor standoffs, 2x M2x6 cable clamp; 6x M2x6 brass pan head for the bezel"
+    }
+  },
+  "_wood_note": "Hardwood cladding: five 9.5 mm boards (front, back, two ends, top) mitred at 45 degrees on every joint, glued to each other only. The box slips over the printed inner case with wood_fit_gap per side and is held by four M2x8 screws driven up through the inner-case roof into the top board. The inner case alone is a complete, working enclosure (the printed edition).",
+  "wood_species": "black walnut (oak, cherry or ash also work)",
+  "wood_t": 9.5,
+  "wood_fit_gap": 0.5,
+  "wood_edge_r": 3.0,
+  "wood_opening_margin": 2.0,
+  "wood_top_hole_d": 8.0,
+  "wood_cable_notch_w": 8.0,
+  "wood_cable_notch_h": 10.0,
+  "wood_k_w_per_m_k": 0.15,
+  "m2_wood_pilot_d": 1.6,
+  "wood_pilot_depth": 6.5,
+  "roof_screws": [
+    [
+      35,
+      40
+    ],
+    [
+      90,
+      40
+    ],
+    [
+      145,
+      40
+    ],
+    [
+      190,
+      40
+    ]
+  ],
+  "bezel_t": 1.0,
+  "bezel_inner_margin": 1.0,
+  "bezel_width": 9.0,
+  "bezel_screws": [
+    [
+      14.5,
+      60
+    ],
+    [
+      219.5,
+      60
+    ],
+    [
+      67,
+      97.5
+    ],
+    [
+      167,
+      97.5
+    ],
+    [
+      67,
+      22.5
+    ],
+    [
+      167,
+      22.5
+    ]
+  ],
+  "foot_d": 14.0,
+  "foot_h": 8.0,
+  "foot_chamfer": 1.0,
+  "foot_cbore_d": 4.2,
+  "foot_cbore_h": 2.2,
+  "light_baffle_x": [
+    212.6,
+    214.2
+  ],
+  "light_baffle_z0": 33.0,
+  "_baffle_note": "A thin black fin hanging from the inner-case roof between tube 6 and the button rods, so the brass rods cannot be seen through the window."
 }

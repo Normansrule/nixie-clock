@@ -1,7 +1,7 @@
 {
   "name": "nixie-clock-companion",
   "productName": "Nixie Clock Companion",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Offline build guide, calculators and USB serial companion for the Six-Tube Nixie Clock (Rev C, unvalidated prototype).",
   "homepage": "https://github.com/Normansrule/nixie-clock",
   "author": "Aleksander Norman",

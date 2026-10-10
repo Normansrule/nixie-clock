@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Printing and cutting the alarm-clock case · Six-Tube Nixie Clock Rev C</title>
+<title>Printing and cutting · Six-Tube Nixie Clock Rev C</title>
 <meta name="description" content="Open-source six-tube IN-14 Nixie clock: build guide, wiring, KiCad, CadQuery, firmware. Rev C, unvalidated prototype.">
 <meta name="nixie-repo" content="">
 <meta name="theme-color" content="#120e0b">
@@ -40,11 +40,12 @@ blockquote h2{border:0;margin:.3em 0;padding:0;color:#ffcbb8}
 footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer div{max-width:1080px;margin:0 auto;padding:18px 16px}
 @media (max-width:640px){body{font-size:15px}h1{font-size:1.6rem}.bar{gap:8px}}
 </style></head><body>
-<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html" class=on>Printing</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
+<header><div class="bar"><a class="brand" href="index.html"><b>IN-14</b> Nixie Clock · Rev C</a><nav><a href="index.html">Overview</a><a href="SAFETY.html">Safety</a><a href="BUILD_GUIDE.html">Build guide</a><a href="MANUFACTURING.html">Make it</a><a href="BOM.html">Parts</a><a href="WIRING.html">Wiring</a><a href="EQUATIONS.html">Equations</a><a href="PRINTING.html" class=on>Printing</a><a href="WOODWORK.html">Woodwork</a><a href="TOOLS.html">Tools</a><a href="APP.html">App</a><a href="REQUIREMENTS.html">Requirements</a><a href="VALIDATION.html">Validation</a><a href="SECURITY.html">Security</a><a href="PUBLISH.html">Publish</a><a href="DEVELOP.html">Develop</a><a href="CREDITS.html">Credits</a></nav></div></header>
 <div class="warn"><div><strong>High voltage (about 170 V DC).</strong> Unvalidated prototype. Read <a href="SAFETY.html">Safety</a> before building. Off is not safe until you have measured it.</div></div>
-<main><h1 id="printing-and-cutting-the-alarm-clock-case">Printing and cutting the alarm-clock case</h1>
-<p>Everything here is a <strong>baseline, untested</strong> starting point. Print the fit coupons first and adjust <code>cad/DIMENSIONS.json</code>, not the slicer scale.</p>
-<p><img alt="Alarm-clock case, model render" src="img/hero_alarm_clock.png"></p>
+<main><h1 id="printing-and-cutting">Printing and cutting</h1>
+<p>Everything here is a <strong>baseline, untested</strong> starting point. Print the fit coupons first and adjust <code>cad/DIMENSIONS.json</code>, not the slicer scale. The wood and brass parts are in <a href="WOODWORK.html">WOODWORK.md</a>.</p>
+<p><img alt="Printed inner case on its own, model render" src="img/printed_edition.png"></p>
+<p>The printed <strong>inner case</strong> is the real enclosure: it carries the window slot, the button guides, the light baffle and the floor-screw blocks, and it is what keeps the high voltage enclosed. On its own it is a complete, working case (the <em>printed edition</em>); the walnut box is cladding that slips over it.</p>
 <h2 id="which-files-to-use">Which files to use</h2>
 <table>
 <thead>
@@ -61,19 +62,24 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <td>Print orientation, already on the bed</td>
 </tr>
 <tr>
-<td><strong>Laser-cut this</strong></td>
-<td><code>cad/Window_panel_3mm_1to1.dxf</code></td>
+<td><strong>Laser-cut these</strong></td>
+<td><code>cad/dxf/Window_panel_3mm_1to1.dxf</code> (acrylic) · <code>cad/dxf/Brass_bezel_1mm_1to1.dxf</code> (brass)</td>
 <td>2D, 1:1 millimetres</td>
 </tr>
 <tr>
+<td><strong>Woodwork</strong></td>
+<td><code>cad/dxf/Wood_boards_1to1.dxf</code> · <a href="WOODWORK.html">WOODWORK.md</a></td>
+<td>2D outer faces, 1:1</td>
+</tr>
+<tr>
 <td>CAD reference only</td>
-<td><code>cad/step/*.step</code>, <code>cad/Assembly_RevC_alarm_clock.step</code></td>
+<td><code>cad/step/*.step</code>, <code>cad/Assembly_RevC_heirloom.step</code></td>
 <td>Assembly coordinates: <strong>do not slice</strong></td>
 </tr>
 <tr>
 <td>View only</td>
-<td><code>cad/view/*.stl</code> (whole clock, chassis)</td>
-<td>Includes glass and PCB envelopes: <strong>never print</strong></td>
+<td><code>cad/view/*.stl</code> (finished clock, printed edition, chassis)</td>
+<td>Includes glass, PCB, wood and brass: <strong>never print</strong></td>
 </tr>
 </tbody>
 </table>
@@ -90,25 +96,35 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 <tr>
 <td><code>plate_0_fit_coupons.3mf</code></td>
 <td>06 fit coupon, 07 unpowered lead-pattern coupon</td>
-<td>Print first</td>
+<td>Print first, black PETG</td>
 </tr>
 <tr>
-<td><code>plate_A_case_shell.3mf</code></td>
-<td>01 alarm-clock case (upright, open bottom on the bed)</td>
-<td>234 × 80 × 112 mm; tree supports (see below)</td>
+<td><code>plate_A_inner_case.3mf</code></td>
+<td>01 inner case (upright, open bottom on the bed)</td>
+<td>234 × 80 × 112 mm, black PETG; tree supports (see below)</td>
 </tr>
 <tr>
-<td><code>plate_B_floor_clamp_rods.3mf</code></td>
-<td>02 floor, 03 cable clamp, 3 × 04 button rods</td>
-<td>Rods stand cap-down; add a brim</td>
+<td><code>plate_B_floor_clamp.3mf</code></td>
+<td>02 floor, 03 cable clamp</td>
+<td>Black PETG, no supports</td>
+</tr>
+<tr>
+<td><code>plate_C_button_rods_silk_brass.3mf</code></td>
+<td>3 × 04 button rods</td>
+<td><strong>Silk brass</strong> (or gold) filament, cap down, 5 mm brim, slow outer walls</td>
+</tr>
+<tr>
+<td>(single part)</td>
+<td>14 brass foot × 4, only if you are not making them from brass bar</td>
+<td>Silk brass, counterbore up</td>
 </tr>
 </tbody>
 </table>
 <p>Coupon 07 carries only the IN-14 lead pattern. <strong>It is never a powered tube spacer.</strong> Keep the factory spacers on your tubes.</p>
-<p>Print the button rods in the <strong>same colour as the case</strong>: they sit just to the right of the window, behind the smoked panel.</p>
-<p><img alt="Case from below: window slot rails, button guides, corner blocks" src="img/case_underside.png"></p>
+<p>Print the inner case in <strong>matte black</strong>: through the smoked window it reads as a dark cavity, so only the glowing digits show.</p>
+<p><img alt="Inner case from below: window slot rails, button guides, light baffle, corner blocks" src="img/case_underside.png"></p>
 <h2 id="printer">Printer</h2>
-<p>Every part fits a Bambu Lab P1S (256 × 256 × 256 mm). Any printer with at least 240 × 85 mm of bed and 115 mm of height works.</p>
+<p>Every printed part fits a Bambu Lab P1S (256 × 256 × 256 mm). Any printer with at least 240 × 85 mm of bed and 115 mm of height works. The wood box (254 × 100 mm) is not printed.</p>
 <h2 id="baseline-settings-petg-matte">Baseline settings (PETG, matte)</h2>
 <table>
 <thead>
@@ -136,40 +152,42 @@ footer{border-top:1px solid var(--line);color:var(--mute);font-size:13px}footer 
 </tr>
 <tr>
 <td>Supports</td>
-<td><strong>Case (01):</strong> tree supports, automatic, with <em>on build plate only</em> turned <strong>off</strong>. They form inside under the roof and the three button guides, and in the window opening; the outside needs none. <strong>Everything else:</strong> none</td>
+<td><strong>Inner case (01):</strong> tree supports, automatic, with <em>on build plate only</em> turned <strong>off</strong>. They form inside under the roof, the three button guides and the baffle, and in the window opening; the outside needs none. <strong>Everything else:</strong> none</td>
 </tr>
 <tr>
 <td>Brim</td>
-<td>5 mm on the case and the rods</td>
+<td>5 mm on the inner case and the rods</td>
 </tr>
 <tr>
 <td>Seam</td>
-<td>Aligned at the back, so the front face and window bezel stay clean</td>
+<td>Aligned at the back</td>
 </tr>
 </tbody>
 </table>
+<p>The rods are 96.5 mm tall and 6 mm thick: print them slowly (outer walls about 40 mm/s) with a brim, spaced apart, so they stay straight.</p>
 <h2 id="inspect-in-the-slicer-before-printing">Inspect in the slicer before printing</h2>
 <ul>
 <li><strong>Window slot:</strong> two vertical rails inside the front wall, a top stop above the window, and a 3.3 mm slot open at the bottom.</li>
 <li><strong>Button guides:</strong> three tubes hanging from the roof at the right-hand end, with 6.6 mm holes through the top.</li>
+<li><strong>Light baffle:</strong> a thin fin hanging from the roof just left of the guides; it hides the brass rods from anyone looking in through the window.</li>
+<li><strong>Roof holes:</strong> four 2.4 mm holes along the middle of the roof for the screws that hold the wood top.</li>
 <li><strong>Corner blocks:</strong> four solid blocks in the bottom corners, each with a 1.7 mm pilot hole.</li>
 <li><strong>Floor standoffs:</strong> five 5 mm posts on part 02, 19.4 mm tall, each with a 1.7 mm pilot at the top.</li>
 <li><strong>Cable path:</strong> the 4.2 mm rear hole, and the cradle and two bosses on the floor.</li>
-<li><strong>Grille:</strong> the dimples on the left end are blind (they do not go through the wall).</li>
 </ul>
 <h2 id="after-printing">After printing</h2>
 <ul>
 <li>Tap every 1.7 mm pilot with an M2 tap; clear the chips.</li>
 <li>Check that each rod slides freely in its guide.</li>
-<li>Remove all support material from inside the case, especially around the window slot.</li>
+<li>Remove all support material from inside the case, especially around the window slot and the baffle.</li>
 </ul>
 <h2 id="window-panel">Window panel</h2>
-<p>Cut <code>cad/Window_panel_3mm_1to1.dxf</code> (layer <code>CUT</code>, millimetres, 1:1) from <strong>3 mm cast acrylic</strong>. Smoked grey gives the classic alarm-clock look: the glowing digits show through and the rest of the inside disappears. Clear also works. Before cutting, confirm the laser software reads it as 206 × 92.8 mm, and peel the protective film only at assembly.</p>
-<p>The panel slides up into its slot from the open bottom of the case. Before the case goes on, put three small dots of clear neutral-cure silicone in the slot (both top corners and the middle of the top edge) so the panel stays in the case when you lift the case off later.</p>
+<p>Cut <code>cad/dxf/Window_panel_3mm_1to1.dxf</code> (layer <code>CUT</code>, millimetres, 1:1) from <strong>3 mm cast acrylic</strong>. Smoked grey or bronze gives the vintage look: the glowing digits show through and the rest of the inside disappears. Before cutting, confirm the laser software reads it as 206 × 92.8 mm, and peel the protective film only at assembly.</p>
+<p>The panel slides up into its slot from the open bottom of the inner case. Before the case goes on, put three small dots of clear neutral-cure silicone in the slot (both top corners and the middle of the top edge) so the panel stays in the case when you lift the case off later.</p>
 <h2 id="changing-a-dimension">Changing a dimension</h2>
 <ol>
-<li>Edit the value in <code>cad/DIMENSIONS.json</code> (for example <code>window_x</code> or <code>button_hole_d</code>).</li>
-<li>Run <code>scripts/render_cad</code>. It rebuilds every STEP, STL, 3MF, plate, the DXF, the drawings and the previews, then runs the geometry checks, so the outputs never drift from the source.</li>
+<li>Edit the value in <code>cad/DIMENSIONS.json</code> (for example <code>window_x</code>, <code>button_hole_d</code> or <code>wood_fit_gap</code>).</li>
+<li>Run <code>scripts/render_cad</code>. It rebuilds every STEP, STL, 3MF, plate, DXF, drawing and preview, then runs the geometry checks, so the outputs never drift from the source.</li>
 <li>Reprint the coupon. Record the change in <a href="VALIDATION.html">VALIDATION.md</a>.</li>
 </ol>
 <p><strong>Never scale a part uniformly to fix a hole.</strong> That moves every screw post too.</p></main>

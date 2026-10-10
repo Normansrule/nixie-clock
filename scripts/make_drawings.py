@@ -2,7 +2,7 @@
 """make_drawings.py - dimensioned drawings and flow diagrams generated from cad/DIMENSIONS.json and the BOM.
 
 Writes (docs/img/):
-  dimensions.svg   enclosure top and front views with key dimensions
+  dimensions.svg   heirloom case front and side views with key dimensions
   pcb_drawing.svg  PCB mechanical drawing: outline, M2 holes, tube/lamp/switch positions
   make_it.svg      what to make, from which file, and what is ready
   build_flow.svg   build stages 0-7 with their gates
@@ -41,48 +41,62 @@ def svg(w, h, body, title):
 
 
 def dimensions():
-    """Alarm-clock case: front view (window, tubes, buttons) and side view (profile)."""
-    s = 3.0
+    """Heirloom case: front view (wood, brass bezel, window, tubes, buttons, feet) and side view."""
+    s = 2.8
+    to = D["wood_t"] + D["wood_fit_gap"]                       # wood outer face offset from the inner case
     L, W_, H = D["base_l"], D["base_w"], D["case_h"]
-    R, CR = D["top_edge_r"], D["corner_r"]
+    WL, WW, WH = L + 2 * to, W_ + 2 * to, H + D["wood_t"]
+    fh = D["foot_h"]
     wx0, wx1 = D["window_x"]
     wz0, wz1 = D["window_z"]
-    rod_top = H + D["rod_cap_gap"] + D["rod_cap_t"]
-    ox, oy = 80, 124
+    bi, bw = D["bezel_inner_margin"], D["bezel_width"]
+    rod_top = WH + D["rod_cap_gap"] + D["rod_cap_t"]
+    ox, oy = 130, 124
+    X = lambda x: ox + (x + to) * s                              # enclosure x -> drawing
     Z = lambda z: oy + (rod_top - z) * s
-    b = [f'<text class="ti" x="24" y="34">Alarm-clock case: front and side views (mm)</text>',
-         f'<text class="sm" x="24" y="52">From cad/DIMENSIONS.json. Fully enclosed: the tubes sit inside, behind a 3 mm smoked acrylic window. Values marked VERIFY there are unmeasured.</text>',
+    WOOD, BRASS = "#8a5a36", "#d9a441"
+    b = [f'<text class="ti" x="24" y="34">Heirloom case: front and side views (mm)</text>',
+         f'<text class="sm" x="24" y="52">From cad/DIMENSIONS.json. Walnut box ({D["wood_t"]:g} mm boards, 45° mitres) over the printed inner case; brass bezel and feet. Values marked VERIFY there are unmeasured.</text>',
          f'<text class="lb" x="{ox}" y="{oy - 44}">Front</text>']
-    b.append(f'<path class="o" d="M{ox} {Z(0)} V{Z(H - R)} Q{ox} {Z(H)} {ox + R * s} {Z(H)} H{ox + (L - R) * s} Q{ox + L * s} {Z(H)} {ox + L * s} {Z(H - R)} V{Z(0)} Z"/>')
-    b.append(f'<rect class="h" x="{ox + (wx0 - D["bezel_step"]) * s}" y="{Z(wz1 + D["bezel_step"])}" width="{(wx1 - wx0 + 2 * D["bezel_step"]) * s}" height="{(wz1 - wz0 + 2 * D["bezel_step"]) * s}" rx="{(D["window_r"] + D["bezel_step"]) * s}"/>')
-    b.append(f'<rect class="o" x="{ox + wx0 * s}" y="{Z(wz1)}" width="{(wx1 - wx0) * s}" height="{(wz1 - wz0) * s}" rx="{D["window_r"] * s}"/>')
+    b.append(f'<rect x="{X(-to)}" y="{Z(WH)}" width="{WL * s}" height="{WH * s}" rx="{D["wood_edge_r"] * s}" fill="{WOOD}" fill-opacity=".22" stroke="{WOOD}" stroke-width="1.6"/>')
+    for x, _ in D["case_screws"][:2]:
+        b.append(f'<rect x="{X(x - D["foot_d"] / 2)}" y="{Z(0)}" width="{D["foot_d"] * s}" height="{fh * s}" rx="3" fill="{BRASS}" fill-opacity=".5" stroke="{BRASS}"/>')
+    r_o = D["window_r"] + bi + bw
+    b.append(f'<rect x="{X(wx0 - bi - bw)}" y="{Z(wz1 + bi + bw)}" width="{(wx1 - wx0 + 2 * (bi + bw)) * s}" height="{(wz1 - wz0 + 2 * (bi + bw)) * s}" rx="{r_o * s}" fill="{BRASS}" fill-opacity=".28" stroke="{BRASS}" stroke-width="1.4"/>')
+    b.append(f'<rect x="{X(wx0 - bi)}" y="{Z(wz1 + bi)}" width="{(wx1 - wx0 + 2 * bi) * s}" height="{(wz1 - wz0 + 2 * bi) * s}" rx="{(D["window_r"] + bi) * s}" fill="{BG}" stroke="{BRASS}" stroke-width="1.2"/>')
+    for x, z in D["bezel_screws"]:
+        b.append(f'<circle cx="{X(x)}" cy="{Z(z)}" r="{1.9 * s}" fill="{BRASS}"/>')
     g = D["tube_glass_d"] / 2
     z0 = D["pcb_top_z"] + D["tube_spacer_h"]
     for i, (x, _) in enumerate(D["tube_centers"], 1):
-        b.append(f'<rect class="t" x="{ox + (x - g) * s}" y="{Z(z0 + D["tube_glass_h"])}" width="{2 * g * s}" height="{D["tube_glass_h"] * s}" rx="{g * s}" stroke-dasharray="3 3"/>'
-                 f'<text x="{ox + x * s}" y="{Z(z0 + 30)}" fill="{GLOW}" font-size="30" text-anchor="middle">{"100842"[i - 1]}</text>')
+        b.append(f'<rect class="t" x="{X(x - g)}" y="{Z(z0 + D["tube_glass_h"])}" width="{2 * g * s}" height="{D["tube_glass_h"] * s}" rx="{g * s}" stroke-dasharray="3 3"/>'
+                 f'<text x="{X(x)}" y="{Z(z0 + 30)}" fill="{GLOW}" font-size="28" text-anchor="middle">{"100842"[i - 1]}</text>')
     for x, y in D["buttons"].values():
-        b.append(f'<rect x="{ox + (x - D["rod_cap_d"] / 2) * s}" y="{Z(rod_top)}" width="{D["rod_cap_d"] * s}" height="{D["rod_cap_t"] * s}" rx="3" fill="{MUTE}"/>')
-    b.append(dim_h(ox, ox + L * s, oy - 28, f"{L:g}"))
-    b.append(dim_v(ox - 14, Z(H), Z(0), f"{H:g}"))
-    b.append(dim_h(ox + wx0 * s, ox + wx1 * s, Z(0) + 22, f"window {wx1 - wx0:g} × {wz1 - wz0:g}"))
-    b.append(f'<text class="dt" x="{ox + L * s - 4}" y="{Z(rod_top) - 6}" text-anchor="end">SET · H · M caps on top</text>')
+        b.append(f'<rect x="{X(x - D["rod_cap_d"] / 2)}" y="{Z(rod_top)}" width="{D["rod_cap_d"] * s}" height="{D["rod_cap_t"] * s}" rx="3" fill="{BRASS}"/>')
+    b.append(dim_h(X(-to), X(L + to), oy - 28, f"{WL:g}"))
+    b.append(dim_v(X(-to) - 14, Z(WH), Z(-fh), f"{WH + fh:g} on feet"))
+    b.append(dim_h(X(wx0 - bi), X(wx1 + bi), Z(-fh) + 22, f"visible window {wx1 - wx0 + 2 * bi:g} × {wz1 - wz0 + 2 * bi:g}"))
+    b.append(f'<text class="dt" x="{X(L + to) - 4}" y="{Z(rod_top) - 6}" text-anchor="end">brass SET · H · M caps on top</text>')
     # side view
-    sx = ox + L * s + 70
-    b.append(f'<text class="lb" x="{sx}" y="{oy - 44}">Side</text>')
-    b.append(f'<path class="o" d="M{sx} {Z(0)} V{Z(H - R)} Q{sx} {Z(H)} {sx + R * s} {Z(H)} H{sx + (W_ - R) * s} Q{sx + W_ * s} {Z(H)} {sx + W_ * s} {Z(H - R)} V{Z(0)} Z"/>')
+    sx = X(L + to) + 80
+    Y = lambda y: sx + (y + to) * s
+    b.append(f'<text class="lb" x="{sx}" y="{oy - 44}">Side (left end)</text>')
+    b.append(f'<rect x="{Y(-to)}" y="{Z(WH)}" width="{WW * s}" height="{WH * s}" rx="{D["wood_edge_r"] * s}" fill="{WOOD}" fill-opacity=".22" stroke="{WOOD}" stroke-width="1.6"/>')
+    b.append(f'<rect class="h" x="{Y(0)}" y="{Z(H)}" width="{W_ * s}" height="{H * s}" stroke-dasharray="4 3"/>')
+    for x, y in D["case_screws"][::2]:
+        b.append(f'<rect x="{Y(y - D["foot_d"] / 2)}" y="{Z(0)}" width="{D["foot_d"] * s}" height="{fh * s}" rx="3" fill="{BRASS}" fill-opacity=".5" stroke="{BRASS}"/>')
     for _, y in D["buttons"].values():
-        b.append(f'<rect x="{sx + (y - D["rod_cap_d"] / 2) * s}" y="{Z(rod_top)}" width="{D["rod_cap_d"] * s}" height="{D["rod_cap_t"] * s}" rx="3" fill="{MUTE}"/>')
+        b.append(f'<rect x="{Y(y - D["rod_cap_d"] / 2)}" y="{Z(rod_top)}" width="{D["rod_cap_d"] * s}" height="{D["rod_cap_t"] * s}" rx="3" fill="{BRASS}"/>')
     ty = D["tube_centers"][0][1]
-    b.append(f'<rect class="t" x="{sx + (ty - g) * s}" y="{Z(z0 + D["tube_glass_h"])}" width="{2 * g * s}" height="{D["tube_glass_h"] * s}" rx="{g * s}" stroke-dasharray="3 3"/>')
-    b.append(f'<line class="h" x1="{sx + D["pcb_offset_y"] * s}" y1="{Z(D["pcb_top_z"])}" x2="{sx + (D["pcb_offset_y"] + D["pcb_w"]) * s}" y2="{Z(D["pcb_top_z"])}" stroke-width="3"/>')
-    b.append(f'<line class="h" x1="{sx + D["wall_t"] * s + 4}" y1="{Z(D["floor_t"])}" x2="{sx + D["wall_t"] * s + 4}" y2="{Z(D["floor_t"] + D["window_panel_h"])}" stroke-width="3" stroke="#8a6a50"/>')
-    b.append(dim_h(sx, sx + W_ * s, oy - 28, f"{W_:g}"))
-    b.append(dim_v(sx + W_ * s + 40, Z(rod_top), Z(0), f"{rod_top:g}"))
-    b.append(f'<text class="sm" x="{sx}" y="{Z(0) + 20}">front ←  window panel · PCB · tube</text>')
-    h = Z(0) + 50
-    b.append(f'<text class="sm" x="{ox}" y="{h - 8}">Top edges rounded R{R:g}, corners R{CR:g}. Glass Ø{D["tube_glass_d"]:g} × {D["tube_glass_h"]:g} on {D["tube_spacer_h"]:g} mm spacers; PCB top at z = {D["pcb_top_z"]:g}. Dashed = tube glass inside the case.</text>')
-    (IMG / "dimensions.svg").write_text(svg(sx + W_ * s + 110, h + 10, "".join(b), "Alarm-clock case dimensions"))
+    b.append(f'<rect class="t" x="{Y(ty - g)}" y="{Z(z0 + D["tube_glass_h"])}" width="{2 * g * s}" height="{D["tube_glass_h"] * s}" rx="{g * s}" stroke-dasharray="3 3"/>')
+    b.append(f'<line class="h" x1="{Y(D["pcb_offset_y"])}" y1="{Z(D["pcb_top_z"])}" x2="{Y(D["pcb_offset_y"] + D["pcb_w"])}" y2="{Z(D["pcb_top_z"])}" stroke-width="3"/>')
+    b.append(f'<line class="h" x1="{Y(D["wall_t"]) + 4}" y1="{Z(D["floor_t"])}" x2="{Y(D["wall_t"]) + 4}" y2="{Z(D["floor_t"] + D["window_panel_h"])}" stroke-width="3" stroke="#8a6a50"/>')
+    b.append(dim_h(Y(-to), Y(W_ + to), oy - 28, f"{WW:g}"))
+    b.append(dim_v(Y(W_ + to) + 44, Z(rod_top), Z(-fh), f"{rod_top + fh:g}"))
+    b.append(f'<text class="sm" x="{sx}" y="{Z(-fh) + 20}">front ←  window panel · PCB · tube; dashed = printed inner case</text>')
+    h = Z(-fh) + 52
+    b.append(f'<text class="sm" x="{ox}" y="{h - 8}">Wood outer edges rounded R{D["wood_edge_r"]:g}. Inner case {L:g} × {W_:g} × {H:g}. Glass Ø{D["tube_glass_d"]:g} × {D["tube_glass_h"]:g} on {D["tube_spacer_h"]:g} mm spacers; PCB top at z = {D["pcb_top_z"]:g}. Brass: bezel {D["bezel_t"]:g} mm sheet, feet Ø{D["foot_d"]:g} × {fh:g}.</text>')
+    (IMG / "dimensions.svg").write_text(svg(Y(W_ + to) + 110, h + 10, "".join(b), "Heirloom case dimensions"))
 
 
 def pcb():
@@ -135,14 +149,14 @@ def make_it():
     W_, gap, bw, bh = 1000, 20, 300, 112
     cells = [
         ("1  Buy parts", [f"hardware/BOM.csv: {n_lines} lines, {n_parts} parts", "hardware/BOM_mechanical.csv", "safety items: rating or better only"], "ready"),
-        ("2  3D print (PETG)", ["cad/print/*.3mf plates", "coupons, then case, floor, 3 rods", "fits a Bambu Lab P1S (256 mm)"], "ready"),
-        ("3  Laser cut", ["cad/Window_panel_3mm_1to1.dxf", "3 mm smoked CAST acrylic", "206 x 92.8 mm window panel"], "ready"),
-        ("4  PCB fabrication", ["hardware/ KiCad project", "not routed yet: no Gerbers", "scripts/make_fab_outputs.sh gate"], "blocked"),
-        ("5  Assemble", ["docs/BUILD_GUIDE.md stages 1-4", "LV first, HV last, one tube first", "discharge gate every time"], "waits"),
-        ("6  Program", ["firmware/Nixie_RevC/*.ino", "or build/Nixie_RevC.hex + avrdude", "compiles; never run on a board"], "ready"),
-        ("7  Wire and enclose", ["12 V pigtail + clamp, CR2032", "neon leads sleeved >=300 V", "M2 screws only"], "ready"),
-        ("8  Label", ["docs/labels.pdf (print at 100 %)", "HV warning + rating plate", "markers near PS1 and JP1"], "ready"),
-        ("9  Test and record", ["hardware/TEST_RECORD.csv", "PASS / FIX / STOP per step", "docs/VALIDATION.md"], "ready"),
+        ("2  3D print (PETG)", ["cad/print/*.3mf plates", "coupons, inner case, floor, rods", "fits a Bambu Lab P1S (256 mm)"], "ready"),
+        ("3  Cut acrylic + brass", ["cad/dxf/Window_panel_3mm_1to1.dxf", "cad/dxf/Brass_bezel_1mm_1to1.dxf", "laser / waterjet service or by hand"], "ready"),
+        ("4  Woodwork", ["cad/dxf/Wood_boards_1to1.dxf", "5 walnut boards, 45° mitres", "docs/WOODWORK.md, oil finish"], "ready"),
+        ("5  PCB fabrication", ["hardware/ KiCad project", "not routed yet: no Gerbers", "scripts/make_fab_outputs.sh gate"], "blocked"),
+        ("6  Assemble + program", ["docs/BUILD_GUIDE.md stages 1-4", "LV first, HV last, one tube first", "firmware compiles; never run"], "waits"),
+        ("7  Brass feet", ["cad/step/14_brass_foot.step", "14 mm brass bar, 8 mm slices", "or print in silk brass"], "ready"),
+        ("8  Enclose", ["12 V pigtail + clamp, CR2032", "neon leads sleeved >=300 V", "M2 screws only"], "ready"),
+        ("9  Label, test, record", ["docs/labels.pdf, TEST_RECORD.csv", "PASS / FIX / STOP per step", "discharge gate every time"], "ready"),
     ]
     b = [f'<text class="ti" x="24" y="36">Make it: what to send where</text>',
          f'<text class="sm" x="24" y="54">Every input is an open file in this repository. The PCB is the one blocked step: it must be routed and reviewed before Gerbers exist.</text>']
@@ -158,7 +172,7 @@ def build_flow():
     stages = [("0", "Fit coupons", "print, check tube, tap M2", "ok"), ("1", "Low voltage", "12 V, polarity, V5", "ok"),
               ("2", "Logic + RTC", "no HV module; fault latch", "ok"), ("!", "HV gate", "experienced reviewer signs", "gate"),
               ("3", "HV supply", "170 V, measure discharge", "hv"), ("4", "Tubes", "one digit, then all six", "hv"),
-              ("5", "Thermal", "2 h closed case", "hv"), ("6", "Close case", "window in, case over", "ok"), ("7", "Record", "VALIDATION.md", "ok")]
+              ("5", "Thermal", "2 h closed case", "hv"), ("6", "Close case", "wood box on, window in, case over", "ok"), ("7", "Record", "VALIDATION.md", "ok")]
     bw, bh, gap = 104, 92, 10
     W_ = 48 + 9 * bw + 8 * gap
     b = [f'<text class="ti" x="24" y="34">Build stages: each ends in PASS, FIX or STOP</text>']

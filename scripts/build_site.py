@@ -24,6 +24,7 @@ PAGES = [  # (source, output, nav label)
     ("docs/WIRING.md", "WIRING.html", "Wiring"),
     ("docs/EQUATIONS.md", "EQUATIONS.html", "Equations"),
     ("docs/PRINTING.md", "PRINTING.html", "Printing"),
+    ("docs/WOODWORK.md", "WOODWORK.html", "Woodwork"),
     ("docs/tools.html", "TOOLS.html", "Tools"),
     ("docs/APP.md", "APP.html", "App"),
     ("docs/REQUIREMENTS.md", "REQUIREMENTS.html", "Requirements"),
@@ -33,8 +34,9 @@ PAGES = [  # (source, output, nav label)
     ("docs/DEVELOP.md", "DEVELOP.html", "Develop"),
     ("CREDITS.md", "CREDITS.html", "Credits"),
 ]
-DOWNLOADS = ["cad/Window_panel_3mm_1to1.dxf", "cad/print/plate_0_fit_coupons.3mf", "cad/print/plate_A_case_shell.3mf",
-             "cad/print/plate_B_floor_clamp_rods.3mf",
+DOWNLOADS = ["cad/dxf/Window_panel_3mm_1to1.dxf", "cad/dxf/Brass_bezel_1mm_1to1.dxf", "cad/dxf/Wood_boards_1to1.dxf",
+             "cad/print/plate_0_fit_coupons.3mf", "cad/print/plate_A_inner_case.3mf",
+             "cad/print/plate_B_floor_clamp.3mf", "cad/print/plate_C_button_rods_silk_brass.3mf",
              "docs/Nixie_RevC_schematic.pdf", "hardware/NET_MAP.csv", "hardware/BOM.csv", "hardware/BOM_mechanical.csv",
              "hardware/REQUIREMENTS.csv", "hardware/TEST_RECORD.csv", "docs/labels.pdf"]
 

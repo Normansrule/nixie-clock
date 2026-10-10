@@ -1,7 +1,7 @@
 (export (version "E")
   (design
     (source "/home/claude/nixie-clock/hardware/Nixie_RevC.kicad_sch")
-    (date "Sun Oct  4 03:37:17 2026")
+    (date "Tue Oct  6 04:26:42 2026")
     (tool "Eeschema 7.0.11+dfsg-1build4")
     (textvar (name "REVISION") "C")
     (textvar (name "STATUS") "UNVALIDATED ENGINEERING PROTOTYPE")

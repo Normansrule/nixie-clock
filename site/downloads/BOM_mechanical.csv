@@ -1,24 +1,34 @@
 option,qty,item,spec,file
-case,1,4-layer FR-4 printed circuit board (PCB) 218 x 64 x 1.6 mm,NOT YET ROUTED: see docs/MANUFACTURING.md release gate,hardware/
-case,1,"Isolated regulated 12 V adapter, >=1 A, centre-positive 5.5 x 2.1 mm","SAFETY ITEM: isolated, regulated, from a reputable maker",-
-case,1,"Insulated DC-jack pigtail, 5.5 x 2.1 mm female, about 150 mm",outer diameter about 4 mm to suit the 4.2 mm rear hole and clamp,-
-case,1,CR2032 primary lithium cell,never a rechargeable LIR2032,-
-case,1,Insulated CR2032 holder with leads,<=30 x 25 x 7 mm,-
-case,2,"1x15 female headers, 2.54 mm","Nano socket, about 6 mm stack",-
-case,1,Converter mount set (stand-offs) for the NCH8200HV,4 mm separation from the board,-
-case,1,"Insulation sleeving for neon leads, about 300 mm","SAFETY ITEM: rated >=300 V, 600 V preferred",-
-case,2,"Cable ties, small",wire dressing,-
-case,4,"Rubber feet, self-adhesive, about 8 mm",keep clear of the four screw heads,-
-case,1,USB Mini-B data cable,"data-capable, for flashing",-
-case,1,"PETG filament, matte black (or your case colour)","about 350 g for the case, floor, rods and coupons, plus supports",-
-case,1,Printed part 01 alarm-clock case shell,"PETG, upright, tree supports inside under the roof",cad/stl/01_alarm_case_shell.stl
-case,1,Printed part 02 floor (carries the PCB on 5 standoffs),PETG,cad/stl/02_floor.stl
-case,1,Printed part 03 cable clamp,PETG,cad/stl/03_cable_clamp.stl
-case,3,"Printed part 04 button rod (SET, H, M)","PETG in the case colour, cap down, brim",cad/stl/04_button_rod.stl
-case,1,"Part 05 window panel, laser cut","3 mm smoked grey CAST acrylic (clear also works), 206 x 92.8 mm",cad/Window_panel_3mm_1to1.dxf
-case,1,"Clear neutral-cure silicone, small tube",3 dots hold the window panel in its slot so it cannot drop out when the case is lifted,-
-case,1,Printed part 06 fit coupon (print first),PETG,cad/stl/06_fit_coupon.stl
-case,1,Printed part 07 unpowered lead-pattern coupon (never powered),PETG,cad/stl/07_unpowered_lead_pattern_coupon.stl
-case,1,Printed HV warning and rating labels,"docs/labels.pdf, on the floor",docs/labels.pdf
-case,4,M2 x 8 screw,floor to case corner blocks,-
-case,7,M2 x 6 screw,5 PCB to floor standoffs + 2 cable clamp,-
+electronics,1,4-layer FR-4 printed circuit board (PCB) 218 x 64 x 1.6 mm,NOT YET ROUTED: see docs/MANUFACTURING.md release gate. Matte black solder mask suits the case (cosmetic; any colour works),hardware/
+electronics,1,"Isolated regulated 12 V adapter, >=1 A, centre-positive 5.5 x 2.1 mm","SAFETY ITEM: isolated, regulated, from a reputable maker",-
+electronics,1,"Insulated DC-jack pigtail, 5.5 x 2.1 mm female, about 150 mm",outer diameter about 4 mm to suit the 4.2 mm rear hole and clamp,-
+electronics,1,CR2032 primary lithium cell,never a rechargeable LIR2032,-
+electronics,1,Insulated CR2032 holder with leads,<=30 x 25 x 7 mm,-
+electronics,2,"1x15 female headers, 2.54 mm","Nano socket, about 6 mm stack",-
+electronics,1,Converter mount set (stand-offs) for the NCH8200HV,4 mm separation from the board,-
+electronics,1,"Insulation sleeving for neon leads, about 300 mm","SAFETY ITEM: rated >=300 V, 600 V preferred",-
+electronics,2,"Cable ties, small",wire dressing,-
+electronics,1,USB Mini-B data cable,"data-capable, for flashing",-
+printed,1,"PETG filament, matte black","about 400 g for the inner case, floor, clamp and coupons, plus supports",-
+printed,1,Silk brass (or gold) PLA or PETG filament,about 15 g for the three button rods (and the feet if you print them),-
+printed,1,Printed part 01 inner case (carries every functional feature),"PETG black, upright, tree supports inside under the roof",cad/stl/01_inner_case.stl
+printed,1,Printed part 02 floor (carries the PCB on 5 standoffs),PETG,cad/stl/02_floor.stl
+printed,1,Printed part 03 cable clamp,PETG,cad/stl/03_cable_clamp.stl
+printed,3,"Part 04 button rod (SET, H, M)","silk brass filament, cap down, brim; or turned from 12 mm brass bar",cad/stl/04_button_rod.stl
+printed,1,Printed part 06 fit coupon (print first),PETG,cad/stl/06_fit_coupon.stl
+printed,1,Printed part 07 unpowered lead-pattern coupon (never powered),PETG,cad/stl/07_unpowered_lead_pattern_coupon.stl
+cut,1,"Part 05 window panel, laser cut","3 mm smoked grey or bronze CAST acrylic, 206 x 92.8 mm",cad/dxf/Window_panel_3mm_1to1.dxf
+cut,1,"Clear neutral-cure silicone, small tube",3 dots hold the window panel in its slot so it cannot drop out when the case is lifted,-
+cut,1,"Part 13 brass bezel, laser or waterjet cut (or fret saw)","1 mm brass sheet CuZn37 / C272 or C260, 214 x 84 mm outline, 6 holes 2.4 mm; brush or polish, then clear lacquer or wax",cad/dxf/Brass_bezel_1mm_1to1.dxf
+wood,1,Hardwood board for parts 08-12,"black walnut (or oak, cherry, ash), planed to 9.5 mm, 130 mm wide x 1.1 m: the four sides from one length for a continuous grain wrap, plus the top",cad/dxf/Wood_boards_1to1.dxf
+wood,1,"PVA wood glue (water resistant, e.g. type II)",for the eight mitre joints only; the wood is never glued to the inner case,-
+wood,1,Wide masking tape,mitre glue-up: tape the boards face-down edge to edge and fold them into a box,-
+wood,1,"Sandpaper 120, 180, 240, 320 grit",round over the outer edges to R3 by hand or with a 3 mm roundover bit,-
+wood,1,"Hardwax oil or Danish oil, small tin, and paste wax",finish outside faces only; leave the inside and the window opening edge raw or dark-stained,-
+brass,1,"Brass round bar, 14 mm diameter x 40 mm","free-machining CuZn39Pb3 / C360; four 8 mm slices, each drilled 2.4 mm and counterbored 4.2 x 2.2 mm (part 14); or print the feet in silk brass",cad/step/14_brass_foot.step
+brass,4,"Felt washers, 14 mm OD, 5 mm hole","under the brass feet, to protect furniture; leave the screw heads reachable",-
+labels,1,Printed HV warning and rating labels,"docs/labels.pdf, on the underside of the floor",docs/labels.pdf
+fasteners,4,M2 x 16 socket-head screw,through each brass foot and the floor into the inner-case corner blocks,-
+fasteners,4,M2 x 8 screw,"up through the inner-case roof into the wood top (6.5 mm pilots, 1.6 mm drill)",-
+fasteners,7,M2 x 6 screw,5 PCB to floor standoffs + 2 cable clamp,-
+fasteners,6,M2 x 6 brass pan-head screw,"brass bezel to wood front (1.6 mm pilots, 6.5 mm deep)",-
