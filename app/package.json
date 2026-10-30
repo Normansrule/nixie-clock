@@ -17,7 +17,7 @@
     "dist:mac": "node copy-site.js && electron-builder --mac --publish never"
   },
   "devDependencies": {
-    "electron": "44.5.1",
+    "electron": "45.0.0",
     "electron-builder": "26.15.3"
   },
   "build": {
